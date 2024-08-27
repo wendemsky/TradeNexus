@@ -1,0 +1,49 @@
+mat-form-field{
+    margin-bottom: 2%;
+    margin-right: 3%;
+    width: 100%;
+}
+
+.form{
+    padding-top: 2%;
+    padding-bottom: 2%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form{
+    width: 55%;
+}
+
+h2{
+    text-align:  center;
+}
+
+.horizontal-fields{
+    display: flex;
+    align-items: flex-start;
+}
+
+mat-slider{
+    margin-left: 3%;
+}
+
+button {
+    margin-right: 2%;
+}
+
+.center-buttons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+mat-slider{
+    width: 100%;
+}
+
+.slider{
+    margin-top: 2%;
+    display: flex;
+}

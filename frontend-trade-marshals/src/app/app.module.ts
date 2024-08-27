@@ -13,6 +13,13 @@ import { ClientPreferencesComponent } from './components/home/_components/client
 import { BuyTradeComponent } from './components/home/_components/buy-trade/buy-trade.component';
 import { TradingFormComponent } from './components/home/_components/trading-form/trading-form.component';
 import { RegistrationComponent } from './components/registration/registration.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatSliderModule} from '@angular/material/slider';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -30,7 +37,14 @@ import { RegistrationComponent } from './components/registration/registration.co
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    BrowserAnimationsModule,
+    MatSliderModule,
+    MatButtonModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]
