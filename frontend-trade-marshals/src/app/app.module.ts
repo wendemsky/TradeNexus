@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from './material.module';
 import { AppRoutingModule } from './app-routing.module';
+
 import { AppComponent } from './app.component';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
 import { HomeComponent } from './components/home/home.component';
@@ -13,13 +16,6 @@ import { ClientPreferencesComponent } from './components/home/_components/client
 import { BuyTradeComponent } from './components/home/_components/buy-trade/buy-trade.component';
 import { TradingFormComponent } from './components/home/_components/trading-form/trading-form.component';
 import { RegistrationComponent } from './components/registration/registration.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatSliderModule} from '@angular/material/slider';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -39,12 +35,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatSelectModule,
     BrowserAnimationsModule,
-    MatSliderModule,
-    MatButtonModule,
-    MatCheckboxModule
+    MaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]

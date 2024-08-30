@@ -1,4 +1,3 @@
-
 <h2>CLIENT PREFERENCES</h2>
 <div class="form">
     <form [formGroup]="preferences" (ngSubmit)="onSubmit()">
@@ -47,13 +46,13 @@
 
         <mat-label>Risk Tolerance</mat-label>
         <div class="slider">
-            <h6>Low</h6>
+            <h4>Low</h4>
             <mat-slider min="1" max="5" step="1" showTickMarks discrete>
                 <input matSliderThumb formControlName="riskTolerance">
             </mat-slider>
-            <h6>High</h6>
+            <h4>High</h4>
         </div>
-        
+
         <br>
 
         <!-- <mat-form-field appearance="fill">
@@ -65,11 +64,12 @@
             </mat-select>
         </mat-form-field> -->
 
-        <mat-checkbox color="primary">I agree to make use of my preferences to get recommendations from Robot Advisor</mat-checkbox>
+        <mat-checkbox color="primary">I agree to make use of my preferences to get recommendations from Robot
+            Advisor</mat-checkbox>
 
         <br>
         <br>
-        
+
         <div class="center-buttons">
             <button type="button" mat-raised-button (click)="savePreferences()">Save</button>
             <button type="submit" mat-raised-button color="primary">Submit</button>

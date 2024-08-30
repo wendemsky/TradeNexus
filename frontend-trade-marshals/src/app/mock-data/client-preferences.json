@@ -1,0 +1,47 @@
+[
+    {
+        "clientId": "739982664",
+        "investmentPurpose": "Retirement",
+        "incomeCategory": "MIG",
+        "lengthOfInvestment": "Medium",
+        "percentageOfSpend": "Tier2",
+        "riskTolerance": 3,
+        "acceptAdvisor": true
+    },
+    {
+        "clientId": "1210776780",
+        "investmentPurpose": "Major Expense",
+        "incomeCategory": "HIG",
+        "lengthOfInvestment": "Short",
+        "percentageOfSpend": "Tier3",
+        "riskTolerance": 4,
+        "acceptAdvisor": false
+    },
+    {
+        "clientId": "2115946042",
+        "investmentPurpose": "Education",
+        "incomeCategory": "LIG",
+        "lengthOfInvestment": "Long",
+        "percentageOfSpend": "Tier1",
+        "riskTolerance": 2,
+        "acceptAdvisor": true
+    },
+    {
+        "clientId": "207280046",
+        "investmentPurpose": "Gift",
+        "incomeCategory": "VHIG",
+        "lengthOfInvestment": "Medium",
+        "percentageOfSpend": "Tier4",
+        "riskTolerance": 5,
+        "acceptAdvisor": false
+    },
+    {
+        "clientId": "1701812344",
+        "investmentPurpose": "Retirement",
+        "incomeCategory": "MIG",
+        "lengthOfInvestment": "Long",
+        "percentageOfSpend": "Tier2",
+        "riskTolerance": 1,
+        "acceptAdvisor": true
+    }
+]
