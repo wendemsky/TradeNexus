@@ -8,10 +8,11 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatCardModule} from "@angular/material/card"
 
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input'
 import {MatSliderModule} from '@angular/material/slider';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 
 
@@ -25,10 +26,11 @@ import {MatSelectModule} from '@angular/material/select';
         MatDialogModule,
         MatSnackBarModule,
         MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
         MatSliderModule,
         MatButtonModule,
         MatCheckboxModule,
-        MatFormFieldModule,
         MatSelectModule
   ],
  
