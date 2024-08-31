@@ -1,7 +1,7 @@
 [
     {
         "email": "john.doe@gmail.com",
-        "clientId": "739982664",
+        "clientId": 739982664,
         "password": "password123",
         "dateOfBirth": "1990-01-01",
         "country": "USA",

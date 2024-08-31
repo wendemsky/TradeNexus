@@ -164,42 +164,53 @@ mat-toolbar button.nav-button a:hover {
 
 }
 
-mat-card-title.login-form-title {
-    display: flex;
-    text-align: center;
-    width: auto;
-    padding: 20px;
-    margin: 0;
-    text-align: center;
-    justify-content: center;
-    font-size: 30px;
+mat-card-header.login-form-header {
+    display: flex; justify-content: center;
+    align-items: center;
     background-color: rgb(55, 97, 67);
-    color: white;
-    font-weight: bold;
-    /* position: relative; */
+    color:white;
+    position: relative;
+    padding:20px;
+    margin:0;
 }
 
-mat-card-title.login-form-title mat-icon {
-    height: 8%;
-    width: fit-content;
+mat-card-title.login-form-title {
+   font-weight: bold;
+   font-size:30px;
+   flex-grow: 1;
+   text-align: center;
+}
+
+mat-card-header.login-form-header mat-icon {
+    position:absolute;
+    top:35%; right:5%;
     font-weight: bold;
     font-size: 30px;
-    color: white;
     cursor: pointer;
 }
 
-mat-card-title.login-form-title mat-icon:hover {
+mat-card-header.login-form-header mat-icon:hover {
     opacity: 50%;
 }
 
+.login-form {
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    margin-bottom: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
 .login-form .form-section {
     width: 100%;
     padding: 5px;
-    border: 2px solid rgb(62, 76, 110);
+    border: 2px solid  rgb(55, 97, 67);
     margin: 20px;
     margin-top: 0;
     display: flex;
     flex-direction: column;
+    justify-content: center; align-items: center;
 }
 
 .login-form .form-section > * {
@@ -209,41 +220,24 @@ mat-card-title.login-form-title mat-icon:hover {
 .login-form .form-section h2 {
     margin: 10px 20px;
     display: inline-block;
-    color: rgb(62, 76, 110);
-    font-size: 24px;
-}
-
-.login-form {
-    margin: 20px;
-    margin-bottom: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.login-form .form-section {
-    width: 100%;
-    padding: 5px;
-    border: 2px solid rgb(55, 97, 67);
-    margin: 20px;
-    margin-top: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-.login-form .form-section>* {
-    max-width: 90%;
-}
-
-.login-form .form-section h2 {
-    margin: 10px 20px;
-    display: inline-block;
-    color: rgb(55, 97, 67);
-    font-size: 24px;
+    color:  rgb(55, 97, 67);
+    font-weight: bold;
+    font-size: 25px;
 }
 
 .login-form .form-section mat-form-field {
-    margin: 5px 20px 5px 20px;
+    margin: 5px 5px;
+    width: 70%;
+}
+
+.login-form button {
+    padding: 2px;
+    margin: 5px 20px;
+    font-size: 25px;
+    background-color: rgb(55, 97, 67);
+    color: white;
+    font-weight: bold;
+    width: 150px;
+    height: fit-content;
+    border-radius: 4px;
 }

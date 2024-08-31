@@ -4,6 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { LoginService } from 'src/app/services/Client/login.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -21,7 +23,8 @@ export class LandingPageComponent implements OnInit {
     password: new FormControl('')
   })
 
-  constructor(private dialog: MatDialog, private snackBar: MatSnackBar) { }
+  constructor(private dialog: MatDialog, private snackBar: MatSnackBar, 
+    private loginService: LoginService, private route: Router) { }
   
   ngOnInit() { }
 
@@ -39,9 +42,13 @@ export class LandingPageComponent implements OnInit {
   }
 
   //On Submitting Login Form
-  OnSubmitLoginForm() {
+  onSubmitLoginForm() {
     console.log(this.loginCredentials.value)
+    console.log(this.loginService.validateEmail(this.loginCredentials.value.email, this.loginCredentials.value.password))
+  }
+  
+  redirectToRegistration(){
+    this.route.navigateByUrl('/register')
   }
 
-  
 }

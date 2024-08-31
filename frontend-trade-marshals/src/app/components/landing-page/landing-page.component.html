@@ -9,7 +9,7 @@
     <span class="spacer-right"></span>
 
     <button mat-button class='nav-button'><a href="#features">Features</a></button>
-    <button mat-button class='nav-button'>Login</button>
+    <button mat-button class='nav-button'  (click)="openDialog('loginFormTemplate')">Login</button>
 
 </mat-toolbar>
 
@@ -20,7 +20,7 @@
     </section>
     <section class="auth-section">
         <h2> Let us help you secure your future! </h2>
-        <button mat-raised-button>Sign Up</button>
+        <button mat-raised-button (click)="redirectToRegistration()">Sign Up</button>
         <button mat-raised-button (click)="openDialog('loginFormTemplate')">Login</button>
     </section>
 
@@ -38,32 +38,31 @@
 
 <ng-template #loginFormTemplate>
     <mat-card style="height:100%; overflow: hidden;">
-        <mat-card-title class="login-form-title">
-            <!-- <span style="flex:1 1 auto"></span> -->
-            Welcome
-            <!-- <span style="flex:1 1 auto"></span> -->
+        <mat-card-header class="login-form-header">
+            <mat-card-title class="login-form-title">
+                Welcome
+            </mat-card-title>
             <mat-icon (click)="closeDialog()"> close </mat-icon>
-        </mat-card-title>
+        </mat-card-header>
+
         <mat-card-content style="height:90%; overflow-y: auto;">
-            <form [formGroup]="loginCredentials" (ngSubmit)="OnSubmitLoginForm()" class="login-form">
-                <div class="form-section">
-                    <h2>Enter your Login Credentials</h2>
-                    <mat-form-field>
-                        <input matInput placeholder="Enter Email ID" formControlName="email" required />
-                        <mat-error #error *ngIf="!loginCredentials.value.email">
-                            Email is Mandatory
-                        </mat-error>
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput placeholder="Enter Password" formControlName="password" required />
-                        <mat-error #error *ngIf="!loginCredentials.value.password">
-                            Password is Mandatory
-                        </mat-error>
-                    </mat-form-field>
+            <form [formGroup]="loginCredentials" (ngSubmit)="onSubmitLoginForm()" class="login-form" (keydown.enter)="$event.preventDefault()">
+                <div class=" form-section">
+                <h2>Enter your Login Credentials</h2>
+                <mat-form-field>
+                    <input matInput placeholder="Enter Email ID" formControlName="email" required />
+                    <mat-error #error *ngIf="!loginCredentials.value.email">
+                        Email is Mandatory
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Enter Password" formControlName="password" required />
+                    <mat-error #error *ngIf="!loginCredentials.value.password">
+                        Password is Mandatory
+                    </mat-error>
+                </mat-form-field>
                 </div>
-                <div class="center-buttons">
-                    <button type="submit" mat-raised-button> Login </button>
-                </div>
+                <button type="submit" mat-raised-button> Login </button>
             </form>
         </mat-card-content>
     </mat-card>
