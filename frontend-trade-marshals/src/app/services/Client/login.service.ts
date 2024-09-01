@@ -9,7 +9,7 @@ import { Client } from 'src/app/models/Client/Client';
 })
 export class LoginService {
 
-  dataURL = '../../../assets/mock-data/client.json';
+  dataURL = 'http://localhost:4000/clients';
 
   constructor(private http: HttpClient) {
   }

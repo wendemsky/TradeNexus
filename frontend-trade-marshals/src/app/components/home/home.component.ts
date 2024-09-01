@@ -21,7 +21,10 @@ export class HomeComponent {
 
   ngOnInit() {
     this.isSideMenuExpanded = false
-    this.isHomeContent = true //Set Home Page Content
+    if(this.route.url === '/home')
+      this.isHomeContent = true //Set Home Page Content
+    else
+      this.isHomeContent = false
     //Getting Client Profile data from service
     this.clientProfileService.getClientProfile().subscribe(profile => {
       this.clientProfileData = profile

@@ -92,8 +92,10 @@ mat-card {
     align-items: center;
 }
 
+
 .alert {
     color: red;
+    margin:5px;
 }
 
 form {
@@ -137,6 +139,29 @@ mat-form-field {
 
 ::ng-deep .mat-step-header .mat-step-icon-state-number {
     background-color: rgb(55, 97, 67);
+}
+
+.register-button {
+    width: 100%;
+    padding:20px;
+    display: flex; flex-direction: row;
+    justify-content: center;
+    align-items: center;
+} 
+
+.register-button button {
+    padding: 2px;
+    margin: 0 10%;
+    width: 120px;
+    font-size: 20px;
+    background-color: rgb(55, 97, 67);
+    color: white;
+    border-radius: 2px;
+}
+
+.register-button .first-button {
+    width:120px;
+   margin-left:70%;
 }
 
 .footer {

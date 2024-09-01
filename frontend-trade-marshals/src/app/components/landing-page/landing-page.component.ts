@@ -6,9 +6,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 import { LoginService } from 'src/app/services/Client/login.service';
+import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
 
 import { Client } from 'src/app/models/Client/Client';
-import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
 import { ValidatedClient } from 'src/app/models/Client/ValidatedClient';
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
 
@@ -53,7 +53,7 @@ export class LandingPageComponent implements OnInit {
 
   //On Submitting Login Form
   onSubmitLoginForm() {
-    console.log('Login Form Submitted Details: ',this.loginCredentials.value)
+    console.log('Login Form Submitted Details: ', this.loginCredentials.value)
 
     const snackBarConfig = new MatSnackBarConfig();
     snackBarConfig.duration = 2000;
@@ -63,7 +63,7 @@ export class LandingPageComponent implements OnInit {
       {
         next: (data) => { //If success
           this.clientData = data
-          console.log('Client data from Service: ',this.clientData)
+          console.log('Client data from Service: ', this.clientData)
           if (!this.clientData) { //Client doesnt exist
             this.snackBar.open('User doesnt exist! Enter a valid email', '', snackBarConfig)
             this.loginCredentials.reset()
@@ -102,8 +102,7 @@ export class LandingPageComponent implements OnInit {
           this.snackBar.open(e, '', snackBarConfig)
           this.loginCredentials.reset()
         }
-      }
-    )
+      })
   }
 
   //After succesful login

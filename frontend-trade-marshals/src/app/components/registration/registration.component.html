@@ -16,8 +16,8 @@
 
 <div class="stepperForm">
     <mat-card>
-        <mat-stepper #stepper>
-            <mat-step [stepControl]="signupForm">
+        <mat-stepper #stepper linear>
+            <mat-step [stepControl]="signupForm"  [completed]="false" #step1>
                 <div class="step">
                     <form [formGroup]="signupForm">
                         <ng-template matStepLabel>Register Email</ng-template>
@@ -50,14 +50,13 @@
                             *Passwords are not matching
                         </div>
 
-                        <div>
-                            <button [disabled]="!signupForm.valid" (click)="validateNewEmail()" mat-raised-button
-                                matStepperNext>Next</button>
+                        <div class="register-button">
+                            <button class="first-button" [disabled]="!signupForm.valid" (click)="validateNewEmail(stepper)" mat-raised-button> Next </button>
                         </div>
                     </form>
                 </div>
             </mat-step>
-            <mat-step [stepControl]="personalDetails">
+            <mat-step [stepControl]="personalDetails"  [completed]="false" #step2>
                 <div class="step">
                     <form [formGroup]="personalDetails">
                         <ng-template matStepLabel>Personal Details</ng-template>
@@ -86,15 +85,15 @@
                         </mat-form-field>
                         <br>
 
-                        <div>
-                            <button [disabled]="!personalDetails.valid" (click)="setGovtIDType()" mat-raised-button
-                                matStepperNext>Next</button>
+                        <div class="register-button">
+                            <button mat-raised-button matStepperPrevious> Previous </button>
+                            <button [disabled]="!personalDetails.valid" (click)="setGovtIDType(stepper)" mat-raised-button > Next </button>
                         </div>
                     </form>
                 </div>
             </mat-step>
 
-            <mat-step [stepControl]="identificationDetails">
+            <mat-step [stepControl]="identificationDetails"  [completed]="false" #step3>
                 <div class="step">
                     <form [formGroup]="identificationDetails">
                         <ng-template matStepLabel>Identification details</ng-template>
@@ -109,17 +108,17 @@
                         <br>
 
                         <mat-form-field appearance="fill">
-                            <mat-label>Govt ID No</mat-label>
+                            <mat-label>Govt ID No.</mat-label>
                             <input matInput placeholder="Enter Govt ID No" type="text" formControlName="value" required>
                         </mat-form-field>
                         <div *ngIf="identificationDetails.errors?.['lengthNotMatched']" class="alert">
-                            *Enter valid information
+                            *Enter a valid Govt ID No.
                         </div>
                         <br>
 
-                        <div>
-                            <button [disabled]="!identificationDetails.valid" (click)="submitRegistrationForm()" mat-raised-button
-                                matStepperNext>Submit</button>
+                        <div class="register-button">
+                            <button mat-raised-button matStepperPrevious> Previous </button>
+                            <button [disabled]="!identificationDetails.valid" (click)="submitRegistrationForm()" mat-raised-button > Submit </button>
                         </div>
                     </form>
                 </div>

@@ -2,7 +2,7 @@ import { ClientIdentification } from "./ClientIdentification";
 
 export interface Client{
     email: string,
-    clientId: string,
+    clientId: string | undefined,
     password: string,
     name: string,
     dateOfBirth: string,
