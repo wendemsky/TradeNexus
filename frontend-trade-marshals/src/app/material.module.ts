@@ -15,6 +15,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSelectModule} from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 
 @NgModule({
@@ -34,8 +36,18 @@ import { MatStepperModule } from '@angular/material/stepper';
         MatCheckboxModule,
         MatFormFieldModule,
         MatSelectModule,
-        MatStepperModule
-  ],
+        MatStepperModule,
+        MatInputModule,
+        MatDatepickerModule
+    ],
+    imports:[
+        MatDatepickerModule,
+        MatNativeDateModule
+    ],
+    providers: [
+        MatDatepickerModule,
+        MatNativeDateModule
+    ]
  
 })
 export class MaterialModule { }

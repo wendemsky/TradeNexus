@@ -1,74 +1,131 @@
-<!-- 1. Email and Password -->
-<!-- 2. Personal Details: DOB, Country, PostalCode -->
-<!-- 3. Identification Information -->
+<mat-toolbar class="mat-elevation-z8">
 
+    <img src="../../../assets/logo.png" alt="Marsh logo" matTooltip="Marsh Logo" />
 
-<mat-stepper #stepper>
-    <mat-step [stepControl]="signupForm">
-        <form [formGroup]="signupForm">
-            <ng-template matStepLabel>Fill out your name</ng-template>
-            <mat-form-field appearance="fill">
-                <mat-label>Name</mat-label>
-                <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
-            </mat-form-field>
-            <div>
-                <button mat-button matStepperNext>Next</button>
-            </div>
-        </form>
-    </mat-step>
-    <!-- <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
-        <form [formGroup]="secondFormGroup">
-            <mat-form-field appearance="fill">
-                <mat-label>Address</mat-label>
-                <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
-            </mat-form-field>
-            <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button matStepperNext>Next</button>
-            </div>
-        </form>
-    </mat-step> -->
-    <mat-step>
-        <ng-template matStepLabel>Done</ng-template>
-        <p>You are now done.</p>
-        <div>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button (click)="stepper.reset()">Reset</button>
-        </div>
-    </mat-step>
-</mat-stepper>
+    <span class="spacer-left"></span>
 
-<!-- <mat-stepper #stepper>
-    <mat-step [stepControl]="personalDetails">
-        <form [formGroup]="personalDetails">
-            <ng-template matStepLabel>Fill out your name</ng-template>
-            <mat-form-field>
-                <mat-label>Email</mat-label>
-                <input matInput placeholder="Last name, First name" formControlName="email" required>
-            </mat-form-field>
-            <div>
-                <button mat-button matStepperNext>Next</button>
-            </div>
-        </form>
-    </mat-step>
-    <mat-step [stepControl]="identificationDetails" label="Fill out your address">
-        <form [formGroup]="identificationDetails">
-            <mat-form-field>
-                <mat-label>Type</mat-label>
-                <input matInput formControlName="type" placeholder="Ex. 1 Main St, New York, NY" required>
-            </mat-form-field>
-            <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button matStepperNext>Next</button>
-            </div>
-        </form>
-    </mat-step>
-    <mat-step>
-        <ng-template matStepLabel>Done</ng-template>
-        <p>You are now done.</p>
-        <div>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button (click)="stepper.reset()">Reset</button>
-        </div>
-    </mat-step>
-</mat-stepper> -->
+    <span class="nav-title">Trade Marshals</span>
+
+    <span class="spacer-right"></span>
+
+</mat-toolbar>
+
+<div class="stepperForm">
+    <mat-card>
+        <mat-stepper #stepper>
+            <mat-step [stepControl]="signupForm">
+                <div class="step">
+                    <form [formGroup]="signupForm">
+                        <ng-template matStepLabel>Register Email</ng-template>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Email</mat-label>
+                            <input matInput placeholder="abc@xyz.com" type="email" formControlName="email" required>
+                        </mat-form-field>
+                        <br>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>Password</mat-label>
+                            <input matInput type="password" minlength="8" formControlName="password" required>
+                        </mat-form-field>
+                        <div *ngIf="signupForm.get('password')?.errors" class="alert">
+                            <div *ngIf="signupForm.get('password')?.errors?.['passwordStrength']">
+                                *{{errorMessage}}
+                            </div>
+                            <div class="alert"
+                                *ngIf="signupForm.get('password')?.errors?.['minlength'] || !signupForm.get('password')?.dirty">
+                                *Password should be minimum of 8 characters long
+                            </div>
+                        </div>
+                        <br>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>Retype Password</mat-label>
+                            <input matInput type="password" formControlName="retypePassword" required>
+                        </mat-form-field>
+                        <div *ngIf="signupForm.errors?.['identityRevealed']" class="alert">
+                            *Passwords not matching
+                        </div>
+
+                        <div>
+                            <button [disabled]="!signupForm.valid" (click)="validateSignupForm()" mat-raised-button
+                                matStepperNext>Next</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-step>
+            <mat-step [stepControl]="personalDetails">
+                <div class="step">
+                    <form [formGroup]="personalDetails">
+                        <ng-template matStepLabel>Personal Details</ng-template>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Name</mat-label>
+                            <input matInput placeholder="Name" type="text" formControlName="name" required>
+                        </mat-form-field>
+                        <br>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>Date of Birth</mat-label>
+                            <input matInput [matDatepicker]="picker" [max]="today" formControlName="doB">
+                            <mat-hint>MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                        <br>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>Country</mat-label>
+                            <mat-select formControlName="country">
+                                <mat-option *ngFor="let country of countries" [value]="country.value">
+                                    {{country.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <br>
+
+                        <div>
+                            <button [disabled]="!personalDetails.valid" (click)="submitPersonalDetailsForm()" mat-raised-button
+                                matStepperNext>Next</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-step>
+
+            <mat-step [stepControl]="identificationDetails">
+                <div class="step">
+                    <form [formGroup]="identificationDetails">
+                        <ng-template matStepLabel>Identification details</ng-template>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Id Type</mat-label>
+                            <mat-select formControlName="type">
+                                <mat-option *ngFor="let idType of identificationTypes" [value]="idType.value">
+                                    {{idType.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <br>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter detail</mat-label>
+                            <input matInput placeholder="Enter Govt. ID" type="text" formControlName="value" required>
+                        </mat-form-field>
+                        <div *ngIf="identificationDetails.errors?.['lengthNotMatched']" class="alert">
+                            *Enter valid information
+                        </div>
+                        <br>
+
+                        <div>
+                            <button [disabled]="!identificationDetails.valid" (click)="submitIdentificationForm()" mat-raised-button
+                                matStepperNext>Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-step>
+        </mat-stepper>
+    </mat-card>
+</div>
+
+<footer class="footer">
+    <a>
+        <p> Contact Support <span><mat-icon mat-list-icon>contact_support</mat-icon></span> | Copyright &copy; MARSH</p>
+    </a>
+</footer>
