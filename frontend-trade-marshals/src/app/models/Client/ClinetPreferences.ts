@@ -1,4 +1,5 @@
 export interface ClientPreferences {
+    clientId: string,
     investmentPurpose: string,
     incomeCategory: string,
     lengthOfInvestment: string,

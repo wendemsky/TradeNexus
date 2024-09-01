@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-client-preferences',
@@ -44,14 +44,13 @@ export class ClientPreferencesComponent {
     ]
 
     preferences: FormGroup = new FormGroup({
-      investmentPurpose: new FormControl(''),
-      incomeCategory: new FormControl(''),
-      lengthOfInvestment: new FormControl(''),
-      percentageOfSpend: new FormControl(''),
-      riskTolerance: new FormControl(1),
-      acceptAdvisor: new FormControl('')
+      investmentPurpose: new FormControl('', Validators.required),
+      incomeCategory: new FormControl('', Validators.required),
+      lengthOfInvestment: new FormControl('', Validators.required),
+      percentageOfSpend: new FormControl('', Validators.required),
+      riskTolerance: new FormControl(1, Validators.required),
+      acceptAdvisor: new FormControl(false, Validators.required)
     })
-
 
     ngOnInit(){
      

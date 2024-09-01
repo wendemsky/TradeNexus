@@ -14,6 +14,7 @@ import {MatSliderModule} from '@angular/material/slider';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSelectModule} from '@angular/material/select';
+import { MatStepperModule } from '@angular/material/stepper';
 
 
 @NgModule({
@@ -31,7 +32,9 @@ import {MatSelectModule} from '@angular/material/select';
         MatSliderModule,
         MatButtonModule,
         MatCheckboxModule,
-        MatSelectModule
+        MatFormFieldModule,
+        MatSelectModule,
+        MatStepperModule
   ],
  
 })
