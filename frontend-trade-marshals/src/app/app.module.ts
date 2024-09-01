@@ -13,6 +13,12 @@ import { ClientPreferencesComponent } from './components/home/_components/client
 import { BuyTradeComponent } from './components/home/_components/buy-trade/buy-trade.component';
 import { TradingFormComponent } from './components/home/_components/trading-form/trading-form.component';
 import { RegistrationComponent } from './components/registration/registration.component';
+import { AgGridModule } from 'ag-grid-angular';
+import { ModuleRegistry } from '@ag-grid-community/core';
+import { SideBarModule } from '@ag-grid-enterprise/side-bar';
+
+ModuleRegistry.registerModules([SideBarModule]);
+
 
 @NgModule({
   declarations: [
@@ -30,7 +36,8 @@ import { RegistrationComponent } from './components/registration/registration.co
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    AgGridModule
   ],
   providers: [],
   bootstrap: [AppComponent]
