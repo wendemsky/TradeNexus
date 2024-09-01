@@ -32,7 +32,7 @@ export class ClientProfileService {
   }
 
   //Setting Client Profile Details - Called from Landing Page/Register component after successful login/register
-  setClientProfile(profile:ClientProfile) {
+  setClientProfile(profile:ClientProfile|null) {
     this.clientProfileSubject.next(profile)
   }
 

@@ -59,8 +59,6 @@ export class LandingPageComponent implements OnInit {
     snackBarConfig.duration = 2000;
     snackBarConfig.panelClass = ['form-submit-snackbar'];
 
-
-
     this.loginService.getValidClientDetails(this.loginCredentials.value.email).subscribe(
       {
         next: (data) => { //If success

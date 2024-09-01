@@ -4,8 +4,8 @@ export interface Client{
     email: string,
     clientId: string,
     password: string,
+    name: string,
     dateOfBirth: string,
     country: string,
-    postalCode: string,
     identification: ClientIdentification[]
 }

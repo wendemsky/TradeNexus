@@ -8,7 +8,11 @@
 
     <span class="spacer-right"></span>
 
+    <button mat-button class='nav-button' (click)="redirectToLandingPage()"> Back </button>
+
 </mat-toolbar>
+
+<h1> Registration Form </h1>
 
 <div class="stepperForm">
     <mat-card>
@@ -33,7 +37,7 @@
                             </div>
                             <div class="alert"
                                 *ngIf="signupForm.get('password')?.errors?.['minlength'] || !signupForm.get('password')?.dirty">
-                                *Password should be minimum of 8 characters long
+                                *Password should be atleast 8 characters long
                             </div>
                         </div>
                         <br>
@@ -43,11 +47,11 @@
                             <input matInput type="password" formControlName="retypePassword" required>
                         </mat-form-field>
                         <div *ngIf="signupForm.errors?.['identityRevealed']" class="alert">
-                            *Passwords not matching
+                            *Passwords are not matching
                         </div>
 
                         <div>
-                            <button [disabled]="!signupForm.valid" (click)="validateSignupForm()" mat-raised-button
+                            <button [disabled]="!signupForm.valid" (click)="validateNewEmail()" mat-raised-button
                                 matStepperNext>Next</button>
                         </div>
                     </form>
@@ -83,7 +87,7 @@
                         <br>
 
                         <div>
-                            <button [disabled]="!personalDetails.valid" (click)="submitPersonalDetailsForm()" mat-raised-button
+                            <button [disabled]="!personalDetails.valid" (click)="setGovtIDType()" mat-raised-button
                                 matStepperNext>Next</button>
                         </div>
                     </form>
@@ -95,7 +99,7 @@
                     <form [formGroup]="identificationDetails">
                         <ng-template matStepLabel>Identification details</ng-template>
                         <mat-form-field appearance="fill">
-                            <mat-label>Id Type</mat-label>
+                            <mat-label>Govt ID Type</mat-label>
                             <mat-select formControlName="type">
                                 <mat-option *ngFor="let idType of identificationTypes" [value]="idType.value">
                                     {{idType.name}}
@@ -105,8 +109,8 @@
                         <br>
 
                         <mat-form-field appearance="fill">
-                            <mat-label>Enter detail</mat-label>
-                            <input matInput placeholder="Enter Govt. ID" type="text" formControlName="value" required>
+                            <mat-label>Govt ID No</mat-label>
+                            <input matInput placeholder="Enter Govt ID No" type="text" formControlName="value" required>
                         </mat-form-field>
                         <div *ngIf="identificationDetails.errors?.['lengthNotMatched']" class="alert">
                             *Enter valid information
@@ -114,7 +118,7 @@
                         <br>
 
                         <div>
-                            <button [disabled]="!identificationDetails.valid" (click)="submitIdentificationForm()" mat-raised-button
+                            <button [disabled]="!identificationDetails.valid" (click)="submitRegistrationForm()" mat-raised-button
                                 matStepperNext>Submit</button>
                         </div>
                     </form>

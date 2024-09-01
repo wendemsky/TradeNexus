@@ -13,16 +13,38 @@ import { ClientProfileService } from 'src/app/services/Client/client-profile.ser
 export class HomeComponent {
 
   clientProfileData!: ClientProfile | null //Client Profile data that is set with ClientProfileService
+  isSideMenuExpanded: boolean = false; //Side Menu
+  isHomeContent:boolean = true; //Home Content displayed
 
   constructor(private dialog: MatDialog, private snackBar: MatSnackBar,
-     private clientProfileService: ClientProfileService, private route: Router) { }
+    private clientProfileService: ClientProfileService, private route: Router) { }
 
   ngOnInit() {
+    this.isSideMenuExpanded = false
+    this.isHomeContent = true //Set Home Page Content
     //Getting Client Profile data from service
     this.clientProfileService.getClientProfile().subscribe(profile => {
       this.clientProfileData = profile
-     console.log('Logged In Client Profile Data: ',this.clientProfileData); 
+      console.log('Logged In Client Profile Data: ', this.clientProfileData);
     })
-   
-   }
+  }
+
+  //To go to Home
+  redirectToHome() {
+    this.isHomeContent = true
+    this.route.navigateByUrl('/home')
+  }
+
+  //To go to Profile Component
+  redirectToProfile() {
+    this.isHomeContent = false
+    this.route.navigateByUrl('/home/profile')
+  }
+
+  //When client logs out - To go back to Landing
+  logout() {
+    this.clientProfileData = null
+    this.clientProfileService.setClientProfile(this.clientProfileData) //Erasing Client data
+    this.route.navigateByUrl('/')
+  }
 }

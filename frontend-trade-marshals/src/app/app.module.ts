@@ -12,7 +12,6 @@ import { ReportActivityComponent } from './components/home/_components/report-ac
 import { TradingHistoryComponent } from './components/home/_components/trading-history/trading-history.component';
 import { ProfileComponent } from './components/home/_components/profile/profile.component';
 import { ClientPreferencesComponent } from './components/home/_components/client-preferences/client-preferences.component';
-import { BuyTradeComponent } from './components/home/_components/buy-trade/buy-trade.component';
 import { TradingFormComponent } from './components/home/_components/trading-form/trading-form.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -27,7 +26,6 @@ import { HttpClientModule } from '@angular/common/http';
     TradingHistoryComponent,
     ProfileComponent,
     ClientPreferencesComponent,
-    BuyTradeComponent,
     TradingFormComponent,
     RegistrationComponent
   ],

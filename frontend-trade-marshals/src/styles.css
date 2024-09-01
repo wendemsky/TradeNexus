@@ -10,11 +10,11 @@ body {
     font-family:Cambria;
 }
 
-button:hover, .mat-button:hover, .mat-raised-button:hover {
+button:hover, .mat-button:hover, .mat-raised-button:hover, .mat-icon-button:hover {
     opacity: 50%;
 }
 
-button:disabled, .mat-button:disabled, .mat-raised-button:disabled {
+button:disabled, .mat-button:disabled, .mat-raised-button:disabled, .mat-icon-button:disabled {
     opacity: 50%;
     cursor: not-allowed;
 }
