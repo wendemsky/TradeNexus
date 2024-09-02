@@ -371,6 +371,24 @@
       },
       "tradeId": "xmv8x42z1xd-v81cfpn8u6-jnz27mcim5",
       "cashValue": 105.7975
+    },
+    {
+      "id": "4f7e",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "739982664",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "739982664",
+        "token": 739859208
+      },
+      "tradeId": "g61inmyjosm-ccb3zxrk80n-5jlgr9j094k",
+      "cashValue": 105.7975
     }
   ]
 }
