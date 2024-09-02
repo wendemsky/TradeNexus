@@ -9,7 +9,7 @@ import { TradeHistoryService } from 'src/app/services/trade-history.service';
   styleUrls: ['./trading-history.component.css']
 })
 export class TradingHistoryComponent  implements OnInit{
-  clientId: string = '920265077';
+  clientId: string = '739982664';
 
   public columnDefs: ColDef[] = [{ 
       headerName: "Instrument ID", 
@@ -31,7 +31,7 @@ export class TradingHistoryComponent  implements OnInit{
       field: "tradeId",
     }, { 
       headerName: "Cash Value", 
-      field: "cashValue ",
+      field: "cashValue",
   }]
 
   public tradeHistoryData: Trade[] = [];

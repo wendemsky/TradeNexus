@@ -38,8 +38,8 @@ export class TradingFormComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.order.clientId = '920265077';
-    this.order.token = 920141621;
+    this.order.clientId = '739982664';
+    this.order.token = 739859208;
     this.order.direction = this.direction;
     this.order.quantity = this.instrument.minQuantity;
     this.order.instrumentId = this.instrument.instrumentId;
