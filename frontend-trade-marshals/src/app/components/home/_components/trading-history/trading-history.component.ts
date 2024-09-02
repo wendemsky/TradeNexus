@@ -9,7 +9,7 @@ import { TradeHistoryService } from 'src/app/services/trade-history.service';
   styleUrls: ['./trading-history.component.css']
 })
 export class TradingHistoryComponent  implements OnInit{
-
+  clientId: string = '920265077';
   
 
   public columnDefs: ColDef[] = [{ 
@@ -69,10 +69,14 @@ export class TradingHistoryComponent  implements OnInit{
 
   ngOnInit(): void {
     this.loadTrades();
+    // this.clientProfileService.getClientProfile().subscribe(profile => {
+    //   this.clientProfileData = profile;
+    //   console.log('Logged in Client Profile Data: ', this.clientPortfolioData);
+    // })
   }
 
   loadTrades() {
-    this.tradeHistoryService.getTrades()
+    this.tradeHistoryService.getTrades(this.clientId)
       .subscribe(data => this.tradeHistoryData = data);
   }
 

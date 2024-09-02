@@ -21,6 +21,9 @@ export class TradingFormComponent implements OnInit{
   order: Order = new Order('', -1, -1, '', '', '', -1);
   trade?: Trade;
 
+
+  dbJsonTradesUrl = 'http://localhost:4000/trades';
+
   constructor(
     private httpClient: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -53,8 +56,17 @@ export class TradingFormComponent implements OnInit{
         this.trade = data;
         console.log('Trade Executed', this.trade);
         // Populate trade history, portfolio etc.
-        mockTrades.push(this.trade);
+        this.saveTrade(this.trade);
       });
+  }
+
+  tradeSaved?: Trade;
+  saveTrade(trade: Trade) { 
+    this.httpClient.post<Trade>(this.dbJsonTradesUrl, trade)
+      .subscribe(data => {
+        this.tradeSaved = data;
+        console.log(this.tradeSaved);
+      }); 
   }
 }
  

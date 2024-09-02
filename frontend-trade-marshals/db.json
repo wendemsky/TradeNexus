@@ -1,0 +1,79 @@
+{
+  "clients": [],
+  "clients-portfolio": [],
+  "clients-preferences": [],
+  "trades": [
+    {
+      "id": "16ef",
+      "instrumentId": "C100",
+      "quantity": 100,
+      "executionPrice": 95.92,
+      "direction": "B",
+      "clientId": "920265077",
+      "order": {
+        "instrumentId": "C100",
+        "quantity": 100,
+        "targetPrice": 95.42,
+        "direction": "B",
+        "clientId": "920265077",
+        "token": 920141621
+      },
+      "tradeId": "c9ue1ftfp5a-zpgldismbaj-zlhj1ya3ju",
+      "cashValue": 9687.92
+    },
+    {
+      "id": "275e",
+      "instrumentId": "T67894",
+      "quantity": 100,
+      "executionPrice": 0.998125,
+      "direction": "B",
+      "clientId": "920265077",
+      "order": {
+        "instrumentId": "T67894",
+        "quantity": 100,
+        "targetPrice": 0.99828125,
+        "direction": "B",
+        "clientId": "920265077",
+        "token": 920141621
+      },
+      "tradeId": "wv8mcutf0vq-q7jt5flknc-nmfbhcif4pk",
+      "cashValue": 100.810625
+    },
+    {
+      "id": "fcdb",
+      "instrumentId": "T67897",
+      "quantity": 100,
+      "executionPrice": 0.999375,
+      "direction": "B",
+      "clientId": "920265077",
+      "order": {
+        "instrumentId": "T67897",
+        "quantity": 100,
+        "targetPrice": 0.999375,
+        "direction": "B",
+        "clientId": "920265077",
+        "token": 920141621
+      },
+      "tradeId": "ogje8vaxi9c-pc39ksgp8d-r5itn4gpvvl",
+      "cashValue": 100.936875
+    },
+    {
+      "id": "592e",
+      "instrumentId": "T67897",
+      "quantity": 100,
+      "executionPrice": 0.999375,
+      "direction": "B",
+      "clientId": "920265077",
+      "order": {
+        "instrumentId": "T67897",
+        "quantity": 100,
+        "targetPrice": 0.999375,
+        "direction": "B",
+        "clientId": "920265077",
+        "token": 920141621
+      },
+      "tradeId": "j6se55rnchi-k8b7cjlguom-g6d8ydowrm",
+      "cashValue": 100.936875
+    }
+  ]
+}
