@@ -56,7 +56,17 @@ ag-grid-angular {
 
 .grid-container {
     height:90vh;
+    font-size: 15px;
 }
- 
 
+.ag-header-viewport{
+    background-color: rgb(222, 223, 221);
+}
 
+.ag-side-bar {
+    background-color: rgb(222, 223, 221);   
+}
+
+.ag-header-cell-resize::after{
+    background-color: black;
+}

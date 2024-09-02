@@ -14,29 +14,18 @@ export class PriceListComponent implements OnInit{
   prices: Price[] = [];
 
   public columnDefs: ColDef[] = [{ 
+    headerName: "Instrument Description", 
+    field: "instrument.instrumentDescription",
+    minWidth: 400,
+  },{ 
+    headerName: "Category ID", 
+    field: "instrument.categoryId",
+  },{ 
     headerName: "Ask Price", 
     field: "askPrice",
   },{ 
     headerName: "Bid Price", 
     field: "bidPrice",
-  },{ 
-    headerName: "Price Timestamp", 
-    field: "priceTimestamp",
-  },{ 
-    headerName: "Instrument ID", 
-    field: "instrument.instrumentId",
-  },{ 
-    headerName: "External ID Type", 
-    field: "instrument.externalIdType",
-  },{ 
-    headerName: "External ID", 
-    field: "instrument.externalId",
-  },{ 
-    headerName: "Category ID", 
-    field: "instrument.categoryId",
-  },{ 
-    headerName: "Instrument Description", 
-    field: "instrument.instrumentDescription",
   },{ 
     headerName: "Max Quantity", 
     field: "instrument.maxQuantity",
@@ -44,10 +33,6 @@ export class PriceListComponent implements OnInit{
     headerName: "Min Quantity", 
     field: "instrument.minQuantity",
   },{ 
-    headerName: "Min Quantity", 
-    field: "instrument.minQuantity",
-  },
-  { 
     headerName: "Buy", 
     field: "buy",
     cellRenderer: BuyComponent
@@ -55,7 +40,7 @@ export class PriceListComponent implements OnInit{
     headerName: "Sell", 
     field: "sell",
     cellRenderer: SellComponent
-  },
+  }
 ]
 
 public defaultColDef: ColDef = {
