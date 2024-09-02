@@ -43,3 +43,15 @@ button:disabled, .mat-button:disabled, .mat-raised-button:disabled, .mat-icon-bu
         font-weight: bold !important;
     }
 } 
+/* You can add global styles to this file, and also import other style files
+/* For AG Grid Alpine theme */
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
+@import 'ag-grid-community/styles/ag-theme-balham.css';
+
+
+.grid-container {
+    height:95vh;
+}
+ 
+

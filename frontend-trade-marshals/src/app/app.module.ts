@@ -15,6 +15,12 @@ import { ClientPreferencesComponent } from './components/home/_components/client
 import { TradingFormComponent } from './components/home/_components/trading-form/trading-form.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { HttpClientModule } from '@angular/common/http';
+import { AgGridModule } from 'ag-grid-angular';
+import { ModuleRegistry } from '@ag-grid-community/core';
+import { SideBarModule } from '@ag-grid-enterprise/side-bar';
+
+ModuleRegistry.registerModules([SideBarModule]);
+
 
 @NgModule({
   declarations: [
@@ -35,7 +41,8 @@ import { HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MaterialModule,
-    HttpClientModule
+    HttpClientModule,
+    AgGridModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -26,9 +26,10 @@
             ],
             "styles": [
               "src/custom-theme.scss",
+              "node_modules/ag-grid-community/styles/ag-theme-alpine.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": []          
           },
           "configurations": {
             "production": {
