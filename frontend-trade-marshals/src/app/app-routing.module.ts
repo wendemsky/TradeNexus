@@ -18,7 +18,9 @@ const routes: Routes = [
       {path: 'client-preferences', component: ClientPreferencesComponent},
       {path: 'client-portfolio', component: PortfolioComponent},
       {path: 'client-trading-history', component: TradingHistoryComponent},
-      {path: 'report-activity', component: ReportActivityComponent}
+      {path: 'report-activity', component: ReportActivityComponent},
+      {path: 'client-preferences', component: ClientPreferencesComponent},
+      {path: 'home', component: HomeComponent}
     ]
   },
   {path:'**', redirectTo:'/'}

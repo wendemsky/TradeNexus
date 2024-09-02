@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -14,10 +12,20 @@ import { ProfileComponent } from './components/home/_components/profile/profile.
 import { ClientPreferencesComponent } from './components/home/_components/client-preferences/client-preferences.component';
 import { TradingFormComponent } from './components/home/_components/trading-form/trading-form.component';
 import { RegistrationComponent } from './components/registration/registration.component';
-import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatSliderModule} from '@angular/material/slider';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { AgGridModule } from 'ag-grid-angular';
 import { ModuleRegistry } from '@ag-grid-community/core';
 import { SideBarModule } from '@ag-grid-enterprise/side-bar';
+import { PriceListComponent } from './components/home/_components/price-list/price-list.component';
+import { HttpClientModule } from '@angular/common/http';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
 
 ModuleRegistry.registerModules([SideBarModule]);
 
@@ -33,7 +41,9 @@ ModuleRegistry.registerModules([SideBarModule]);
     ProfileComponent,
     ClientPreferencesComponent,
     TradingFormComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    PriceListComponent,
+    TradingHistoryComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +52,15 @@ ModuleRegistry.registerModules([SideBarModule]);
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
-    AgGridModule
+    AgGridModule,
+    MatSliderModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    AgGridModule,
+    HttpClientModule,
+    MatDialogModule,
+    FormsModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]

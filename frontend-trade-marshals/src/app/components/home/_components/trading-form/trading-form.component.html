@@ -1,1 +1,51 @@
-<p>trading-form works!</p>
+<div mat-dialog-title>
+    <h1>Trade Form</h1>
+</div>
+<div mat-dialog-content>
+    <div>
+        <h2>{{ this.instrument.instrumentDescription }}</h2>
+        <p>Instrument ID: {{ this.instrument.instrumentId }}</p>
+        <p *ngIf="this.direction === 'B'">Bid Price: {{ this.bidPrice }}</p>
+        <p *ngIf="this.direction === 'S'">Sell Price: {{ this.askPrice }}</p>
+    </div>
+    <div class="row">
+        <mat-form-field>
+            <mat-label>Instrument ID</mat-label>
+            <input matInput [(ngModel)]="order.instrumentId" />
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Quantity</mat-label>
+            <input matInput [(ngModel)]="order.quantity" />
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Target Price</mat-label>
+            <input matInput [(ngModel)]="order.targetPrice" />
+        </mat-form-field>
+    </div>
+    <div class="row">
+
+        <mat-form-field>
+            <mat-label>Direction</mat-label>
+            <mat-select [(ngModel)]="order.direction">
+                <mat-option value="B">Buy</mat-option>
+                <mat-option value="S">Sell</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Client ID</mat-label>
+            <input matInput [(ngModel)]="order.clientId" />
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Order ID</mat-label>
+            <input matInput [(ngModel)]="order.orderId" />
+        </mat-form-field>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="executeTrade(order)" [mat-dialog-close]="true">
+        Submit
+    </button>
+    <button mat-raised-button mat-dialog-close>
+        Cancel
+    </button>
+</div>

@@ -6,6 +6,11 @@
         "name": "John Doe",
         "dateOfBirth": "1990-01-01",
         "country": "USA",
+        "clientId": "C001",
+        "password": "password123",
+        "dateOfBirth": "1990-01-01",
+        "country": "USA",
+        "postalCode": "12345",
         "identification": [
             {
                 "type": "SSN",
@@ -20,6 +25,11 @@
         "name": "Jane Smith",
         "dateOfBirth": "1985-05-15",
         "country": "India",
+        "clientId": "C002",
+        "password": "password456",
+        "dateOfBirth": "1985-05-15",
+        "country": "India",
+        "postalCode": "A1B2C3",
         "identification": [
             {
                 "type": "PAN",
@@ -34,6 +44,11 @@
         "name": "Alice Jones",
         "dateOfBirth": "1992-07-20",
         "country": "USA",
+        "clientId": "C003",
+        "password": "password789",
+        "dateOfBirth": "1992-07-20",
+        "country": "USA",
+        "postalCode": "W1A1AA",
         "identification": [
             {
                 "type": "SSN",
@@ -48,6 +63,11 @@
         "name": "Bob Brown",
         "dateOfBirth": "1988-11-30",
         "country": "India",
+        "clientId": "C004",
+        "password": "password101",
+        "dateOfBirth": "1988-11-30",
+        "country": "India",
+        "postalCode": "2000",
         "identification": [
             {
                 "type": "PAN",
@@ -62,6 +82,11 @@
         "name": "Charlie Davis",
         "dateOfBirth": "1995-03-10",
         "country": "India",
+        "clientId": "C005",
+        "password": "password202",
+        "dateOfBirth": "1995-03-10",
+        "country": "India",
+        "postalCode": "600001",
         "identification": [
             {
                 "type": "PAN",
@@ -70,3 +95,4 @@
         ]
     }
 ]
+

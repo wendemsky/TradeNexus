@@ -49,9 +49,14 @@ button:disabled, .mat-button:disabled, .mat-raised-button:disabled, .mat-icon-bu
 @import 'ag-grid-community/styles/ag-theme-alpine.css';
 @import 'ag-grid-community/styles/ag-theme-balham.css';
 
+ag-grid-angular {
+    margin: 20px;
+    max-width: 90vw;
+}
 
 .grid-container {
-    height:95vh;
+    height:90vh;
 }
  
+
 
