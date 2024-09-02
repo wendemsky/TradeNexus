@@ -1,10 +1,10 @@
-mat-form-field{
+mat-form-field {
     margin-bottom: 2%;
     margin-right: 3%;
     width: 100%;
 }
 
-.form{
+.form {
     padding-top: 2%;
     padding-bottom: 2%;
     display: flex;
@@ -12,21 +12,26 @@ mat-form-field{
     align-items: center;
 }
 
-form{
+form {
     width: 55%;
 }
 
-h2{
-    text-align:  center;
+h2 {
+    text-align: center;
 }
 
-.horizontal-fields{
+.horizontal-fields {
     display: flex;
     align-items: flex-start;
 }
 
-mat-slider{
+mat-slider {
     margin-left: 3%;
+    width: 100%;
+}
+
+mat-label {
+    font-size: large;
 }
 
 .center-buttons button {
@@ -35,17 +40,14 @@ mat-slider{
     color: white;
 }
 
-.center-buttons{
+.center-buttons {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-mat-slider{
-    width: 100%;
-}
 
-.slider{
+.slider {
     margin-top: 2%;
     display: flex;
 }
@@ -81,3 +83,21 @@ mat-slider{
 ::ng-deep .mat-step-header .mat-step-icon-state-number {
     background-color: rgb(55, 97, 67);
 }
+
+.mat-mdc-slider.mat-slider-green{
+    --mdc-slider-handle-color: #00c510;
+    --mdc-slider-focus-handler-color: #019b0e;
+    --mdc-slider-active-track-color: #019b0e;
+    --mdc-slider-inactive-track-color: #019b0e;
+    --mdc-slider-with-tick-marks-active-container-color: #ffffff;
+    --mdc-slider-with-tick-marks-inactive-container-color: #019b0e;
+    /* --mat-mdc-slider-hover-ripple-color: #88da8f; */
+    --mat-mdc-slider-focus-ripple-color: #88da8f;
+    width: 100%;
+}
+
+/* .mat-mdc-slider.mat-slider-green{
+    --mdc-slider-label-container-color: #e00025;
+    --mdc-slider-label-text-color: #fff;
+    --mat-mdc-slider-value-indicator-opacity: 0.61;
+} */

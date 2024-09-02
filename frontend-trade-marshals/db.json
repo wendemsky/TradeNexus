@@ -203,10 +203,10 @@
     {
       "investmentPurpose": "Retirement",
       "incomeCategory": "HIG",
-      "lengthOfInvestment": "Long",
+      "lengthOfInvestment": "Short",
       "percentageOfSpend": "Tier3",
-      "riskTolerance": 3,
-      "acceptAdvisor": true,
+      "riskTolerance": 1,
+      "acceptAdvisor": false,
       "clientId": "1212794226",
       "id": "85eb"
     },
