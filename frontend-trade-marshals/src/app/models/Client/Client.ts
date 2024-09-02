@@ -7,5 +7,6 @@ export interface Client{
     name: string,
     dateOfBirth: string,
     country: string,
-    identification: ClientIdentification[]
+    identification: ClientIdentification[],
+    isAdmin: boolean
 }

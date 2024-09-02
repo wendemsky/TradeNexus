@@ -183,7 +183,7 @@ export class RegistrationComponent implements OnInit {
     snackBarConfig.duration = 3000;
     snackBarConfig.panelClass = ['form-submit-snackbar'];
 
-    //To get the data that is to be saved : clientData
+    //To get the data that is to be saved : clientData - Every client registering from platform is not an admin
     this.clientData = {
       'email': this.signupForm.value.email,
       'clientId': String(this.fmtsValidatedClientData?.clientId),
@@ -191,7 +191,8 @@ export class RegistrationComponent implements OnInit {
       'name': this.personalDetails.value.name,
       'dateOfBirth': this.personalDetails.value.doB,
       'country': this.personalDetails.value.country,
-      'identification': [{ 'type': this.identificationDetails.value.type, 'value': this.identificationDetails.value.value }]
+      'identification': [{ 'type': this.identificationDetails.value.type, 'value': this.identificationDetails.value.value }],
+      'isAdmin': false
     }
     console.log('Registered Data to be posted to the Service: ', this.clientData)
     //Saving Registered client with service

@@ -54,7 +54,7 @@
                     </a>
                 </mat-list-item>
                 <mat-divider></mat-divider> 
-                <mat-list-item routerLinkActive="active">
+                <mat-list-item routerLinkActive="active" >
                     <a routerLink="/home/client-trading-history">
                         <button mat-button class="menu-button" (click)="isHomeContent=false">
                             <mat-icon mat-list-icon> history </mat-icon>
@@ -62,8 +62,8 @@
                         </button>
                     </a>
                 </mat-list-item>
-                <mat-divider></mat-divider> 
-                <mat-list-item routerLinkActive="active">
+                <mat-divider *ngIf="clientProfileData?.client?.isAdmin===true"></mat-divider> 
+                <mat-list-item routerLinkActive="active" *ngIf="clientProfileData?.client?.isAdmin===true">
                     <a routerLink="/home/report-activity">
                         <button mat-button class="menu-button" (click)="isHomeContent=false">
                             <mat-icon mat-list-icon> assessment</mat-icon>
@@ -79,12 +79,12 @@
                 <div *ngIf="isHomeContent" class="home-content">
                     <h1> Welcome {{clientProfileData?.client?.name}} ! </h1>
 
-                    <div class="robo-advisior-section">
-                        <h2> Robo Advisor </h2>
+                    <div class="robo-advisior-section mat-elevation-z8">
+                        <!-- <h2> Robo Advisor </h2> -->
                     </div>
 
-                    <div class="explore-section">
-                        <h2> Explore </h2>
+                    <div class="explore-section mat-elevation-z8">
+                        <!-- <h2> Explore </h2> -->
                     </div>
 
                 </div>

@@ -1,149 +1,140 @@
 {
   "clients": [
     {
-      "email": "john.doe@gmail.com",
-      "clientId": "739982664",
-      "password": "password123",
-      "name": "John Doe",
-      "dateOfBirth": "1990-01-01",
-      "country": "USA",
-      "identification": [
-        {
-          "type": "SSN",
-          "value": "P1234567"
-        }
-      ]
-    },
-    {
-      "email": "jane.smith@gmail.com",
-      "clientId": "1210776780",
-      "password": "password456",
-      "name": "Jane Smith",
-      "dateOfBirth": "1985-05-15",
-      "country": "India",
-      "identification": [
-        {
-          "type": "PAN",
-          "value": "P2345678"
-        }
-      ]
-    },
-    {
-      "email": "alice.jones@gmail.com",
-      "clientId": "2115946042",
-      "password": "password789",
-      "name": "Alice Jones",
-      "dateOfBirth": "1992-07-20",
-      "country": "USA",
-      "identification": [
-        {
-          "type": "SSN",
-          "value": "P3456789"
-        }
-      ]
-    },
-    {
-      "email": "bob.brown@gmail.com",
-      "clientId": "207280046",
-      "password": "password101",
-      "name": "Bob Brown",
-      "dateOfBirth": "1988-11-30",
-      "country": "India",
-      "identification": [
-        {
-          "type": "PAN",
-          "value": "P4567890"
-        }
-      ]
-    },
-    {
-      "email": "charlie.davis@gmail.com",
-      "clientId": "1701812344",
-      "password": "password202",
-      "name": "Charlie Davis",
-      "dateOfBirth": "1995-03-10",
-      "country": "India",
-      "identification": [
-        {
-          "type": "PAN",
-          "value": "P5678901"
-        }
-      ]
-    },
-    {
-      "id": "d52a",
+      "id": "57af",
       "email": "sowmya@gmail.com",
       "clientId": "1654658069",
-      "password": "KS2024fmr",
+      "password": "Marsh2024",
       "name": "Sowmya",
-      "dateOfBirth": "2024-08-31T18:30:00.000Z",
+      "dateOfBirth": "08/12/2002",
       "country": "India",
       "identification": [
         {
           "type": "Aadhar",
-          "value": "124532554234"
+          "value": "123456789102"
         }
-      ]
+      ],
+      "isAdmin": true
+    },
+    {
+      "id": "89b3",
+      "email": "himanshu@gmail.com",
+      "clientId": "541107416",
+      "password": "Marsh2024",
+      "name": "Himanshu",
+      "dateOfBirth": "08/12/2002",
+      "country": "India",
+      "identification": [
+        {
+          "type": "Aadhar",
+          "value": "123456789102"
+        }
+      ],
+      "isAdmin": true
+    },
+    {
+      "id": "a4d4",
+      "email": "rishiyanth@gmail.com",
+      "clientId": "1425922638",
+      "password": "Marsh2024",
+      "name": "Rishiyanth",
+      "dateOfBirth": "08/12/2002",
+      "country": "India",
+      "identification": [
+        {
+          "type": "Aadhar",
+          "value": "123456789102"
+        }
+      ],
+      "isAdmin": true
+    },
+    {
+      "id": "7a38",
+      "email": "aditi@gmail.com",
+      "clientId": "1644724236",
+      "password": "Marsh2024",
+      "name": "Aditi",
+      "dateOfBirth": "08/12/2002",
+      "country": "India",
+      "identification": [
+        {
+          "type": "Aadhar",
+          "value": "123456789102"
+        }
+      ],
+      "isAdmin": true
+    },
+    {
+      "id": "bc32",
+      "email": "mohith@gmail.com",
+      "clientId": "1236679496",
+      "password": "Marsh2024",
+      "name": "Mohith",
+      "dateOfBirth": "08/12/2002",
+      "country": "India",
+      "identification": [
+        {
+          "type": "Aadhar",
+          "value": "123456789102"
+        }
+      ],
+      "isAdmin": true
+    },
+    {
+      "id": "bc75",
+      "email": "jdeepak@gmail.com",
+      "clientId": "1272174385",
+      "password": "Jd@2024fmr",
+      "name": "Deepak",
+      "dateOfBirth": "2002-10-01T18:30:00.000Z",
+      "country": "India",
+      "identification": [
+        {
+          "type": "Aadhar",
+          "value": "444455556666"
+        }
+      ],
+      "isAdmin": false
     }
   ],
   "clients-portfolio": [
     {
-      "clientId": "739982664",
+      "id": "aabd",
+      "clientId": "1654658069",
       "currBalance": 10000,
       "holdings": []
     },
     {
-      "id": "4afe",
-      "clientId": "1654658069",
+      "id": "e747",
+      "clientId": "541107416",
+      "currBalance": 10000,
+      "holdings": []
+    },
+    {
+      "id": "f4ad",
+      "clientId": "1425922638",
+      "currBalance": 10000,
+      "holdings": []
+    },
+    {
+      "id": "602c",
+      "clientId": "1644724236",
+      "currBalance": 10000,
+      "holdings": []
+    },
+    {
+      "id": "d986",
+      "clientId": "1236679496",
+      "currBalance": 10000,
+      "holdings": []
+    },
+    {
+      "id": "6ad8",
+      "clientId": "1272174385",
       "currBalance": 10000,
       "holdings": []
     }
   ],
-  "clients-preferences": [
-    {
-      "clientId": "739982664",
-      "investmentPurpose": "Retirement",
-      "incomeCategory": "MIG",
-      "lengthOfInvestment": "Medium",
-      "percentageOfSpend": "Tier2",
-      "riskTolerance": 3,
-      "acceptAdvisor": true
-    },
-    {
-      "clientId": "1210776780",
-      "investmentPurpose": "Major Expense",
-      "incomeCategory": "HIG",
-      "lengthOfInvestment": "Short",
-      "percentageOfSpend": "Tier3",
-      "riskTolerance": 4,
-      "acceptAdvisor": false
-    },
-    {
-      "clientId": "2115946042",
-      "investmentPurpose": "Education",
-      "incomeCategory": "LIG",
-      "lengthOfInvestment": "Long",
-      "percentageOfSpend": "Tier1",
-      "riskTolerance": 2,
-      "acceptAdvisor": true
-    },
-    {
-      "clientId": "207280046",
-      "investmentPurpose": "Gift",
-      "incomeCategory": "VHIG",
-      "lengthOfInvestment": "Medium",
-      "percentageOfSpend": "Tier4",
-      "riskTolerance": 5,
-      "acceptAdvisor": false
-    },
-    {
-      "clientId": "1701812344",
-      "investmentPurpose": "Retirement",
-      "incomeCategory": "MIG",
-      "lengthOfInvestment": "Long",
-      "percentageOfSpend": "Tier2",
-      "riskTolerance": 1,
-      "acceptAdvisor": true
-    }
-  ]
+  "clients-preferences": [],
+  "trades": []
 }
