@@ -16,7 +16,7 @@ export class PriceListComponent implements OnInit{
   public columnDefs: ColDef[] = [{ 
     headerName: "Instrument Description", 
     field: "instrument.instrumentDescription",
-    minWidth: 400,
+    minWidth: 300,
   },{ 
     headerName: "Category ID", 
     field: "instrument.categoryId",

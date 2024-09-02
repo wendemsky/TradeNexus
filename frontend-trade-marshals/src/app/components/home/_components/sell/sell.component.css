@@ -8,6 +8,10 @@ button {
     margin-bottom: 5px;
 }
 
+button:hover {
+    cursor: pointer;
+}
+
 .ng-star-inserted{
     align-items: center;
     justify-content: center;
