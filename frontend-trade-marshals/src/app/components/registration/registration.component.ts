@@ -191,7 +191,8 @@ export class RegistrationComponent implements OnInit {
       'name': this.personalDetails.value.name,
       'dateOfBirth': this.personalDetails.value.doB,
       'country': this.personalDetails.value.country,
-      'identification': [{ 'type': this.identificationDetails.value.type, 'value': this.identificationDetails.value.value }]
+      'identification': [{ 'type': this.identificationDetails.value.type, 'value': this.identificationDetails.value.value }],
+      'isAdmin': false
     }
     console.log('Registered Data to be posted to the Service: ', this.clientData)
     //Saving Registered client with service
