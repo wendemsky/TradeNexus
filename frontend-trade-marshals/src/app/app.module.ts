@@ -15,6 +15,7 @@ import { ClientPreferencesComponent } from './components/home/_components/client
 import { TradingFormComponent } from './components/home/_components/trading-form/trading-form.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { HttpClientModule } from '@angular/common/http';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,7 @@ import { HttpClientModule } from '@angular/common/http';
     MaterialModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

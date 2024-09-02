@@ -53,8 +53,8 @@
                         </button>
                     </a>
                 </mat-list-item>
-                <mat-divider></mat-divider> 
-                <mat-list-item routerLinkActive="active" >
+                <mat-divider></mat-divider>
+                <mat-list-item routerLinkActive="active">
                     <a routerLink="/home/client-trading-history">
                         <button mat-button class="menu-button" (click)="isHomeContent=false">
                             <mat-icon mat-list-icon> history </mat-icon>
@@ -62,7 +62,7 @@
                         </button>
                     </a>
                 </mat-list-item>
-                <mat-divider *ngIf="clientProfileData?.client?.isAdmin===true"></mat-divider> 
+                <mat-divider *ngIf="clientProfileData?.client?.isAdmin===true"></mat-divider>
                 <mat-list-item routerLinkActive="active" *ngIf="clientProfileData?.client?.isAdmin===true">
                     <a routerLink="/home/report-activity">
                         <button mat-button class="menu-button" (click)="isHomeContent=false">
@@ -74,8 +74,8 @@
             </mat-nav-list>
         </mat-sidenav>
 
-        <mat-sidenav-content [ngStyle]="{'margin-left.px': isSideMenuExpanded ? 250 : 100}" >
-            <section class="body-content mat-elevation-z8" >
+        <mat-sidenav-content [ngStyle]="{'margin-left.px': isSideMenuExpanded ? 250 : 100}">
+            <section class="body-content mat-elevation-z8">
                 <div *ngIf="isHomeContent" class="home-content">
                     <h1> Welcome {{clientProfileData?.client?.name}} ! </h1>
 
@@ -88,7 +88,9 @@
                     </div>
 
                 </div>
-                <router-outlet> </router-outlet>
+                <div *ngIf="!isHomeContent" class="home-content">
+                    <router-outlet></router-outlet>
+                </div>
             </section>
         </mat-sidenav-content>
     </mat-sidenav-container>

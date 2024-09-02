@@ -3,5 +3,5 @@ export interface Holding {
     instrumentId: string,
     instrumentDesc: string,
     quantity: number,
-    currPrice: number //Based on trade (exec Price) you add or remove to it
+    avgPrice: number //Based on trade (exec Price) you 
 }

@@ -201,12 +201,16 @@ mat-sidenav-content {
 }
 
 
-.home-content {
+.home-content, .robo-advisor-section, .explore-section {
+    padding:5px;
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
 }
 
+.home-content {
+    padding:20px;
+}
 .home-content h1 {
     color: #02310d;
     font-size: 40px;

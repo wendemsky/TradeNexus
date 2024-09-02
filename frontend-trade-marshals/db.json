@@ -81,17 +81,17 @@
       "isAdmin": true
     },
     {
-      "id": "bc75",
-      "email": "jdeepak@gmail.com",
-      "clientId": "1272174385",
-      "password": "Jd@2024fmr",
-      "name": "Deepak",
-      "dateOfBirth": "2002-10-01T18:30:00.000Z",
-      "country": "India",
+      "id": "9fb6",
+      "email": "john.doe@gmail.com",
+      "clientId": "739982664",
+      "password": "Marsh2024",
+      "name": "John Doe",
+      "dateOfBirth": "06/09/2004",
+      "country": "USA",
       "identification": [
         {
-          "type": "Aadhar",
-          "value": "444455556666"
+          "type": "SSN",
+          "value": "1245423459"
         }
       ],
       "isAdmin": false
@@ -129,8 +129,8 @@
       "holdings": []
     },
     {
-      "id": "6ad8",
-      "clientId": "1272174385",
+      "id": "4843",
+      "clientId": "739982664",
       "currBalance": 10000,
       "holdings": []
     }
