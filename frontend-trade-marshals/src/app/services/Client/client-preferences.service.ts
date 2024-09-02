@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { Client } from 'src/app/models/Client/Client';
 import { ClientPreferences } from 'src/app/models/Client/ClientPreferences';
 
 @Injectable({
@@ -20,12 +21,12 @@ export class ClientPreferencesService {
       ),catchError(this.handleError))
   }
 
-  updateClientPreferences(id:string | undefined, updatedRecord: any){
+  updateClientPreferences(id:string | undefined, updatedRecord: any):Observable<any> {
     return this.http.put(this.dataURL+id, updatedRecord)
       .pipe(catchError(this.handleError))
   }
 
-  setClientPreferences(record: any){
+  setClientPreferences(record: any ): Observable<any> {
     return this.http.post(this.dataURL, record)
       .pipe(catchError(this.handleError))
   }

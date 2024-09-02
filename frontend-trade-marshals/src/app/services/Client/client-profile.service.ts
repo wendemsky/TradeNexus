@@ -37,6 +37,7 @@ export class ClientProfileService {
     localStorage.setItem('clientDetails', JSON.stringify(profile) )
   }
 
+  //Removing Client Profile from local storage on Logout
   removeClientProfile(){
     localStorage.removeItem('clientDetails')
   }

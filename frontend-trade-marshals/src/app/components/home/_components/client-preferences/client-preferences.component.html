@@ -1,6 +1,6 @@
 <h2>CLIENT PREFERENCES</h2>
 <div class="form">
-    <form [formGroup]="preferences" (ngSubmit)="onSubmit()">
+    <form [formGroup]="preferences" (ngSubmit)="savePreferences()">
 
         <div class="horizontal-fields">
             <mat-form-field appearance="fill">
@@ -56,15 +56,18 @@
         <br>
 
         <input type="checkbox" formControlName="acceptAdvisor" class="acceptAdvisor">
-        <label for="acceptAdvisor">I have read the <a href="/home">Terms & Conditions</a> and would like to get recommendations from Robot
-            Advisor</label>
+        <label for="acceptAdvisor">I have read the <a href="/home">Terms & Conditions</a> and would like to get
+            recommendations from Robot Advisor</label>
 
         <br>
         <br>
 
         <div class="center-buttons">
-            <button type="button" mat-raised-button (click)="savePreferences()">Save</button>
-            <button *ngIf="!clientPreferencesData?.clientId" type="submit" [disabled]="!preferences.valid" mat-raised-button color="primary">Submit</button>
+            <button type="button" mat-raised-button (click)="savePreferences()" [disabled]="!preferences.valid">
+                Save
+            </button>
+            <!-- <button *ngIf="!clientPreferencesData?.clientId" type="submit" [disabled]="!preferences.valid"
+                mat-raised-button color="primary">Submit</button> -->
         </div>
     </form>
 </div>

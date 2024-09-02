@@ -29,8 +29,10 @@ mat-slider{
     margin-left: 3%;
 }
 
-button {
+.center-buttons button {
     margin-right: 2%;
+    background-color: rgb(55, 97, 67);
+    color: white;
 }
 
 .center-buttons{

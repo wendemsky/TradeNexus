@@ -79,7 +79,7 @@
                 <div *ngIf="isHomeContent" class="home-content">
                     <h1> Welcome {{clientProfileData?.client?.name}} ! </h1>
 
-                    <div class="robo-advisior-section mat-elevation-z8">
+                    <div *ngIf="clientPreferencesData?.acceptAdvisor" class="robo-advisior-section mat-elevation-z8">
                         <!-- <h2> Robo Advisor </h2> -->
                     </div>
 
