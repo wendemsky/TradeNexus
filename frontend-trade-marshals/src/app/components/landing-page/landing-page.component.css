@@ -30,6 +30,7 @@ mat-toolbar img {
 }
 
 .nav-title {
+    margin-left: 20%;
     font-weight: 600;
     font-size: 35px;
     display: flex;

@@ -33,11 +33,11 @@ export class ClientProfileService {
   }
 
   //Setting Client Profile Details - Called from Landing Page/Register component after successful login/register
-  setClientProfile(profile: any) {
-    localStorage.setItem('clientDetails', JSON.stringify(profile))
+  setClientProfile(profile:any) {
+    localStorage.setItem('clientDetails', JSON.stringify(profile) )
   }
 
-  removeClientProfile() {
+  removeClientProfile(){
     localStorage.removeItem('clientDetails')
   }
 

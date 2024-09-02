@@ -95,6 +95,38 @@
         }
       ],
       "isAdmin": false
+    },
+    {
+      "id": "49a7",
+      "email": "abc@gmail.com",
+      "clientId": "1622363757",
+      "password": "ABC2024fmr",
+      "name": "ABC",
+      "dateOfBirth": "2024-08-31T18:30:00.000Z",
+      "country": "India",
+      "identification": [
+        {
+          "type": "Aadhar",
+          "value": "124345464523"
+        }
+      ],
+      "isAdmin": false
+    },
+    {
+      "id": "688f",
+      "email": "rishi@gmail.com",
+      "clientId": "1212794226",
+      "password": "Marsh2024",
+      "name": "Rishiyanth",
+      "dateOfBirth": "11/04/2002",
+      "country": "India",
+      "identification": [
+        {
+          "type": "Aadhar",
+          "value": "123412341234"
+        }
+      ],
+      "isAdmin": false
     }
   ],
   "clients-portfolio": [
@@ -133,8 +165,51 @@
       "clientId": "739982664",
       "currBalance": 10000,
       "holdings": []
+    },
+    {
+      "id": "f04c",
+      "clientId": "1622363757",
+      "currBalance": 10000,
+      "holdings": []
+    },
+    {
+      "id": "f103",
+      "clientId": "1212794226",
+      "currBalance": 10000,
+      "holdings": []
     }
   ],
-  "clients-preferences": [],
+  "clients-preferences": [
+    {
+      "investmentPurpose": "Education",
+      "incomeCategory": "MIG",
+      "lengthOfInvestment": "Short",
+      "percentageOfSpend": "Tier4",
+      "riskTolerance": 4,
+      "acceptAdvisor": true,
+      "clientId": "1425922638",
+      "id": "dd54"
+    },
+    {
+      "investmentPurpose": "Major Expense",
+      "incomeCategory": "HIG",
+      "lengthOfInvestment": "Medium",
+      "percentageOfSpend": "Tier4",
+      "riskTolerance": 3,
+      "acceptAdvisor": true,
+      "clientId": "1654658069",
+      "id": "15b4"
+    },
+    {
+      "investmentPurpose": "Retirement",
+      "incomeCategory": "HIG",
+      "lengthOfInvestment": "Long",
+      "percentageOfSpend": "Tier3",
+      "riskTolerance": 3,
+      "acceptAdvisor": true,
+      "clientId": "1212794226",
+      "id": "85eb"
+    }
+  ],
   "trades": []
 }
