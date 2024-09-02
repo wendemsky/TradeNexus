@@ -26,6 +26,8 @@ import { PriceListComponent } from './components/home/_components/price-list/pri
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
+import { BuyComponent } from './components/home/_components/buy/buy.component';
+import { SellComponent } from './components/home/_components/sell/sell.component';
 
 ModuleRegistry.registerModules([SideBarModule]);
 
@@ -43,10 +45,14 @@ ModuleRegistry.registerModules([SideBarModule]);
     TradingFormComponent,
     RegistrationComponent,
     PriceListComponent,
-    TradingHistoryComponent
+    TradingHistoryComponent,
+    BuyComponent,
+    SellComponent
   ],
   imports: [
     BrowserModule,
+    MatSelectModule,
+    MatFormFieldModule,
     AppRoutingModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,

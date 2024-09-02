@@ -84,6 +84,21 @@
           "value": "124532554234"
         }
       ]
+    },
+    {
+      "id": "06b1",
+      "email": "himanshu@gmail.com",
+      "clientId": "541107416",
+      "password": "HR2024fmr",
+      "name": "Himanshu",
+      "dateOfBirth": "2003-09-09T18:30:00.000Z",
+      "country": "India",
+      "identification": [
+        {
+          "type": "Aadhar",
+          "value": "123456789012"
+        }
+      ]
     }
   ],
   "clients-portfolio": [
@@ -95,6 +110,12 @@
     {
       "id": "4afe",
       "clientId": "1654658069",
+      "currBalance": 10000,
+      "holdings": []
+    },
+    {
+      "id": "60de",
+      "clientId": "541107416",
       "currBalance": 10000,
       "holdings": []
     }

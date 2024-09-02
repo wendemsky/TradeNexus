@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { Instrument } from 'src/app/models/instrument';
 import { Price } from 'src/app/models/price';
 import { PriceService } from 'src/app/services/price.service';
-import { TradingFormComponent } from '../trading-form/trading-form.component';
 import { ColDef, SideBarDef } from 'ag-grid-community';
+import { SellComponent } from '../sell/sell.component';
+import { BuyComponent } from '../buy/buy.component';
 
 @Component({
   selector: 'app-price-list',
@@ -44,7 +43,20 @@ export class PriceListComponent implements OnInit{
   },{ 
     headerName: "Min Quantity", 
     field: "instrument.minQuantity",
-  }]
+  },{ 
+    headerName: "Min Quantity", 
+    field: "instrument.minQuantity",
+  },
+  { 
+    headerName: "Buy", 
+    field: "buy",
+    cellRenderer: BuyComponent
+  },{ 
+    headerName: "Sell", 
+    field: "sell",
+    cellRenderer: SellComponent
+  },
+]
 
 public defaultColDef: ColDef = {
   flex: 1,
@@ -73,7 +85,6 @@ public sidebar: SideBarDef | null = {
 
   constructor(
     private priceService: PriceService,
-    private _dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -83,36 +94,5 @@ public sidebar: SideBarDef | null = {
   loadAllPrices() {
     this.priceService.getPrices()
       .subscribe(data => this.prices = data);
-  }
-
-  onClickBuy(price: Price) {
-    console.log('Buy', price.instrument);
-    const tradeFormData = {
-      askPrice: price.askPrice,
-      bidPrice: price.bidPrice,
-      priceTimeStamp: price.priceTimestamp,
-      direction: 'B',
-      instrument: price.instrument
-    }
-    this._dialog.open(TradingFormComponent, {
-      data: tradeFormData
-    });
-  }
-
-  onClickSell(price: Price) {
-    console.log('Sell', price.instrument);
-    const tradeFormData = {
-      askPrice: price.askPrice,
-      bidPrice: price.bidPrice,
-      priceTimeStamp: price.priceTimestamp,
-      direction: 'S',
-      instrument: price.instrument
-    }
-
-    this._dialog.open(TradingFormComponent, {
-      "width": '600px',
-      "maxHeight": '90vh',
-      data: tradeFormData
-    });
   }
 }

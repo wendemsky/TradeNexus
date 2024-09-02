@@ -10,8 +10,6 @@ import { TradeHistoryService } from 'src/app/services/trade-history.service';
 })
 export class TradingHistoryComponent  implements OnInit{
 
-  
-
   public columnDefs: ColDef[] = [{ 
       headerName: "Instrument ID", 
       field: "instrumentId"
