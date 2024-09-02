@@ -47,3 +47,35 @@ mat-slider{
     margin-top: 2%;
     display: flex;
 }
+
+::ng-deep .mdc-text-field:not(.mdc-text-field-disabled) .mdc-floating-label {
+    color: rgb(55, 97, 67) !important;
+}
+
+::ng-deep .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+    color: rgb(55, 97, 67) !important;
+}
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::before {
+    border-bottom-color: rgb(55, 97, 67) !important;
+}
+
+::ng-deep .mdc-text-field--filled .mdc-line-ripple::after {
+    border-bottom-color: rgb(55, 97, 67) !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-selected {
+    background-color: rgb(55, 97, 67);
+}
+
+::ng-deep .mat-step-header .mat-step-icon-content {
+    background-color: rgb(55, 97, 67);
+}
+
+::ng-deep .mat-step-header .mat-step-icon-state-edit {
+    background-color: rgb(55, 97, 67);
+}
+
+::ng-deep .mat-step-header .mat-step-icon-state-number {
+    background-color: rgb(55, 97, 67);
+}

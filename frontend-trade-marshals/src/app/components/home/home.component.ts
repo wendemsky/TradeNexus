@@ -46,8 +46,7 @@ export class HomeComponent {
 
   //When client logs out - To go back to Landing
   logout() {
-    this.clientProfileData = null
-    this.clientProfileService.setClientProfile(this.clientProfileData) //Erasing Client data
+    this.clientProfileService.removeClientProfile() //Erasing Client data
     this.route.navigateByUrl('/')
   }
 }

@@ -30,6 +30,7 @@ mat-toolbar img {
 }
 
 .nav-title {
+    margin-left: 20%;
     font-weight: 600;
     font-size: 35px;
     display: flex;
@@ -151,17 +152,54 @@ mat-toolbar button.nav-button a:hover {
 .features-section {
     margin: 2%;
     grid-column: 1/3;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minimax200px, 1fr);
-    grid-gap: 20px;
-    justify-content: space-around;
+    display: flex; flex-direction: column;
+    text-align: center;
     align-items: center;
+    justify-content: center;
 }
 
 .features-section h2 {
     color: #02310d;
     font-size: 40px;
+}
 
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr); 
+    grid-gap: 90px;
+    width: 75%;
+}
+
+mat-card.feature-card {
+    height: 150px; 
+    padding: 5px;
+    display: flex; align-items: center; justify-content: center;
+    background-color:#046223;
+    border-radius: 4px;
+    color:white;
+    box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.2), 6px 12px 24px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+mat-card.feature-card mat-icon {
+    color:white;
+    font-size:32px; font-weight: bold;
+    height:35%; width: 35%;
+    margin-top:1%;
+    position: absolute; top:1%; left:32%;
+}
+
+mat-card.feature-card mat-card-title {
+    font-size:28px; 
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+}
+mat-card.feature-card mat-card-subtitle {
+    font-size:20px; 
+    width: 100%;
+    text-align: center;
+    color:white;
 }
 
 mat-card-header.login-form-header {

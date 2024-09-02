@@ -19,14 +19,15 @@ mat-toolbar {
     position: relative;
 }
 
-mat-toolbar img {
+mat-toolbar a img {
     max-width: 60px;
     max-height: 50px;
     margin-top: -5px;
+    cursor: pointer;
 }
 
 .spacer-left {
-    flex: 1 1.2 auto;
+    flex: 1 0.5 auto;
 }
 
 .nav-title {
@@ -36,10 +37,11 @@ mat-toolbar img {
     justify-content: center;
     align-items: center;
     width: fit-content;
+    margin-left: -60px;
 }
 
 .spacer-right {
-    flex: 1 1.5 auto;
+    flex: 1 1 auto;
 }
 
 mat-toolbar button.nav-button {

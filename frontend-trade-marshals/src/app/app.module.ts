@@ -28,6 +28,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { BuyComponent } from './components/home/_components/buy/buy.component';
 import { SellComponent } from './components/home/_components/sell/sell.component';
+import { DatePipe } from '@angular/common';
 
 ModuleRegistry.registerModules([SideBarModule]);
 
@@ -68,7 +69,7 @@ ModuleRegistry.registerModules([SideBarModule]);
     FormsModule,
     MatInputModule
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

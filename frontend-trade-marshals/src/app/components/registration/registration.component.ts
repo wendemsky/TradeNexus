@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -12,8 +12,8 @@ import { RegisterService } from 'src/app/services/Client/register.service';
 
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-registration',
@@ -100,7 +100,7 @@ export class RegistrationComponent implements OnInit {
   clientProfileData!: ClientProfile | null //Client Profile data that is set with ClientProfileService
   clientPortfolio!: ClientPortfolio | null //To set Client Portfolio on registering
 
-  constructor(private route: Router, private snackBar: MatSnackBar,
+  constructor(private route: Router, private snackBar: MatSnackBar ,private datePipe: DatePipe,
     private loginService: LoginService, private registerService: RegisterService, private clientProfileService: ClientProfileService) { }
 
   ngOnInit() {
@@ -183,13 +183,15 @@ export class RegistrationComponent implements OnInit {
     snackBarConfig.duration = 3000;
     snackBarConfig.panelClass = ['form-submit-snackbar'];
 
-    //To get the data that is to be saved : clientData
+    //To get the data that is to be saved : clientData - Every client registering from platform is not an admin
+    //Transform doB with pipe operator
+    let formattedDate = this.datePipe.transform(this.personalDetails.value?.doB, 'MM/dd/yyyy');
     this.clientData = {
       'email': this.signupForm.value.email,
       'clientId': String(this.fmtsValidatedClientData?.clientId),
       'password': this.signupForm.value.password,
       'name': this.personalDetails.value.name,
-      'dateOfBirth': this.personalDetails.value.doB,
+      'dateOfBirth': String(formattedDate),
       'country': this.personalDetails.value.country,
       'identification': [{ 'type': this.identificationDetails.value.type, 'value': this.identificationDetails.value.value }],
       'isAdmin': false

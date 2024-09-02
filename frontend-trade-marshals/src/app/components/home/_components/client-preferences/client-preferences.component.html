@@ -3,7 +3,7 @@
     <form [formGroup]="preferences" (ngSubmit)="onSubmit()">
 
         <div class="horizontal-fields">
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="fill">
                 <mat-label>Investment Purpose</mat-label>
                 <mat-select formControlName="investmentPurpose">
                     <mat-option *ngFor="let purpose of purposes" [value]="purpose.value">
@@ -12,7 +12,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="fill">
                 <mat-label>Income Category</mat-label>
                 <mat-select formControlName="incomeCategory">
                     <mat-option *ngFor="let income of incomes" [value]="income.value">
@@ -25,7 +25,7 @@
         <br>
 
         <div class="horizontal-fields">
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="fill">
                 <mat-label>Length of Investment</mat-label>
                 <mat-select formControlName="lengthOfInvestment">
                     <mat-option *ngFor="let length of lengths" [value]="length.value">
@@ -34,7 +34,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="fill">
                 <mat-label>Percentage of Spend</mat-label>
                 <mat-select formControlName="percentageOfSpend">
                     <mat-option *ngFor="let percentage of percentages" [value]="percentage.value">
@@ -64,7 +64,7 @@
 
         <div class="center-buttons">
             <button type="button" mat-raised-button (click)="savePreferences()">Save</button>
-            <button type="submit" [disabled]="!preferences.valid" mat-raised-button color="primary">Submit</button>
+            <button *ngIf="!clientPreferencesData?.clientId" type="submit" [disabled]="!preferences.valid" mat-raised-button color="primary">Submit</button>
         </div>
     </form>
 </div>
