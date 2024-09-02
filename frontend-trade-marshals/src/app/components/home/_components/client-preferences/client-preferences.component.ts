@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ClientPreferences } from 'src/app/models/Client/ClientPreferences';
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
 import { ClientPreferencesService } from 'src/app/services/Client/client-preferences.service';
@@ -59,11 +59,11 @@ export class ClientPreferencesComponent {
     lengthOfInvestment: new FormControl('', Validators.required),
     percentageOfSpend: new FormControl('', Validators.required),
     riskTolerance: new FormControl(1),
-    acceptAdvisor: new FormControl('')
+    acceptAdvisor: new FormControl(false)
   })
 
   constructor(private clientPreferencesService: ClientPreferencesService, private clientProfileService: ClientProfileService,
-    private route: Router, private snackBar: MatSnackBar) { }
+    private router: Router, private route: ActivatedRoute, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.clientProfileService.getClientProfile().subscribe(profile => {
@@ -71,12 +71,12 @@ export class ClientPreferencesComponent {
       console.log('Logged In Client Profile Data: ', this.clientProfileData);
       this.clientPreferencesService.getClientPreferences(this.clientProfileData?.client?.clientId).subscribe({
         next: (data: any) => {
-          if(data !== null){
+          if (data) {
             this.isClientFormFilled = true
             this.clientPreferencesData = data
             this.setPreferencesFormData(this.clientPreferencesData)
           }
-          else{
+          else {
             this.clientPreferencesData = null
           }
         },
@@ -99,23 +99,23 @@ export class ClientPreferencesComponent {
     })
   }
 
-  onSubmit() {
+  // onSubmit() {
 
-    const snackBarConfig = new MatSnackBarConfig();
-    snackBarConfig.duration = 3000;
-    snackBarConfig.panelClass = ['form-submit-snackbar'];
+  //   const snackBarConfig = new MatSnackBarConfig();
+  //   snackBarConfig.duration = 3000;
+  //   snackBarConfig.panelClass = ['form-submit-snackbar'];
 
-    let obj = this.preferences.getRawValue()
-    obj.clientId = this.clientProfileData?.client?.clientId
-    this.clientPreferencesService.setClientPreferences(obj).subscribe({
-      next: () => {
-        this.snackBar.open('Preferences submitted successfully', '', snackBarConfig)
-      },
-      error: (err) => {
-        this.snackBar.open(err, '', snackBarConfig)
-      }
-    })
-  }
+  //   let obj = this.preferences.getRawValue()
+  //   obj.clientId = this.clientProfileData?.client?.clientId
+  //   this.clientPreferencesService.setClientPreferences(obj).subscribe({
+  //     next: () => {
+  //       this.snackBar.open('Preferences submitted successfully', '', snackBarConfig)
+  //     },
+  //     error: (err) => {
+  //       this.snackBar.open(err, '', snackBarConfig)
+  //     }
+  //   })
+  // }
 
   savePreferences() {
 
@@ -127,8 +127,15 @@ export class ClientPreferencesComponent {
     obj.clientId = this.clientProfileData?.client?.clientId
     if (this.isClientFormFilled) {
       this.clientPreferencesService.updateClientPreferences(this.clientPreferencesData?.id, obj).subscribe({
-        next: () => {
-          this.snackBar.open('Preferences updated successfully', '', snackBarConfig)
+        next: (data: any) => {
+          console.log('New Preferences Submmited Data: ', data)
+          if (data && data.clientId === this.clientProfileData?.client?.clientId) {
+            this.snackBar.open('Preferences updated successfully', '', snackBarConfig)
+            this.redirectToHome()
+          }
+          else {
+            this.snackBar.open('Client preferences couldnt be updated! Unexpected error at service!', '', snackBarConfig)
+          }
         },
         error: (err) => {
           this.snackBar.open(err, '', snackBarConfig)
@@ -137,14 +144,29 @@ export class ClientPreferencesComponent {
     }
     else {
       this.clientPreferencesService.setClientPreferences(obj).subscribe({
-        next: () => {
-          this.snackBar.open('Preferences saved successfully', '', snackBarConfig)
-          this.isClientFormFilled = true
+        next: (data: any) => {
+          console.log('New Preferences Submmited Data: ', data)
+          if (data && data.clientId === this.clientProfileData?.client?.clientId) {
+            this.snackBar.open('Preferences saved successfully', '', snackBarConfig)
+            this.isClientFormFilled = true
+            this.clientPreferencesData = data
+            this.redirectToHome()
+          }
+          else {
+            this.snackBar.open('Client preferences couldnt be saved! Unexpected error at service!', '', snackBarConfig)
+          }
+
         },
         error: (err) => {
           this.snackBar.open(err, '', snackBarConfig)
         }
       })
     }
+  }
+
+  redirectToHome() {
+    this.router.navigate(['../'], { relativeTo: this.route });
+    
+ 
   }
 }

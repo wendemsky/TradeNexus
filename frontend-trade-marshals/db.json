@@ -97,22 +97,6 @@
       "isAdmin": false
     },
     {
-      "id": "49a7",
-      "email": "abc@gmail.com",
-      "clientId": "1622363757",
-      "password": "ABC2024fmr",
-      "name": "ABC",
-      "dateOfBirth": "2024-08-31T18:30:00.000Z",
-      "country": "India",
-      "identification": [
-        {
-          "type": "Aadhar",
-          "value": "124345464523"
-        }
-      ],
-      "isAdmin": false
-    },
-    {
       "id": "688f",
       "email": "rishi@gmail.com",
       "clientId": "1212794226",
@@ -124,6 +108,22 @@
         {
           "type": "Aadhar",
           "value": "123412341234"
+        }
+      ],
+      "isAdmin": false
+    },
+    {
+      "id": "90df",
+      "email": "sarika@gmail.com",
+      "clientId": "608947084",
+      "password": "ES2024fmr",
+      "name": "Sarika",
+      "dateOfBirth": "09/01/2024",
+      "country": "India",
+      "identification": [
+        {
+          "type": "Aadhar",
+          "value": "234645234652"
         }
       ],
       "isAdmin": false
@@ -167,14 +167,14 @@
       "holdings": []
     },
     {
-      "id": "f04c",
-      "clientId": "1622363757",
+      "id": "f103",
+      "clientId": "1212794226",
       "currBalance": 10000,
       "holdings": []
     },
     {
-      "id": "f103",
-      "clientId": "1212794226",
+      "id": "62fb",
+      "clientId": "608947084",
       "currBalance": 10000,
       "holdings": []
     },
@@ -197,12 +197,12 @@
       "id": "dd54"
     },
     {
-      "investmentPurpose": "Major Expense",
+      "investmentPurpose": "Education",
       "incomeCategory": "HIG",
-      "lengthOfInvestment": "Medium",
+      "lengthOfInvestment": "Short",
       "percentageOfSpend": "Tier4",
-      "riskTolerance": 3,
-      "acceptAdvisor": true,
+      "riskTolerance": 2,
+      "acceptAdvisor": false,
       "clientId": "1654658069",
       "id": "15b4"
     },
@@ -215,6 +215,16 @@
       "acceptAdvisor": true,
       "clientId": "1212794226",
       "id": "85eb"
+    },
+    {
+      "investmentPurpose": "Retirement",
+      "incomeCategory": "MIG",
+      "lengthOfInvestment": "Short",
+      "percentageOfSpend": "Tier3",
+      "riskTolerance": 3,
+      "acceptAdvisor": false,
+      "clientId": "608947084",
+      "id": "3bbd"
     }
   ],
   "trades": [
