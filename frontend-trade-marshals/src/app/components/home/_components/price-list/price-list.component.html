@@ -1,0 +1,43 @@
+<table>
+    <tr>
+        <th>askPrice</th>
+        <th>bidPrice</th>
+        <th>priceTimestamp</th>
+        <th>instrumentId</th>
+        <th>externalIdType</th>
+        <th>externalId</th>
+        <th>categoryId</th>
+        <th>instrumentDescription</th>
+        <th>maxQuantity</th>
+        <th>minQuantity</th>
+        <th>Buy</th>
+        <th>Sell</th>
+    </tr>
+    <tr *ngFor="let price of prices">
+        <td>{{ price.askPrice }}</td>
+        <td>{{ price.bidPrice }}</td>
+        <td>{{ price.priceTimestamp }}</td>
+        <td>{{ price.instrument.instrumentId }}</td>
+        <td>{{ price.instrument.externalIdType }}</td>
+        <td>{{ price.instrument.externalId }}</td>
+        <td>{{ price.instrument.categoryId }}</td>
+        <td>{{ price.instrument.instrumentDescription }}</td>
+        <td>{{ price.instrument.maxQuantity }}</td>
+        <td>{{ price.instrument.minQuantity }}</td>
+        <td><button (click)="onClickBuy(price)">BUY</button></td>
+        <td><button (click)="onClickSell(price)">SELL</button></td>
+    </tr>
+</table>
+
+
+
+<div  class="grid-container ag-theme-alpine">
+    <ag-grid-angular 
+        style="height: 100%; width:100%;"
+        [rowData]="prices"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [sideBar] = "sidebar"
+        />
+</div>
+      

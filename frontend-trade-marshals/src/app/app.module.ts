@@ -13,13 +13,23 @@ import { ClientPreferencesComponent } from './components/home/_components/client
 import { BuyTradeComponent } from './components/home/_components/buy-trade/buy-trade.component';
 import { TradingFormComponent } from './components/home/_components/trading-form/trading-form.component';
 import { RegistrationComponent } from './components/registration/registration.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { AgGridModule } from 'ag-grid-angular';
+import { ModuleRegistry } from '@ag-grid-community/core';
+import { SideBarModule } from '@ag-grid-enterprise/side-bar';
+import { PriceListComponent } from './components/home/_components/price-list/price-list.component';
+import { HttpClientModule } from '@angular/common/http';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
+
+ModuleRegistry.registerModules([SideBarModule]);
+
 
 @NgModule({
   declarations: [
@@ -33,7 +43,9 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     ClientPreferencesComponent,
     BuyTradeComponent,
     TradingFormComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    PriceListComponent,
+    TradingHistoryComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +56,12 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     BrowserAnimationsModule,
     MatSliderModule,
     MatButtonModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    AgGridModule,
+    HttpClientModule,
+    MatDialogModule,
+    FormsModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]

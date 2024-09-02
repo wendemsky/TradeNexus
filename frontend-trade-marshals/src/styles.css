@@ -1,4 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, and also import other style files
+/* For AG Grid Alpine theme */
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
+@import 'ag-grid-community/styles/ag-theme-balham.css';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+ag-grid-angular {
+    margin: 20px;
+    max-width: 90vw;
+}
+
+.grid-container {
+    height:90vh;
+}
+ 
+
+

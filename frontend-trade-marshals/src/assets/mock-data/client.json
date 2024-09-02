@@ -1,0 +1,72 @@
+[
+    {
+        "email": "john.doe@gmail.com",
+        "clientId": "C001",
+        "password": "password123",
+        "dateOfBirth": "1990-01-01",
+        "country": "USA",
+        "postalCode": "12345",
+        "identification": [
+            {
+                "type": "SSN",
+                "value": "P1234567"
+            }
+        ]
+    },
+    {
+        "email": "jane.smith@gmail.com",
+        "clientId": "C002",
+        "password": "password456",
+        "dateOfBirth": "1985-05-15",
+        "country": "India",
+        "postalCode": "A1B2C3",
+        "identification": [
+            {
+                "type": "PAN",
+                "value": "P2345678"
+            }
+        ]
+    },
+    {
+        "email": "alice.jones@gmail.com",
+        "clientId": "C003",
+        "password": "password789",
+        "dateOfBirth": "1992-07-20",
+        "country": "USA",
+        "postalCode": "W1A1AA",
+        "identification": [
+            {
+                "type": "SSN",
+                "value": "P3456789"
+            }
+        ]
+    },
+    {
+        "email": "bob.brown@gmail.com",
+        "clientId": "C004",
+        "password": "password101",
+        "dateOfBirth": "1988-11-30",
+        "country": "India",
+        "postalCode": "2000",
+        "identification": [
+            {
+                "type": "PAN",
+                "value": "P4567890"
+            }
+        ]
+    },
+    {
+        "email": "charlie.davis@gmail.com",
+        "clientId": "C005",
+        "password": "password202",
+        "dateOfBirth": "1995-03-10",
+        "country": "India",
+        "postalCode": "600001",
+        "identification": [
+            {
+                "type": "PAN",
+                "value": "P5678901"
+            }
+        ]
+    }
+]
