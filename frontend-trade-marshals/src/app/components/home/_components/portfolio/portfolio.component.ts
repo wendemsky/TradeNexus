@@ -17,6 +17,7 @@ export class PortfolioComponent implements OnInit{
 
   portfolioData: ClientPortfolio[] = [];
   transformedData: any[] = [];
+  currentBalance: any;
 
   public columnDefs: ColDef[] = [
     {
@@ -104,7 +105,10 @@ export class PortfolioComponent implements OnInit{
         instrumentDesc: holding.instrumentDesc,
         quantity: holding.quantity,
         avgPrice: holding.avgPrice
-      })))
+      }),
+      this.currentBalance = portfolio.currBalance
+    )
+    )
   }
   
 

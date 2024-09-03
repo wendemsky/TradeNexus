@@ -166,14 +166,14 @@
       "currBalance": 10000,
       "holdings": [
         {
-          "categoryId" : "1",
+          "categoryId": "1",
           "instrumentId": "N123456",
           "instrumentDesc": "JPMorgan Chase & Co. Capital Stock",
           "quantity": 1,
           "avgPrice": 100
         },
         {
-          "categoryId" : "1",
+          "categoryId": "1",
           "instrumentId": "N123456",
           "instrumentDesc": "JPMorgan Chase & Co. Capital Stock",
           "quantity": 1,
@@ -260,6 +260,15 @@
       "riskTolerance": 3,
       "acceptAdvisor": true,
       "clientId": "1236679496"
+    },
+    {
+      "investmentPurpose": "Retirement",
+      "incomeCategory": "MIG",
+      "lengthOfInvestment": "Medium",
+      "percentageOfSpend": "Tier4",
+      "riskTolerance": 2,
+      "acceptAdvisor": true,
+      "id": "bb61"
     }
   ],
   "trades": [
