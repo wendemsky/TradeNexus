@@ -42,8 +42,7 @@ export class SellComponent implements OnInit {
     }
 
     this._dialog.open(TradingFormComponent, {
-      "width": '600px',
-      "maxHeight": '90vh',
+      width: '50vw',
       data: tradeFormData
     });
   }

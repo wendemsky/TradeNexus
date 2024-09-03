@@ -41,7 +41,8 @@ export class BuyComponent {
       instrument: price.instrument
     }
     this._dialog.open(TradingFormComponent, {
-      data: tradeFormData
+      data: tradeFormData,
+      width: '50vw',
     });
   }
 }
