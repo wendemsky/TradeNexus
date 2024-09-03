@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { ColDef, GridOptions, SideBarDef } from 'ag-grid-community';
+import { ColDef, SideBarDef } from 'ag-grid-community';
+import { BuyComponent } from '../buy/buy.component';
+import { SellComponent } from '../sell/sell.component';
 
 
 @Component({
@@ -26,6 +28,16 @@ export class PortfolioComponent {
       headerName: "Current Price", 
       field: "currentPrice",
     }, 
+    { 
+      headerName: "Buy", 
+      field: "buy",
+      cellRenderer: BuyComponent
+    },
+    { 
+      headerName: "Sell", 
+      field: "sell",
+      cellRenderer: SellComponent
+    }
   ]
 
   public defaultColDef: ColDef = {

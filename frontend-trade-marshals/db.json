@@ -225,6 +225,16 @@
       "acceptAdvisor": false,
       "clientId": "608947084",
       "id": "3bbd"
+    },
+    {
+      "investmentPurpose": "Major Expense",
+      "incomeCategory": "LIG",
+      "lengthOfInvestment": "Short",
+      "percentageOfSpend": "Tier4",
+      "riskTolerance": 1,
+      "acceptAdvisor": true,
+      "clientId": "739982664",
+      "id": "2b2e"
     }
   ],
   "trades": [
