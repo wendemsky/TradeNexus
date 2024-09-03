@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { Trade } from '../models/trade';
 import { mockTrades } from 'src/assets/mock-data/mock-trade-history';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 export class TradeHistoryService {
 
   // trades: Trade[] = mockTrades;
+  private _snackBar = inject(MatSnackBar);
 
   constructor(private httpClient: HttpClient) { }
 
@@ -19,7 +21,22 @@ export class TradeHistoryService {
       tap(trades => { console.log(trades)}),
       map(trades => 
         trades.filter(trade => trade.clientId === clientId),
-      )
+      ),
+      catchError(this.handleError)
     )
   }
+
+  handleError(response: HttpErrorResponse) {
+    if (response.error instanceof ProgressEvent) {
+      console.error('There is a client-side or network error - ' +
+        `${response.message} ${response.status} ${response.statusText}`);
+    } else {
+      console.error(`There is an error with status: ${response.status}, ` +
+        `and body: ${JSON.stringify(response.error)}`);
+    }
+    
+    return throwError(
+      () => 'Unexpected error at service while trying to fetch trade history. Please try again later!');
+  }
 }
+

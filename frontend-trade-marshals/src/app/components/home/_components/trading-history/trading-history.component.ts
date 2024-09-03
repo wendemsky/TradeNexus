@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ColDef, GridOptions, SideBarDef } from 'ag-grid-community';
+import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
+import { ClientPreferences } from 'src/app/models/Client/ClientPreferences';
+import { ClientProfile } from 'src/app/models/Client/ClientProfile';
 import { Trade } from 'src/app/models/trade';
+import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
 import { TradeHistoryService } from 'src/app/services/trade-history.service';
 
 @Component({
@@ -9,7 +14,11 @@ import { TradeHistoryService } from 'src/app/services/trade-history.service';
   styleUrls: ['./trading-history.component.css']
 })
 export class TradingHistoryComponent  implements OnInit{
-  clientId: string = '739982664';
+  clientId: string | undefined;
+
+  clientProfileData!: ClientProfile | null; //Client Profile data that is set with ClientProfileService
+  clientPortfolioData!: ClientPortfolio | null;
+  private _snackBar = inject(MatSnackBar);
 
   public columnDefs: ColDef[] = [{ 
       headerName: "Instrument ID", 
@@ -62,21 +71,36 @@ export class TradingHistoryComponent  implements OnInit{
     position: 'left',
   }
 
-  constructor(private tradeHistoryService: TradeHistoryService) {
+  constructor(
+    private tradeHistoryService: TradeHistoryService,
+    private clientProfileService: ClientProfileService,
+  ) {
     
   }
 
   ngOnInit(): void {
-    this.loadTrades();
-    // this.clientProfileService.getClientProfile().subscribe(profile => {
-    //   this.clientProfileData = profile;
-    //   console.log('Logged in Client Profile Data: ', this.clientPortfolioData);
-    // })
+    
+    this.clientProfileService.getClientProfile().subscribe(profile => {
+      this.clientProfileData = profile;
+      console.log('client ID: ',this.clientProfileData?.client?.clientId);
+      this.clientProfileData?.client?.clientId !== undefined ? this.clientId = this.clientProfileData?.client?.clientId : console.error('Client ID is of type undefined');
+      this.loadTrades();
+    })
   }
 
   loadTrades() {
-    this.tradeHistoryService.getTrades(this.clientId)
-      .subscribe(data => this.tradeHistoryData = data);
+    this.clientId !== undefined ? this.tradeHistoryService.getTrades(this.clientId)
+      .subscribe({
+        next: (data) => {
+          this.tradeHistoryData = data;
+        },
+        error: (e) => {
+          console.log('Error in loading Trade History: ',e);
+          this._snackBar.open(e, '', {
+            duration: 3000,
+          })
+        }
+      }) : console.error('Client ID is undefined.')
   }
 
 }

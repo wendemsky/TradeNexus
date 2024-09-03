@@ -51,3 +51,26 @@ mat-card-header.login-form-header mat-icon {
 mat-card-header.login-form-header mat-icon:hover {
     opacity: 50%;
 }
+
+.tf-button {
+    padding: 5px 10px;
+    font-size: medium;
+    margin: 5px 10px;
+}
+
+.error-text {
+    color: red;
+    font-size: small;
+}
+
+.tf-dialog-title, .tf-dialog-content, .tf-dialog-actions {
+    margin: 4px 10px;
+}
+
+.tf-dialog-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
