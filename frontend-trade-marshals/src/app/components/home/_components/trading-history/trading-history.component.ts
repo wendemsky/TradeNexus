@@ -33,12 +33,6 @@ export class TradingHistoryComponent  implements OnInit{
       headerName: "Direction", 
       field: "direction",
     },{ 
-      headerName: "Client ID", 
-      field: "clientId",
-    },{ 
-      headerName: "Trade ID", 
-      field: "tradeId",
-    }, { 
       headerName: "Cash Value", 
       field: "cashValue",
   }]

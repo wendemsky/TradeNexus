@@ -44,10 +44,10 @@
             </mat-form-field>
         </div>
 
-        <mat-label>Risk Tolerance</mat-label>
+        <mat-label>Risk Tolerance:</mat-label>
         <div class="slider">
             <h4>Low</h4>
-            <mat-slider min="1" max="5" step="1" showTickMarks discrete>
+            <mat-slider min="1" max="5" step="1" showTickMarks discrete color="slider-green">
                 <input matSliderThumb formControlName="riskTolerance">
             </mat-slider>
             <h4>High</h4>
@@ -56,8 +56,10 @@
         <br>
 
         <input type="checkbox" formControlName="acceptAdvisor" class="acceptAdvisor">
-        <label for="acceptAdvisor">I have read the <a href="/home">Terms & Conditions</a> and would like to get
-            recommendations from Robot Advisor</label>
+        <mat-label for="acceptAdvisor">
+            I have read the <a href="/home">Terms & Conditions</a> and would like to get
+            recommendations from Robot Advisor
+        </mat-label>
 
         <br>
         <br>

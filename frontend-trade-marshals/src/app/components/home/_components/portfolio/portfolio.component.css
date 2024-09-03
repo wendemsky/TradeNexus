@@ -1,0 +1,15 @@
+.balance{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: darkgreen;
+    padding-bottom: 15px;
+}
+
+.title{
+    border: 2px solid darkgreen; 
+    padding: 10px; 
+    margin: 0; 
+    background-color: #fff;
+
+}

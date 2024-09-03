@@ -29,6 +29,7 @@ import { MatInputModule } from '@angular/material/input';
 import { BuyComponent } from './components/home/_components/buy/buy.component';
 import { SellComponent } from './components/home/_components/sell/sell.component';
 import { DatePipe } from '@angular/common';
+import { RoboAdvisorComponent } from './components/home/_components/robo-advisor/robo-advisor.component';
 
 ModuleRegistry.registerModules([SideBarModule]);
 
@@ -48,7 +49,8 @@ ModuleRegistry.registerModules([SideBarModule]);
     PriceListComponent,
     TradingHistoryComponent,
     BuyComponent,
-    SellComponent
+    SellComponent,
+    RoboAdvisorComponent
   ],
   imports: [
     BrowserModule,

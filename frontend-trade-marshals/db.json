@@ -164,7 +164,22 @@
       "id": "4843",
       "clientId": "739982664",
       "currBalance": 10000,
-      "holdings": []
+      "holdings": [
+        {
+          "categoryId": "1",
+          "instrumentId": "N123456",
+          "instrumentDesc": "JPMorgan Chase & Co. Capital Stock",
+          "quantity": 1,
+          "avgPrice": 100
+        },
+        {
+          "categoryId": "1",
+          "instrumentId": "N123456",
+          "instrumentDesc": "JPMorgan Chase & Co. Capital Stock",
+          "quantity": 1,
+          "avgPrice": 100
+        }
+      ]
     },
     {
       "id": "f103",
@@ -209,10 +224,10 @@
     {
       "investmentPurpose": "Retirement",
       "incomeCategory": "HIG",
-      "lengthOfInvestment": "Long",
+      "lengthOfInvestment": "Short",
       "percentageOfSpend": "Tier3",
-      "riskTolerance": 3,
-      "acceptAdvisor": true,
+      "riskTolerance": 1,
+      "acceptAdvisor": false,
       "clientId": "1212794226",
       "id": "85eb"
     },
@@ -235,6 +250,34 @@
       "riskTolerance": 2,
       "acceptAdvisor": false,
       "clientId": "541107416"
+    },
+    {
+      "incomeCategory": "LIG",
+      "lengthOfInvestment": "Short",
+      "percentageOfSpend": "Tier4",
+      "riskTolerance": 1,
+      "acceptAdvisor": true,
+      "clientId": "739982664",
+      "id": "2b2e"
+    },
+    {
+      "id": "8be6",
+      "investmentPurpose": "Retirement",
+      "incomeCategory": "MIG",
+      "lengthOfInvestment": "Long",
+      "percentageOfSpend": "Tier3",
+      "riskTolerance": 3,
+      "acceptAdvisor": true,
+      "clientId": "1236679496"
+    },
+    {
+      "investmentPurpose": "Retirement",
+      "incomeCategory": "MIG",
+      "lengthOfInvestment": "Medium",
+      "percentageOfSpend": "Tier4",
+      "riskTolerance": 2,
+      "acceptAdvisor": true,
+      "id": "bb61"
     }
   ],
   "trades": [

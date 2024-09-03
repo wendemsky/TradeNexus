@@ -128,7 +128,7 @@ export class ClientPreferencesComponent {
     if (this.isClientFormFilled) {
       this.clientPreferencesService.updateClientPreferences(this.clientPreferencesData?.id, obj).subscribe({
         next: (data: any) => {
-          console.log('New Preferences Submmited Data: ', data)
+          console.log('New Preferences Submitted Data: ', data)
           if (data && data.clientId === this.clientProfileData?.client?.clientId) {
             this.snackBar.open('Preferences updated successfully', '', snackBarConfig)
             this.redirectToHome()
@@ -145,7 +145,7 @@ export class ClientPreferencesComponent {
     else {
       this.clientPreferencesService.setClientPreferences(obj).subscribe({
         next: (data: any) => {
-          console.log('New Preferences Submmited Data: ', data)
+          console.log('New Preferences Submitted Data: ', data)
           if (data && data.clientId === this.clientProfileData?.client?.clientId) {
             this.snackBar.open('Preferences saved successfully', '', snackBarConfig)
             this.isClientFormFilled = true
@@ -165,8 +165,10 @@ export class ClientPreferencesComponent {
   }
 
   redirectToHome() {
-    this.router.navigate(['../'], { relativeTo: this.route });
-    
- 
+    this.router.navigateByUrl('/',{skipLocationChange:true}).then(()=>{
+      this.router.navigate(['/home']).then(()=>{
+        console.log(`After navigation I am on:${this.router.url}`)
+      })
+    })
   }
 }
