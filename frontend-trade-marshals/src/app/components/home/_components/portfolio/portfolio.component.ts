@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ColDef, SideBarDef } from 'ag-grid-community';
 import { BuyComponent } from '../buy/buy.component';
 import { SellComponent } from '../sell/sell.component';
+import { ClientPortfolioService } from 'src/app/services/Client/client-portfolio.service';
+import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
 
 
 @Component({
@@ -9,15 +11,25 @@ import { SellComponent } from '../sell/sell.component';
   templateUrl: './portfolio.component.html',
   styleUrls: ['./portfolio.component.css']
 })
-export class PortfolioComponent {
+export class PortfolioComponent implements OnInit{
+
+  clientId: string = '739982664';
+
+  portfolioData: ClientPortfolio[] = [];
+  transformedData: any[] = [];
+
   public columnDefs: ColDef[] = [
-    { 
+    {
       headerName: "Instrument Description", 
-      field: "instrumentDescription",
+      field: "instrumentDesc",
       minWidth: 400,
     },
     { 
-      headerName: "Category", 
+      headerName: "Instrument ID", 
+      field: "instrumentId",
+    },
+    { 
+      headerName: "Category ID", 
       field: "categoryId",
     },
     { 
@@ -25,8 +37,8 @@ export class PortfolioComponent {
       field: "quantity",
     }, 
     { 
-      headerName: "Current Price", 
-      field: "currentPrice",
+      headerName: "Average Price", 
+      field: "avgPrice",
     }, 
     { 
       headerName: "Buy", 
@@ -66,5 +78,34 @@ export class PortfolioComponent {
   ],    
     position: 'left',
   }
+  
+  constructor(private clientPortfolioService: ClientPortfolioService){
+    
+  }
+
+  ngOnInit(): void{
+    this.loadPortfolio();
+  }
+
+  loadPortfolio(){
+    this.clientPortfolioService.getClientPortfolio(this.clientId)
+    .subscribe( (data) => {
+      this.portfolioData = data;
+      this.transformData();
+    })
+  }
+
+  // Function to flatten the holdings array into individual rows
+  transformData(){
+     this.transformedData = this.portfolioData.flatMap(portfolio =>
+      portfolio.holdings.map(holding => ({
+        instrumentId: holding.instrumentId,
+        categoryId: holding.categoryId,
+        instrumentDesc: holding.instrumentDesc,
+        quantity: holding.quantity,
+        avgPrice: holding.avgPrice
+      })))
+  }
+  
 
 }

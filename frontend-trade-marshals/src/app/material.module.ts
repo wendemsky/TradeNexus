@@ -42,11 +42,11 @@ import { MatNativeDateModule } from '@angular/material/core';
         MatSelectModule,
         MatStepperModule,
         MatInputModule,
-        MatDatepickerModule
+        MatDatepickerModule,
     ],
     imports:[
         MatDatepickerModule,
-        MatNativeDateModule
+        MatNativeDateModule,
     ],
     providers: [
         MatDatepickerModule,

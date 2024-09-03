@@ -1,0 +1,20 @@
+<div  class="grid-container ag-theme-alpine">
+    <ag-grid-angular 
+        style="height: 100%; width:50%;"
+        [rowData]="prices"
+        [columnDefs]="buyColumnDefs"
+        [defaultColDef]="defaultColDef"
+        [sideBar] = "sidebar"
+        />
+</div>
+      
+<div  class="grid-container ag-theme-alpine">
+    <ag-grid-angular 
+        style="height: 100%; width:50%;"
+        [rowData]="prices"
+        [columnDefs]="sellColumnDefs"
+        [defaultColDef]="defaultColDef"
+        [sideBar] = "sidebar"
+        />
+</div>
+      

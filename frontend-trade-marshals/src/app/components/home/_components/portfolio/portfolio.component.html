@@ -3,6 +3,7 @@
 <div  class="grid-container ag-theme-alpine">
 <ag-grid-angular 
     style="height: 100%; width:96%;"
+    [rowData]="transformedData"
     [columnDefs]="columnDefs"
     [defaultColDef]="defaultColDef"
     [sideBar] = "sidebar"
