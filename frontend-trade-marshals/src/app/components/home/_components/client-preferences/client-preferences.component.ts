@@ -63,7 +63,7 @@ export class ClientPreferencesComponent {
   })
 
   constructor(private clientPreferencesService: ClientPreferencesService, private clientProfileService: ClientProfileService,
-    private router: Router, private route: ActivatedRoute, private snackBar: MatSnackBar) { }
+    private router: Router, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.clientProfileService.getClientProfile().subscribe(profile => {

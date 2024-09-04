@@ -13,19 +13,12 @@ import { ClientPreferencesComponent } from './components/home/_components/client
 import { TradingFormComponent } from './components/home/_components/trading-form/trading-form.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatSliderModule} from '@angular/material/slider';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCheckboxModule} from '@angular/material/checkbox';
 import { AgGridModule } from 'ag-grid-angular';
 import { ModuleRegistry } from '@ag-grid-community/core';
 import { SideBarModule } from '@ag-grid-enterprise/side-bar';
 import { PriceListComponent } from './components/home/_components/price-list/price-list.component';
 import { HttpClientModule } from '@angular/common/http';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatInputModule } from '@angular/material/input';
 import { BuyComponent } from './components/home/_components/buy/buy.component';
 import { SellComponent } from './components/home/_components/sell/sell.component';
 import { DatePipe } from '@angular/common';
@@ -54,22 +47,14 @@ ModuleRegistry.registerModules([SideBarModule]);
   ],
   imports: [
     BrowserModule,
-    MatSelectModule,
-    MatFormFieldModule,
     AppRoutingModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
     AgGridModule,
-    MatSliderModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    AgGridModule,
     HttpClientModule,
-    MatDialogModule,
     FormsModule,
-    MatInputModule
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

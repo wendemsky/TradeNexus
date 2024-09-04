@@ -10,8 +10,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class PriceService {
   prices: Price[] = [];
   url = 'http://localhost:3000/fmts/trades/prices';
-  private _snackBar = inject(MatSnackBar)
-
 
   constructor(private httpClient: HttpClient) { }
 
@@ -27,9 +25,6 @@ export class PriceService {
       console.error(`There is an error with status: ${response.status}, ` +
         `and body: ${JSON.stringify(response.error)}`);
     }
-
-    
-
     return throwError(
       () => 'Unexpected error at service while trying to fetch instruments. Please try again later!');
   }

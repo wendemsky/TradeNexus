@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ReportActivityComponent } from './report-activity.component';
+import { MaterialModule } from 'src/app/material.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 describe('ReportActivityComponent', () => {
   let component: ReportActivityComponent;
@@ -8,7 +11,14 @@ describe('ReportActivityComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ReportActivityComponent ]
+      declarations: [ ReportActivityComponent ],
+      imports: [
+        MaterialModule,
+        ReactiveFormsModule
+      ],
+      providers: [
+        provideAnimations() 
+      ]
     })
     .compileComponents();
 

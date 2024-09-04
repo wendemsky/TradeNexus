@@ -68,9 +68,7 @@ export class TradingHistoryComponent  implements OnInit{
   constructor(
     private tradeHistoryService: TradeHistoryService,
     private clientProfileService: ClientProfileService,
-  ) {
-    
-  }
+  ) {}
 
   ngOnInit(): void {
     
