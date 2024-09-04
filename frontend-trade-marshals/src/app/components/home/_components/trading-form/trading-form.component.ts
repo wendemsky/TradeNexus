@@ -10,6 +10,7 @@ import { Holding } from 'src/app/models/Holding';
 import { Instrument } from 'src/app/models/instrument';
 import { Order } from 'src/app/models/order';
 import { Trade } from 'src/app/models/trade';
+import { ClientPortfolioService } from 'src/app/services/Client/client-portfolio.service';
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -41,7 +42,7 @@ export class TradingFormComponent implements OnInit{
   
 
   clientProfileData!: ClientProfile | null; //Client Profile data that is set with ClientProfileService
-
+  clientPortfolioData: ClientPortfolio[] = [];
 
   dbJsonTradesUrl = 'http://localhost:4000/trades';
   errorMessage: string = '' //For Form Validation
@@ -50,6 +51,7 @@ export class TradingFormComponent implements OnInit{
     private httpClient: HttpClient,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private clientProfileService: ClientProfileService,
+    private clientPortfolioService: ClientPortfolioService
   ){
     this.askPrice = data.askPrice;
     this.bidPrice = data.bidPrice;
@@ -66,6 +68,7 @@ export class TradingFormComponent implements OnInit{
       console.log(this.clientProfileData);
       
       // console.log('Logged in Client Portfolio Data: ', this.clientPortfolioData);
+      
     })
     this.clientId = this.clientProfileData?.client?.clientId;
     this.clientId !== undefined ? this.order.clientId = this.clientId : console.error('Client ID is undefined');
@@ -85,7 +88,9 @@ export class TradingFormComponent implements OnInit{
     this.upperLimit = this.order.direction === 'B' ? (this.bidPrice + (this.bidPrice/100)) : (this.askPrice + (this.askPrice/100));
     this.lowerLimit = this.order.direction === 'B' ? (this.bidPrice - (this.bidPrice/100)) : (this.askPrice - (this.askPrice/100));
 
-   
+     this.clientId !== undefined ? this.loadClientPortfolioHolding(this.clientId) : console.error('Client ID is undefined');
+    
+    
 
   }
 
@@ -105,6 +110,7 @@ export class TradingFormComponent implements OnInit{
             });
           } else {
             this.saveTrade(this.trade);
+            this.addTradeToClientHoldings(this.trade);
           }
         },
         error: (e) => {
@@ -125,7 +131,165 @@ export class TradingFormComponent implements OnInit{
       }); 
   }
 
+  loadClientPortfolioHolding(clientId: string) {
+    this.clientPortfolioService.getClientPortfolio(clientId)
+      .subscribe({
+        next:   (data) => {
+          this.clientPortfolioData = data;
+          console.log('Client Portfolio Data: ', this.clientPortfolioData)
+          console.log(this.clientPortfolioData[0]);
+        }
+      })
+  }
+
+  holding: Holding = new Holding('', '', '', -1, -1);
+  clientHoldings: Holding[] = [];
+  // clientPortfolioUpdateUrl: string = `http://localhost:8000/client-portfolio/`;
+  clientPortfolioDataUpdated?: ClientPortfolio;
+        // public categoryId: string,
+        // public instrumentId: string,
+        // public instrumentDesc: string,
+        // public quantity: number,
+        // public avgPrice: number
+  addTradeToClientHoldings(trade: Trade) {
+    // If holding is already present in the array
+    // -> buy -> if currBalance is enough buy -> edit the holding
+    // -> sell -> quantity of order.sell should be <= quantity
+
+
+    // Else holding is not present in the array
+    // -> buy -> if currbalance is enough buy
+    // -> sell -> X 
+
+    
+    this.clientHoldings = this.clientPortfolioData[0].holdings;
+    const PresentHolding = this.clientHoldings.find(holding => holding.instrumentId === this.trade?.instrumentId);
+    const indexPresentHolding = this.clientHoldings.findIndex(holding => holding.instrumentId === this.trade?.instrumentId);
+    // Holding exists
+    if(PresentHolding) {
+      // Buy
+      if(this.trade?.direction === 'B'){
+        const totalCostOfTrade = (this.trade.executionPrice * this.trade.quantity);
+        // You have money to buy
+        if(this.clientPortfolioData[0].currBalance >= totalCostOfTrade){
+          // Change curr balance
+          this.clientPortfolioData[0].currBalance -= totalCostOfTrade;
+
+          // Holding ** check **
+          this.clientHoldings[indexPresentHolding].avgPrice = (this.clientHoldings[indexPresentHolding].avgPrice + totalCostOfTrade)/(this.clientHoldings[indexPresentHolding].quantity + this.trade.quantity);
+          this.clientHoldings[indexPresentHolding].quantity += this.trade.quantity;
+
+          
+        }
+        // You don't have the money to buy
+        else {
+          console.error('You cant buy with your current balance')
+        }
+      }
+      // Sell 
+      else {
+        // You have quantity to sell
+        if(this.trade?.quantity && PresentHolding.quantity >= this.trade?.quantity){
+          const totalCostOfTrade = (this.trade.executionPrice * this.trade.quantity);
+          // Change currentBalance
+          this.clientPortfolioData[0].currBalance += totalCostOfTrade;
+          // Edit Holding
+          this.clientHoldings[indexPresentHolding].avgPrice = (this.clientHoldings[indexPresentHolding].avgPrice - totalCostOfTrade)/(this.clientHoldings[indexPresentHolding].quantity - this.trade.quantity);
+          this.clientHoldings[indexPresentHolding].quantity -= this.trade.quantity;
+
+          // If quantity becomes 0 remove it 
+          if(this.clientHoldings[indexPresentHolding].quantity === 0){
+            this.clientHoldings = this.clientHoldings.splice(indexPresentHolding, 1);
+          }
+        }
+        // You don't have the quantity to sell
+        else {
+          // snackbar
+          console.error('You dont own the quantity to sell');
+        }
+      }
+    }
+    // Holding doesn't exist 
+    else {
+      // Buy
+      if(this.trade?.direction === 'B'){
+        const totalCostOfTrade = (this.trade.executionPrice * this.trade.quantity);
+        // You have money to buy
+        if(this.clientPortfolioData[0].currBalance >= totalCostOfTrade){
+          // Change curr balance
+          this.clientPortfolioData[0].currBalance -= totalCostOfTrade;
+
+          // Holding
+          this.holding.categoryId = this.instrument.categoryId;
+          this.holding.instrumentId = this.trade.instrumentId;
+          this.holding.instrumentDesc = this.instrument.instrumentDescription;
+          this.holding.quantity = this.trade.quantity;
+          this.holding.avgPrice = totalCostOfTrade/this.trade.quantity;
+
+          // Push holding into the client holding array
+          this.clientHoldings.push(this.holding);
+
+        } 
+        // You don't have money to buy
+        else {
+          // snackbar -> you don't have money to buy
+          console.error('You dont have the money to buy')
+        }
+      } else {
+        // snackbar -> you don't own the instrument to sell
+        console.error('You dont own the instrument to sell')
+      }
+    }
+
+
+    console.log(this.clientHoldings);
+
+    
+    // Rough
+    // We have the client portfolio and holdings, check if the instrument id is already present
+    // If present we will edit that holding
+    // If not we will push a new entry into the holding array
+
+    /*
+    this.holding.categoryId = this.instrument.categoryId;
+    // this.holding.instrumentId = this.trade.instrumentId;
+    this.holding.instrumentDesc = this.instrument.instrumentDescription;
+    this.holding.quantity = this.order.quantity;
+    this.trade ? this.holding.avgPrice = this.trade.executionPrice : console.error('Trade property is undefined');
+
+
+    this.clientPortfolioData[0].holdings ? this.clientPortfolioData[0].holdings.push(this.holding) : console.error('Holding is undefined');
+    
+    // change currBalance
+    this.order.direction === 'B' ? (this.trade ? this.clientPortfolioData[0].currBalance -= (this.trade.quantity * this.trade?.executionPrice) : console.error('Trade is undefined')):
+    (this.trade? this.clientPortfolioData[0].currBalance += (this.trade.quantity * this.trade?.executionPrice) : console.error('Trade is undefined'));
+    */
+    
+    console.log('Client Portfolio Data: ', this.clientPortfolioData);
+    console.log('Holdings: ', this.clientPortfolioData[0].holdings);
+
+    
+
+    // Everytime its a put request to update
+
+    this.clientPortfolioData[0].holdings = this.clientHoldings;
+
+    this.httpClient.put<ClientPortfolio>(`http://localhost:4000/clients-portfolio/60de`, this.clientPortfolioData[0]).pipe()
+      .subscribe(data => {
+        this.clientPortfolioDataUpdated = data;
+        console.log('Updated Client Portfolio', this.clientPortfolioDataUpdated);
+        console.log('Updated Client Portfolio Holdings', this.clientPortfolioDataUpdated.holdings);
+        
+    }); 
+
+    this.clientId ? this.loadClientPortfolioHolding(this.clientId) : console.error('Client id is undefined');
+
+  }
+
+}
 
   
-}
+
+
+
  

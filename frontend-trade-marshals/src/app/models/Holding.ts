@@ -1,7 +1,9 @@
-export interface Holding {
-    categoryId: string,
-    instrumentId: string,
-    instrumentDesc: string,
-    quantity: number,
-    avgPrice: number //Based on trade (exec Price) you 
-}
+export class Holding{
+    constructor(
+        public categoryId: string,
+        public instrumentId: string,
+        public instrumentDesc: string,
+        public quantity: number,
+        public avgPrice: number
+    ) {}
+ }

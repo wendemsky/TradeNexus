@@ -137,12 +137,6 @@
       "holdings": []
     },
     {
-      "id": "e747",
-      "clientId": "541107416",
-      "currBalance": 10000,
-      "holdings": []
-    },
-    {
       "id": "f4ad",
       "clientId": "1425922638",
       "currBalance": 10000,
@@ -196,8 +190,16 @@
     {
       "id": "60de",
       "clientId": "541107416",
-      "currBalance": 10000,
-      "holdings": []
+      "currBalance": 9371,
+      "holdings": [
+        {
+          "categoryId": "STOCK",
+          "instrumentId": "N123456",
+          "instrumentDesc": "JPMorgan Chase & Co. Capital Stock",
+          "quantity": 6,
+          "avgPrice": 31.425
+        }
+      ]
     }
   ],
   "clients-preferences": [
@@ -242,14 +244,14 @@
       "id": "3bbd"
     },
     {
-      "id": "2c7d",
       "investmentPurpose": "Major Expense",
       "incomeCategory": "LIG",
       "lengthOfInvestment": "Medium",
       "percentageOfSpend": "Tier2",
       "riskTolerance": 2,
       "acceptAdvisor": false,
-      "clientId": "541107416"
+      "clientId": "541107416",
+      "id": "2c7d"
     },
     {
       "incomeCategory": "LIG",
@@ -816,6 +818,708 @@
         "token": 540983960
       },
       "tradeId": "vlpe2ums4ua-ryvo5jobue-wtjch6l2u4c",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "6d58",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "1qen8zrrg4o-0opwpk0h06g-j5d0yki3ydf",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "4bd6",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "0ej2ckq28vts-se9qqftov6-nionwow5lw",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "b101",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "wm9ydp465-0q3o7ig843ve-y6urzmjwyqo",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "a237",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "svs3ambpdg-basuod83yrf-5fidqa2c7f7",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "de95",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "iveui6224fs-ucurr06m9ri-gvqiktqisy",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "d31d",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "jsf3zpfsge-ackextslyrl-uzv1i9h5ylc",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "d93e",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "7h16z8vr5f5-l8ivtqe346-dzs9y5medkt",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "963b",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "3wgrb4vuaek-mt6fpl24r-3gxvcsqiwbc",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "b60a",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "1jelbpp6mw7-fmi2bm7p4m8-5jpiddv84ea",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "3f54",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "s8nye0ixfpm-hb5vm0p2psh-umbe64ycej",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "32db",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "mr76nedibwl-2ir7qqxy5gw-1kc4p1dr99pj",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "2677",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "z0atldr7n1g-o0i2qj022tp-08zglkmpsjk4",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "ce7c",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "s0iigi4zpuq-exen2snbnlj-p71h2k6k0yn",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "7714",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "y7vbaiob408-etwy2k27i5t-xe7y7ot7zfh",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "be66",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.25,
+      "direction": "S",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.75,
+        "direction": "S",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "opywq7pkhb-4nl3n5p1wtc-82gz4tp87xq",
+      "cashValue": 105.2925
+    },
+    {
+      "id": "5ec1",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "wou505151e-iazhiu2l2zo-bg7rzsepii",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "42c4",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "o7dyfjewzaq-hl41xssg0z8-4vbang7pg1a",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "ca22",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "y1e0bkzna1d-obo83cndkk-arpycusn8fs",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "8d36",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "4m8j56hqf4u-tgqzvjyzeyi-lzjjpf19ak",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "b859",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "gmdzbt7j0q-j5w7ijwq2wh-0umyz8e7wuwa",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "d94b",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "sdrx7pv4t7b-02ycvp2qz3bb-npisakfdrhe",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "cbf0",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "0p5un2jc1ter-n8oq12z534i-d767645bzol",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "1ebb",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "fxb2xehz6pa-qgw6sa3hn3-ez4me1l439j",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "3845",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "zcpolh7bo-t02yn07owi-k43ks5p5w7j",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "c310",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "fwirb31veke-3cgmgqqtco2-kaaha2rzp0p",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "5f64",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.25,
+      "direction": "S",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.75,
+        "direction": "S",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "fxj450ia8y-3pwyy0t0qmp-d5gx4l0fpjl",
+      "cashValue": 105.2925
+    },
+    {
+      "id": "dd34",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "vegbqgxwvme-kawslvtqkok-aunvn87ynu7",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "fae6",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "asbpqnhocd-rb8dddtoyfm-twu6bcuosl",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "cc84",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "ipbxjjo7jl-np734xaqg9l-bjvkecs96mr",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "7f85",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "f137frnjejn-844glumtpg6-6nawaj1gbhc",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "3796",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "iiy3t93r9h-x09lkt2yyq-o5mnii1se6",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "3da8",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "xsf67s98iy-j3gen8t9iu-frdy67cvldo",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "a8fe",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "e730dp1c93j-86242jiyyvt-8f5ztqk1gl5",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "eb91",
+      "instrumentId": "N123456",
+      "quantity": 4,
+      "executionPrice": 104.25,
+      "direction": "S",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 4,
+        "targetPrice": 104.75,
+        "direction": "S",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "fjpbf5wxg8-9bakiy96ji-qh6iekmtsx",
+      "cashValue": 421.17
+    },
+    {
+      "id": "c6e6",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.25,
+      "direction": "S",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.75,
+        "direction": "S",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "zohrzfbd1rs-yo9drelhvu-ps5fuobtph",
+      "cashValue": 105.2925
+    },
+    {
+      "id": "cc6e",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "sff1guri9in-3utl76sinf5-xp260hotsxj",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "8408",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "pjhm3emolpb-ttv005lzi3p-do1m1b02yqr",
+      "cashValue": 105.7975
+    },
+    {
+      "id": "7bd1",
+      "instrumentId": "N123456",
+      "quantity": 3,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 3,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "8me9tl9qoi6-fjfckhmarhd-g52me9vtjle",
+      "cashValue": 317.3925
+    },
+    {
+      "id": "46c6",
+      "instrumentId": "N123456",
+      "quantity": 1,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "y43vjo6fel-k1jcpbthgw-kbmctdk6qan",
       "cashValue": 105.7975
     }
   ]

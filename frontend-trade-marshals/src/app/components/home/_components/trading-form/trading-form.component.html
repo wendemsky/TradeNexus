@@ -38,6 +38,7 @@
             <input matInput [(ngModel)]="order.targetPrice" 
             required
             #targetPrice="ngModel" 
+            type="number"
             />
             <span *ngIf="targetPrice.value && targetPrice.value > this.upperLimit || targetPrice.value < this.lowerLimit" 
                 class="error-text">Target Price should be within one percent of the askPrice/bidPrice
