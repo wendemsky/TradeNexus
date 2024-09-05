@@ -190,7 +190,7 @@ export class RegistrationComponent implements OnInit {
         if (data) { //Which means client doesnt have unique govt id
           this.snackBar.open("Entered Govt ID details aren't unique! Couldn't register client!", '', snackBarConfig)
           this.identificationDetails.reset()
-        }
+        } 
         else {
           //To get the data that is to be saved : clientData - Every client registering from platform is not an admin
 
@@ -211,11 +211,11 @@ export class RegistrationComponent implements OnInit {
             next: (data) => {
               if (data && data.clientId === this.clientData?.clientId) { //Successfully saved registered client details
                 //Save client Portfolio details
-                this.clientPortfolio = { 'clientId': String(data.clientId), 'currBalance': 10000, 'holdings': [] }
+                this.clientPortfolio = { 'clientId': String(data.clientId), 'currBalance': 1000000, 'holdings': [] }
                 this.registerService.saveClientPortfolioDetails(this.clientPortfolio).subscribe({
                   next: (data) => {
                     if (data && data.clientId === this.clientPortfolio?.clientId) { //Successfully created client portfolio too
-                      this.snackBar.open('Client has been registered and portfolio has been created with $10000 balance!', '', snackBarConfig)
+                      this.snackBar.open('Client has been registered and portfolio has been created with $1000000 (1 mil) balance!', '', snackBarConfig)
                     }
                     else {
                       this.snackBar.open('Client has been registered but and portfolio couldnt be created! Unexpected error at service!', '', snackBarConfig)
