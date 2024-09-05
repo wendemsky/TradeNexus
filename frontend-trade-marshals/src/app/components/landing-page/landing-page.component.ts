@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { MatDialog } from '@angular/material/dialog';
@@ -25,8 +25,8 @@ export class LandingPageComponent implements OnInit {
 
   //Form group for Login Credentials
   loginCredentials: FormGroup = new FormGroup({
-    email: new FormControl(''),
-    password: new FormControl('')
+    email: new FormControl('',Validators.required),
+    password: new FormControl('',Validators.required)
   })
 
   clientData!: Client | null  //Logging in Client Data fetched from LoginService
@@ -74,7 +74,6 @@ export class LandingPageComponent implements OnInit {
               this.loginCredentials.get('password')?.reset()
             }
             else {
-              this.snackBar.open('User has successfully logged in!', '', snackBarConfig)
               //Validate user with fmts
               let fmtsClientData = { 'clientId': this.clientData.clientId, 'email': this.clientData.email }
               this.clientProfileService.fmtsClientVerification(fmtsClientData).subscribe({
@@ -84,13 +83,14 @@ export class LandingPageComponent implements OnInit {
                   //After successful client validation - Set Client Profile data
                   this.clientProfileData = { client: this.clientData, token: this.fmtsValidatedClientData?.token }
                   this.clientProfileService.setClientProfile(this.clientProfileData)
+                  this.snackBar.open('User has successfully logged in!', '', snackBarConfig)
                   //After setting profile redirect to Home Component
                   this.closeDialog()
                   this.redirectToHome()
                 },
                 error: (e) => { //Error in hitting fmts client data
                   console.log(e)
-                  this.snackBar.open(e, '', snackBarConfig)
+                  this.snackBar.open('User credentials are valid but '+e, '', snackBarConfig)
                   this.loginCredentials.reset()
                 }
               })
