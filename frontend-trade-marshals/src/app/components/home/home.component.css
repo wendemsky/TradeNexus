@@ -231,3 +231,23 @@ mat-sidenav-content {
     height: 400px;
     margin-bottom: 2rem;
 }
+
+
+.client-data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.client-content-card {
+    flex: 1;
+    margin: 20px 5px;
+    height: fit-content;
+    max-height: 175px;
+}
+
+.client-content-card p {
+    margin: 4px;
+}
+
+

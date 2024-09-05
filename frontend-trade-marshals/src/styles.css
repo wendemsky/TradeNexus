@@ -43,6 +43,16 @@ button:disabled, .mat-button:disabled, .mat-raised-button:disabled, .mat-icon-bu
         font-weight: bold !important;
     }
 } 
+
+.red-snackbar {  
+    --mdc-snackbar-container-color: rgb(221, 62, 62) !important;
+    --mdc-snackbar-supporting-text-color:white !important;
+    text-align:center !important;
+    --mdc-snackbar-supporting-text {
+        font-size:30px !important;
+        font-weight: bold !important;
+    }
+} 
 /* You can add global styles to this file, and also import other style files
 /* For AG Grid Alpine theme */
 @import 'ag-grid-community/styles/ag-grid.css';
