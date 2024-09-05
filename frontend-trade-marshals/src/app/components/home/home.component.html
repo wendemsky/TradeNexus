@@ -78,6 +78,36 @@
             <section class="body-content mat-elevation-z8">
                 <div *ngIf="isHomeContent" class="home-content">
                     <h1> Welcome {{clientProfileData?.client?.name}} ! </h1>
+                    <!-- <div class="client-data">
+                         <div class="clientInfo">
+                            <p>Client ID: {{clientProfileData?.client?.clientId}}</p>
+                            <p>Email: {{clientProfileData?.client?.email}}</p>
+                            <p>Country: {{clientProfileData?.client?.country}}</p>
+                        </div> 
+                        <mat-card appearance="outlined" class="client-content-card">
+                            <mat-card-header>
+                              <mat-card-title><h2>{{clientProfileData?.client?.name}}</h2></mat-card-title>
+                              <mat-card-subtitle>Profile</mat-card-subtitle>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <p>Client ID: {{clientProfileData?.client?.clientId}}</p>
+                                <p>Email: {{clientProfileData?.client?.email}}</p>
+                                <p>Country: {{clientProfileData?.client?.country}}</p>
+                              </mat-card-content>
+                          </mat-card>
+                         <div class="balance">
+                            <h2 class="title">Current Balance: {{ 1000000 }}</h2>
+                        </div>
+                        <mat-card appearance="outlined" class="client-content-card">
+                            <mat-card-header>
+                              <mat-card-title>Current Balance</mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <h2>{{ 1000000 }}</h2>
+                              </mat-card-content>
+                          </mat-card>
+                    </div> -->
+                    
 
                     <div *ngIf="clientPreferencesData?.acceptAdvisor" class="robo-advisior-section mat-elevation-z8">
                         <h2> Robo Advisor </h2>

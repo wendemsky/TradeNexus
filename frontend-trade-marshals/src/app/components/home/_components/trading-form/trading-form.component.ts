@@ -110,12 +110,14 @@ export class TradingFormComponent implements OnInit{
             });
           } else {
             this.addTradeToClientHoldings(this.trade);
+            
           }
         },
         error: (e) => {
           console.error('Trade Execution error: ',e)
           this._snackBar.open(e, '', {
-            duration: 3000
+            duration: 3000,
+            panelClass: ['red-snackbar']
           })
         }
       });
@@ -127,6 +129,10 @@ export class TradingFormComponent implements OnInit{
       .subscribe(data => {
         this.tradeSaved = data;
         console.log(this.tradeSaved);
+        // this._snackBar.open('Trade saved successfully', '', {
+        //   duration: 3000,
+        //   panelClass: ['form-submit-snackbar']
+        // });
       }); 
   }
 
@@ -177,8 +183,9 @@ export class TradingFormComponent implements OnInit{
         // You don't have the money to buy
         else {
           console.error('You cant buy with your current balance')
-          this._snackBar.open('You cant buy with your current balance', '', {
-            duration: 3000
+          this._snackBar.open(`Insufficient balance`, '', {
+            duration: 3000,
+            panelClass: ['red-snackbar']
           });
           return;
         }
@@ -203,8 +210,9 @@ export class TradingFormComponent implements OnInit{
         else {
           // snackbar
           console.error('You dont own the quantity to sell');
-          this._snackBar.open('You dont own the quantity to sell', '', {
-            duration: 3000
+          this._snackBar.open(`You don't own the quantity to sell`, '', {
+            duration: 3000,
+            panelClass: ['red-snackbar']
           });
           return;
         }
@@ -232,7 +240,8 @@ export class TradingFormComponent implements OnInit{
           clientHoldings.push(this.holding);
           console.error('Client Holdings after push', clientHoldings);
           this._snackBar.open('Client Holdings after push', '', {
-            duration: 3000
+            duration: 3000,
+            panelClass: ['red-snackbar']
           });
 
         } 
@@ -240,16 +249,18 @@ export class TradingFormComponent implements OnInit{
         else {
           // snackbar -> you don't have money to buy
           console.error('You dont have the money to buy')
-          this._snackBar.open('You dont have the money to buy', '', {
-            duration: 3000
+          this._snackBar.open(`Insufficient Balance`, '', {
+            duration: 3000,
+            panelClass: ['red-snackbar']
           });
           return;
         }
       } else {
         // snackbar -> you don't own the instrument to sell
         console.error('You dont own the instrument to sell')
-        this._snackBar.open('You dont own the instrument to sell', '', {
-          duration: 3000
+        this._snackBar.open(`You don't own this instrument to sell`, '', {
+          duration: 3000,
+          panelClass: ['red-snackbar']
         });
         return;
       }
@@ -300,13 +311,17 @@ export class TradingFormComponent implements OnInit{
         console.error(e);
         this._snackBar.open(e, '', {
           duration: 3000,
-
+          panelClass: ['red-snackbar']
         });
       }
     }); 
 
     this.clientId ? this.loadClientPortfolioHolding(this.clientId) : console.error('Client id is undefined');
     this.saveTrade(this.trade); // Save to trade history
+    this._snackBar.open('Trade execution success', '', {
+      duration: 3000,
+      panelClass: ['form-submit-snackbar']
+    });
   }
 
 }
