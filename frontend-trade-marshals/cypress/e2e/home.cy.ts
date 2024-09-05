@@ -27,14 +27,17 @@ describe('Home page', () => {
   it('Validate Client Preferences page', () =>{
     cy.get('.mat-mdc-nav-list > :nth-child(2)').click()
     cy.get('h2').contains('CLIENT PREFERENCES')
-    cy.get('#mat-select-value-1').should('exist')
-    cy.get('#mat-select-value-3').should('exist')
-    cy.get('#mat-select-value-5').should('exist')
-    cy.get('#mat-select-value-7').should('exist')
-    cy.get('.mdc-slider__input').should('exist')
+    cy.get('#mat-select-value-1').click()
+    cy.get('#mat-option-0').click()
+    cy.get('#mat-select-value-3').click()
+    cy.get('#mat-option-4').click()
+    cy.get('#mat-select-value-5').click()
+    cy.get('#mat-option-8').click()
+    cy.get('#mat-select-value-7').click()
+    cy.get('#mat-option-11').click()
+    cy.get('.acceptAdvisor').check()
     cy.get('.center-buttons > .mdc-button > .mdc-button__label').contains('Save').click()
     cy.get('h1').contains('Welcome')
-
   })
 })
   
