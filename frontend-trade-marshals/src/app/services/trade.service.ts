@@ -9,13 +9,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   providedIn: 'root'
 })
 export class TradeService {
-  private _snackBar = inject(MatSnackBar);
+
+  url = 'http://localhost:3000/fmts/trades/trade';
 
   constructor(private httpClient: HttpClient) { }
 
   orderRequest(order: Order): Observable<Trade> {
-    const url = 'http://localhost:3000/fmts/trades/trade';
-    return this.httpClient.post<Trade>(url, order).pipe(catchError(this.handleError));
+    return this.httpClient.post<Trade>(this.url, order).pipe(catchError(this.handleError));
+  }
+
+  addOrder(order: Order): Observable<Trade> {
+    return this.httpClient.post<Trade>(this.url, order).pipe(catchError(this.handleError));
   }
 
   handleError(response: HttpErrorResponse) {

@@ -207,8 +207,8 @@
       "investmentPurpose": "Education",
       "incomeCategory": "MIG",
       "lengthOfInvestment": "Short",
-      "percentageOfSpend": "Tier4",
-      "riskTolerance": 4,
+      "percentageOfSpend": "Tier1",
+      "riskTolerance": 5,
       "acceptAdvisor": true,
       "clientId": "1425922638",
       "id": "dd54"
@@ -1487,7 +1487,79 @@
       "cashValue": 105.7975
     },
     {
-      "id": "7bd1",
+      "id": "aec6",
+      "instrumentId": "N123456",
+      "quantity": 998,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "1425922638",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 998,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "1425922638",
+        "token": 1425799182
+      },
+      "tradeId": "ohr813iman-3zy8mpv69rk-yvnc2orb0g",
+      "cashValue": 105585.905
+    },
+    {
+      "id": "fa44",
+      "instrumentId": "N123456",
+      "quantity": 4,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "1425922638",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 4,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "1425922638",
+        "token": 1425799182
+      },
+      "tradeId": "h5di442eohe-lm06p2lee7b-9v937nmax3p",
+      "cashValue": 423.19
+    },
+    {
+      "id": "9d09",
+      "instrumentId": "N123456",
+      "quantity": 1000,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "1425922638",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 1000,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "1425922638",
+        "token": 1425799182
+      },
+      "tradeId": "60o9pkp9o2f-y9finyocu0g-5v5fmt1gkpn",
+      "cashValue": 105797.5
+    },
+    {
+      "id": "87db",
+      "instrumentId": "N123456",
+      "quantity": 2,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "1212794226",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 2,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "1212794226",
+        "token": 1212670770
+      },
+      "tradeId": "7b93srpdno7-2wr0eilhipz-7x602080a4m",
+      "cashValue": 211.595
+    },
+    {
+      "id": "fa4a",
       "instrumentId": "N123456",
       "quantity": 3,
       "executionPrice": 104.75,

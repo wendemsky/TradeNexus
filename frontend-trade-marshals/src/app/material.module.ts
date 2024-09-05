@@ -41,7 +41,6 @@ import { MatNativeDateModule } from '@angular/material/core';
         MatFormFieldModule,
         MatSelectModule,
         MatStepperModule,
-        MatInputModule,
         MatDatepickerModule,
     ],
     imports:[

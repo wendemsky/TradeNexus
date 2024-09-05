@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, Inject, OnInit } from '@angular/core';
-import { Validators, ValidatorFn, ValidationErrors, AbstractControl } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
 import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
 import { Holding } from 'src/app/models/Holding';
@@ -12,6 +10,8 @@ import { Order } from 'src/app/models/order';
 import { Trade } from 'src/app/models/trade';
 import { ClientPortfolioService } from 'src/app/services/Client/client-portfolio.service';
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
+import { TradeHistoryService } from 'src/app/services/trade-history.service';
+import { TradeService } from 'src/app/services/trade.service';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -48,7 +48,9 @@ export class TradingFormComponent implements OnInit{
   errorMessage: string = '' //For Form Validation
 
   constructor(
+    private tradeService: TradeService,
     private httpClient: HttpClient,
+    private tradeHistoryService: TradeHistoryService,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private clientProfileService: ClientProfileService,
     private clientPortfolioService: ClientPortfolioService
@@ -77,8 +79,8 @@ export class TradingFormComponent implements OnInit{
     this.token !== undefined ? this.order.token = this.token : console.error('Token in of type undefined');
 
     this.order.direction = this.direction;
-    this.order.quantity = this.instrument.minQuantity;
-    this.order.instrumentId = this.instrument.instrumentId;
+    this.order.quantity = this.instrument?.minQuantity;
+    this.order.instrumentId = this.instrument?.instrumentId;
     this.order.targetPrice = this.direction === 'B' ? this.bidPrice : this.askPrice;
 
     this.order.orderId = this.orderId;
@@ -97,7 +99,7 @@ export class TradingFormComponent implements OnInit{
   executeTrade(order: Order) {
     const url = 'http://localhost:3000/fmts/trades/trade';
     console.log('Order: ', order);
-    this.httpClient.post<Trade>(url, order)
+    this.tradeService.addOrder(order)
       .subscribe({
         next:   (data) => {
           this.trade = data;
@@ -124,7 +126,7 @@ export class TradingFormComponent implements OnInit{
 
   tradeSaved?: Trade;
   saveTrade(trade: Trade) { 
-    this.httpClient.post<Trade>(this.dbJsonTradesUrl, trade).pipe()
+    this.tradeHistoryService.addTrade(trade).pipe()
       .subscribe(data => {
         this.tradeSaved = data;
         console.log(this.tradeSaved);

@@ -19,8 +19,7 @@ export class HomeComponent {
   isSideMenuExpanded: boolean = false; //Side Menu
   isHomeContent:boolean = true; //Home Content displayed
 
-  constructor(private dialog: MatDialog, private snackBar: MatSnackBar,
-    private clientProfileService: ClientProfileService, private clientPreferencesService: ClientPreferencesService, private router: Router) { }
+  constructor(private clientProfileService: ClientProfileService, private clientPreferencesService: ClientPreferencesService, private router: Router) { }
 
   ngOnInit() {
     this.isSideMenuExpanded = false
