@@ -85,6 +85,7 @@ export class TradingHistoryComponent  implements OnInit{
       .subscribe({
         next: (data) => {
           this.tradeHistoryData = data;
+          this.tradeHistoryData = this.tradeHistoryData.reverse()
         },
         error: (e) => {
           console.log('Error in loading Trade History: ',e);

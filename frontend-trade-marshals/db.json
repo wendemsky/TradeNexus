@@ -81,65 +81,17 @@
       "isAdmin": true
     },
     {
-      "id": "9fb6",
+      "id": "4532",
       "email": "john.doe@gmail.com",
       "clientId": "739982664",
       "password": "Marsh2024",
       "name": "John Doe",
-      "dateOfBirth": "06/09/2004",
+      "dateOfBirth": "06/12/2002",
       "country": "USA",
       "identification": [
         {
           "type": "SSN",
-          "value": "1245423459"
-        }
-      ],
-      "isAdmin": false
-    },
-    {
-      "id": "688f",
-      "email": "rishi@gmail.com",
-      "clientId": "1212794226",
-      "password": "Marsh2024",
-      "name": "Rishiyanth",
-      "dateOfBirth": "11/04/2002",
-      "country": "India",
-      "identification": [
-        {
-          "type": "Aadhar",
-          "value": "123412341234"
-        }
-      ],
-      "isAdmin": false
-    },
-    {
-      "id": "90df",
-      "email": "sarika@gmail.com",
-      "clientId": "608947084",
-      "password": "ES2024fmr",
-      "name": "Sarika",
-      "dateOfBirth": "09/01/2024",
-      "country": "India",
-      "identification": [
-        {
-          "type": "Aadhar",
-          "value": "234645234652"
-        }
-      ],
-      "isAdmin": false
-    },
-    {
-      "id": "a0c0",
-      "email": "test1@gmail.com",
-      "clientId": "1371369776",
-      "password": "Test1test",
-      "name": "Test",
-      "dateOfBirth": "06/20/2006",
-      "country": "India",
-      "identification": [
-        {
-          "type": "Aadhar",
-          "value": "876543211234"
+          "value": "1234573532"
         }
       ],
       "isAdmin": false
@@ -175,6 +127,27 @@
       "clientId": "1236679496",
       "currBalance": 1000000,
       "holdings": []
+    },
+    {
+      "id": "10f4",
+      "clientId": "739982664",
+      "currBalance": 997465.66,
+      "holdings": [
+        {
+          "categoryId": "STOCK",
+          "instrumentId": "N123456",
+          "instrumentDesc": "JPMorgan Chase & Co. Capital Stock",
+          "quantity": 2,
+          "avgPrice": 104.75
+        },
+        {
+          "categoryId": "STOCK",
+          "instrumentId": "Q123",
+          "instrumentDesc": "Alphabet Inc. Class C Capital Stock",
+          "quantity": 2,
+          "avgPrice": 1162.42
+        }
+      ]
     }
   ],
   "clients-preferences": [
@@ -229,12 +202,12 @@
       "clientId": "1644724236"
     },
     {
-      "id": "399d",
+      "id": "46ba",
       "investmentPurpose": "Retirement",
       "incomeCategory": "LIG",
       "lengthOfInvestment": "Short",
       "percentageOfSpend": "Tier4",
-      "riskTolerance": 2,
+      "riskTolerance": 1,
       "acceptAdvisor": true,
       "clientId": "739982664"
     },
@@ -245,8 +218,81 @@
       "percentageOfSpend": "Tier4",
       "riskTolerance": 1,
       "acceptAdvisor": true,
-      "id": "76a8"
+      "id": "5665"
     }
   ],
-  "trades": []
+  "trades": [
+    {
+      "id": "94da",
+      "instrumentId": "N123456",
+      "quantity": 2,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "739982664",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 2,
+        "targetPrice": 104.15,
+        "direction": "B",
+        "clientId": "739982664",
+        "token": 739859208
+      },
+      "tradeId": "26huc8cjhc2-tjnia8afpdo-zzhuhmv55l",
+      "cashValue": 211.595
+    },
+    {
+      "id": "e75d",
+      "instrumentId": "T67880",
+      "quantity": 100,
+      "executionPrice": 1.00375,
+      "direction": "B",
+      "clientId": "739982664",
+      "order": {
+        "instrumentId": "T67880",
+        "quantity": 100,
+        "targetPrice": 1.00375,
+        "direction": "B",
+        "clientId": "739982664",
+        "token": 739859208
+      },
+      "tradeId": "wxerpcd221s-7l1njl7y7rn-fv0ellqkiw",
+      "cashValue": 101.37874999999998
+    },
+    {
+      "id": "80b5",
+      "instrumentId": "T67880",
+      "quantity": 100,
+      "executionPrice": 1.00375,
+      "direction": "S",
+      "clientId": "739982664",
+      "order": {
+        "instrumentId": "T67880",
+        "quantity": 100,
+        "targetPrice": 1.00375,
+        "direction": "S",
+        "clientId": "739982664",
+        "token": 739859208
+      },
+      "tradeId": "p0fqt13l28l-qnu141hm01e-78ocvykxm46",
+      "cashValue": 101.37874999999998
+    },
+    {
+      "id": "26bc",
+      "instrumentId": "Q123",
+      "quantity": 2,
+      "executionPrice": 1162.42,
+      "direction": "B",
+      "clientId": "739982664",
+      "order": {
+        "instrumentId": "Q123",
+        "quantity": 2,
+        "targetPrice": 1161.42,
+        "direction": "B",
+        "clientId": "739982664",
+        "token": 739859208
+      },
+      "tradeId": "9x1n1uzobwp-2v5djga2zaq-pv92m6yu1ee",
+      "cashValue": 2348.0884
+    }
+  ]
 }
