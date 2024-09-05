@@ -16,7 +16,6 @@ export class LoginService {
 
   //Validating client email ID with our database - For login and sending back client details
   getValidClientDetails(email: string): Observable<Client | null> {
-
     return this.http.get<Client[]>(this.dataURL).pipe(
       tap(clients => { console.log(clients) }),
       map(clients =>

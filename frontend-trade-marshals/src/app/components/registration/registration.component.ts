@@ -100,7 +100,7 @@ export class RegistrationComponent implements OnInit {
   clientProfileData!: ClientProfile | null //Client Profile data that is set with ClientProfileService
   clientPortfolio!: ClientPortfolio | null //To set Client Portfolio on registering
 
-  constructor(private route: Router, private snackBar: MatSnackBar ,private datePipe: DatePipe,
+  constructor(private route: Router, private snackBar: MatSnackBar, private datePipe: DatePipe,
     private loginService: LoginService, private registerService: RegisterService, private clientProfileService: ClientProfileService) { }
 
   ngOnInit() {
@@ -183,56 +183,72 @@ export class RegistrationComponent implements OnInit {
     snackBarConfig.duration = 3000;
     snackBarConfig.panelClass = ['form-submit-snackbar'];
 
-    //To get the data that is to be saved : clientData - Every client registering from platform is not an admin
-    //Transform doB with pipe operator
-    let formattedDate = this.datePipe.transform(this.personalDetails.value?.doB, 'MM/dd/yyyy');
-    this.clientData = {
-      'email': this.signupForm.value.email,
-      'clientId': String(this.fmtsValidatedClientData?.clientId),
-      'password': this.signupForm.value.password,
-      'name': this.personalDetails.value.name,
-      'dateOfBirth': String(formattedDate),
-      'country': this.personalDetails.value.country,
-      'identification': [{ 'type': this.identificationDetails.value.type, 'value': this.identificationDetails.value.value }],
-      'isAdmin': false
-    }
-    console.log('Registered Data to be posted to the Service: ', this.clientData)
-    //Saving Registered client with service
-    this.registerService.saveClientDetails(this.clientData).subscribe({
+
+    //To verify if the client has entered unique govt id
+    this.registerService.checkUniqueGovtIDDetails({ 'type': this.identificationDetails.value.type, 'value': this.identificationDetails.value.value }).subscribe({
       next: (data) => {
-        if (data && data.clientId === this.clientData?.clientId) { //Successfully saved registered client details
-          //Save client Portfolio details
-          this.clientPortfolio = { 'clientId': String(data.clientId), 'currBalance': 10000, 'holdings': [] }
-          this.registerService.saveClientPortfolioDetails(this.clientPortfolio).subscribe({
+        if (data) { //Which means client doesnt have unique govt id
+          this.snackBar.open("Entered Govt ID details aren't unique! Couldn't register client!", '', snackBarConfig)
+          this.identificationDetails.reset()
+        }
+        else {
+          //To get the data that is to be saved : clientData - Every client registering from platform is not an admin
+
+          let formattedDate = this.datePipe.transform(this.personalDetails.value?.doB, 'MM/dd/yyyy');  //Transform doB with pipe operator
+          this.clientData = {
+            'email': this.signupForm.value.email,
+            'clientId': String(this.fmtsValidatedClientData?.clientId),
+            'password': this.signupForm.value.password,
+            'name': this.personalDetails.value.name,
+            'dateOfBirth': String(formattedDate),
+            'country': this.personalDetails.value.country,
+            'identification': [{ 'type': this.identificationDetails.value.type, 'value': this.identificationDetails.value.value }],
+            'isAdmin': false
+          }
+          console.log('Registered Data to be posted to the Service: ', this.clientData)
+          //Saving Registered client with service
+          this.registerService.saveClientDetails(this.clientData).subscribe({
             next: (data) => {
-              if (data && data.clientId === this.clientPortfolio?.clientId) { //Successfully created client portfolio too
-                this.snackBar.open('Client has been registered and portfolio has been created with $10000 balance!', '', snackBarConfig)
+              if (data && data.clientId === this.clientData?.clientId) { //Successfully saved registered client details
+                //Save client Portfolio details
+                this.clientPortfolio = { 'clientId': String(data.clientId), 'currBalance': 10000, 'holdings': [] }
+                this.registerService.saveClientPortfolioDetails(this.clientPortfolio).subscribe({
+                  next: (data) => {
+                    if (data && data.clientId === this.clientPortfolio?.clientId) { //Successfully created client portfolio too
+                      this.snackBar.open('Client has been registered and portfolio has been created with $10000 balance!', '', snackBarConfig)
+                    }
+                    else {
+                      this.snackBar.open('Client has been registered but and portfolio couldnt be created! Unexpected error at service!', '', snackBarConfig)
+                    }
+                  },
+                  error: (e) => {
+                    console.log('Portfolio creation error: ', e)
+                    this.snackBar.open('Client has been registered but and portfolio couldnt be created! Unexpected error at service!', '', snackBarConfig)
+                  }
+                })
+                //After successful client validation - Set Client Profile data
+                this.clientProfileData = { client: this.clientData, token: this.fmtsValidatedClientData?.token }
+                this.clientProfileService.setClientProfile(this.clientProfileData)
+                //After setting profile redirect to Client Preferences Component
+                this.redirectToClientPreferencesPage()
               }
               else {
-                this.snackBar.open('Client has been registered but and portfolio couldnt be created! Unexpected error at service!', '', snackBarConfig)
+                this.snackBar.open('Client couldnt be registered! Please try again later!', '', snackBarConfig)
               }
             },
             error: (e) => {
-              console.log('Portfolio creation error: ', e)
-              this.snackBar.open('Client has been registered but and portfolio couldnt be created! Unexpected error at service!', '', snackBarConfig)
+              console.log('Registering Client error: ', e)
+              this.snackBar.open(e, '', snackBarConfig)
             }
           })
-          //After successful client validation - Set Client Profile data
-          this.clientProfileData = { client: this.clientData, token: this.fmtsValidatedClientData?.token }
-          this.clientProfileService.setClientProfile(this.clientProfileData)
-          //After setting profile redirect to Client Preferences Component
-          this.redirectToClientPreferencesPage()
-        }
-        else {
-          this.snackBar.open('Client couldnt be registered! Please try again later!', '', snackBarConfig)
         }
       },
       error: (e) => {
-        console.log('Registering Client error: ',e)
+        console.log('Registering Client error: ', e)
         this.snackBar.open(e, '', snackBarConfig)
       }
     })
-  }
 
+  }
 
 }

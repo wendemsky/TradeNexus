@@ -871,6 +871,42 @@
       },
       "tradeId": "60o9pkp9o2f-y9finyocu0g-5v5fmt1gkpn",
       "cashValue": 105797.5
+    },
+    {
+      "id": "87db",
+      "instrumentId": "N123456",
+      "quantity": 2,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "1212794226",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 2,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "1212794226",
+        "token": 1212670770
+      },
+      "tradeId": "7b93srpdno7-2wr0eilhipz-7x602080a4m",
+      "cashValue": 211.595
+    },
+    {
+      "id": "fa4a",
+      "instrumentId": "N123456",
+      "quantity": 3,
+      "executionPrice": 104.75,
+      "direction": "B",
+      "clientId": "1212794226",
+      "order": {
+        "instrumentId": "N123456",
+        "quantity": 3,
+        "targetPrice": 104.25,
+        "direction": "B",
+        "clientId": "1212794226",
+        "token": 1212670770
+      },
+      "tradeId": "ri9h2zgjvj-m62tuqz9qln-cuoyc3ckjaw",
+      "cashValue": 317.3925
     }
   ]
 }
