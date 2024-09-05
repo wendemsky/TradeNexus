@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
 
 import { ClientPreferencesComponent } from './client-preferences.component';
 import { of } from 'rxjs';
@@ -8,6 +8,7 @@ import { ClientProfileService } from 'src/app/services/Client/client-profile.ser
 import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { By } from '@angular/platform-browser';
 
 const testClientPreferences: any = 
   {
@@ -53,7 +54,13 @@ clientProfileMockService.getClientProfile.and.returnValue(of(testClientProfile))
 describe('ClientPreferencesComponent', () => {
   let component: ClientPreferencesComponent;
   let fixture: ComponentFixture<ClientPreferencesComponent>;
+  let clientPreferencesService: jasmine.SpyObj<ClientPreferencesService>;
+  let clientProfileService: jasmine.SpyObj<ClientProfileService>;
+
   beforeEach(async () => {
+    const clientPreferencesServiceSpy = jasmine.createSpyObj('ClientPreferencesService', ['setClientPreferences', 'updateClientPreferences', 'getClientPreferences']);
+    const clientProfileServiceSpy = jasmine.createSpyObj('ClientProfileService', ['getClientProfile']);
+
     await TestBed.configureTestingModule({
       declarations: [ 
         ClientPreferencesComponent,
@@ -63,8 +70,8 @@ describe('ClientPreferencesComponent', () => {
         ReactiveFormsModule
       ],
       providers: [
-        {provide: ClientPreferencesService, useValue: clientPreferencesMockService},
-        {provide: ClientProfileService, useValue: clientProfileMockService},
+        { provide: ClientPreferencesService, useValue: clientPreferencesServiceSpy },
+        { provide: ClientProfileService, useValue: clientProfileServiceSpy },
         provideAnimations() 
       ]
     })
@@ -72,10 +79,67 @@ describe('ClientPreferencesComponent', () => {
 
     fixture = TestBed.createComponent(ClientPreferencesComponent);
     component = fixture.componentInstance;
+
+    clientPreferencesService = TestBed.inject(ClientPreferencesService) as jasmine.SpyObj<ClientPreferencesService>;
+    clientProfileService = TestBed.inject(ClientProfileService) as jasmine.SpyObj<ClientProfileService>;
+
+    clientProfileService.getClientProfile.and.returnValue(of(testClientProfile));
+    clientPreferencesService.getClientPreferences.and.returnValue(of(testClientPreferences));
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should submit form successfully', inject([ClientPreferencesService], 
+    fakeAsync((service: ClientPreferencesService) => {
+      {
+        component.preferences.setValue({
+          investmentPurpose: 'Retirement',
+          incomeCategory: 'MIG',
+          lengthOfInvestment: 'Medium',
+          percentageOfSpend: 'Tier2',
+          riskTolerance: 3,
+          acceptAdvisor: true
+        });
+        let obj = component.preferences.getRawValue()
+        obj.clientId = component.clientProfileData?.client?.clientId
+    
+        component.isClientFormFilled = false
+    
+        clientPreferencesService.setClientPreferences.and.returnValue(of(testClientProfile));
+        
+        component.savePreferences();
+        tick();
+    
+        expect(service.setClientPreferences).toHaveBeenCalledWith(obj);
+        flush();
+      }
+    })))
+
+
+  it('validate invalid data in the form', () =>{
+    component.preferences.setValue({
+      investmentPurpose: '',
+      incomeCategory: 'MIG',
+      lengthOfInvestment: 'Medium',
+      percentageOfSpend: 'Tier2',
+      riskTolerance: 3,
+      acceptAdvisor: true
+    });
+
+    spyOnProperty(component.preferences, 'valid').and.returnValue(false);
+    expect(component.preferences.valid).toBe(false)
+    // let addCommentBtn = fixture.debugElement.query(By.css('.submitButton')).nativeElement;
+    // expect(addCommentBtn.getAttribute('disabled')).toBeTruthy();
+  })
+
+  // it('should populate the form with information by default', () =>{
+
+  // })
+
+  // it('should update data to service', () => {
+    
+  // })
 });
