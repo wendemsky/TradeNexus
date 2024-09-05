@@ -11,6 +11,7 @@ import { PriceService } from 'src/app/services/price.service';
 })
 export class BuyComponent {
   prices: Price[] = [];
+  price?: Price;
 
   constructor(
     private priceService: PriceService,
@@ -26,9 +27,11 @@ export class BuyComponent {
       .subscribe(data => this.prices = data);
   }
 
+
   params: any;
   agInit(params: any): void {
     this.params = params;
+
   }
 
   onClickBuy(price: Price) {

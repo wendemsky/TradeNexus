@@ -35,13 +35,20 @@ export class PriceListComponent implements OnInit{
   },{ 
     headerName: "Buy", 
     field: "buy",
-    cellRenderer: BuyComponent
+    cellRenderer: BuyComponent,
+    cellRendererParams: {
+      
+    }
   },{ 
     headerName: "Sell", 
     field: "sell",
-    cellRenderer: SellComponent
+    cellRenderer: SellComponent,
+    cellRendererParams: {
+      
+    }
   }
 ]
+
 
 public defaultColDef: ColDef = {
   flex: 1,
@@ -80,4 +87,6 @@ public sidebar: SideBarDef | null = {
     this.priceService.getPrices()
       .subscribe(data => this.prices = data);
   }
+
+  
 }

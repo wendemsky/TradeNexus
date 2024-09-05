@@ -47,16 +47,16 @@ export class PortfolioComponent implements OnInit{
       headerName: "Average Price", 
       field: "avgPrice",
     }, 
-    { 
-      headerName: "Buy", 
-      field: "buy",
-      cellRenderer: BuyComponent
-    },
-    { 
-      headerName: "Sell", 
-      field: "sell",
-      cellRenderer: SellComponent
-    }
+    // { 
+    //   headerName: "Buy", 
+    //   field: "buy",
+    //   cellRenderer: BuyComponent
+    // },
+    // { 
+    //   headerName: "Sell", 
+    //   field: "sell",
+    //   cellRenderer: SellComponent
+    // }
   ]
 
   public defaultColDef: ColDef = {
@@ -137,3 +137,7 @@ export class PortfolioComponent implements OnInit{
   
 
 }
+
+
+// To have buy and sell in portfolio, we need to create a new prices array for portfolio and
+// populate it by finding the instrument id of that price 

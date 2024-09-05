@@ -11,13 +11,14 @@ import { PriceService } from 'src/app/services/price.service';
 })
 export class SellComponent implements OnInit {
   prices: Price[] = [];
+  price?: Price;
 
   constructor(
     private priceService: PriceService,
     private _dialog: MatDialog
   ) {}
 
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.loadAllPrices();
   }
 
