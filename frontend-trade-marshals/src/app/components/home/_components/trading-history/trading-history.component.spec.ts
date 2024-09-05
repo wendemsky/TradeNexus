@@ -65,14 +65,14 @@ describe('TradingHistoryComponent', () => {
       ],
       imports: [
         MaterialModule,
-        AgGridAngular
       ],
       providers: [
         { provide: TradeHistoryService, useValue: tradeHistoryMockService },
         { provide: ClientProfileService, useValue: clientProfileMockService }
       ]
     })
-      .compileComponents();
+    .overrideTemplate(TradingHistoryComponent, '')
+    .compileComponents();
 
     fixture = TestBed.createComponent(TradingHistoryComponent);
     component = fixture.componentInstance;

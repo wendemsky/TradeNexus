@@ -9,14 +9,11 @@ import { MaterialModule } from 'src/app/material.module';
 import { Component } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ViewChild } from '@angular/core';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
-// @Component({
-//   selector: 'app-grid-angular',
-//   template: '',
-// })
-// export class TestGridComponent {
-//   @ViewChild(AgGridAngular) public agGrid?: AgGridAngular;
-// }
 
 describe('TradingFormComponent', () => {
   let component: TradingFormComponent;
@@ -32,18 +29,26 @@ describe('TradingFormComponent', () => {
       ],
       imports: [
         HttpClientTestingModule,
-        MatDialogModule
+        MatDialogModule,
+        MatSnackBarModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        FormsModule
       ],
       providers: [
         {provide: TradeService, useValue: tradeMockService},
         {provide: TradeHistoryService, useValue: tradeHistoryMockService},
+        { provide: MAT_DIALOG_DATA, useValue: {} }
       ]
     })
+    .overrideTemplate(TradingFormComponent, '')
       .compileComponents();
 
     fixture = TestBed.createComponent(TradingFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+
   });
 
   it('should create', () => {

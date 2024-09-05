@@ -72,8 +72,8 @@ export class TradingFormComponent implements OnInit{
     this.token !== undefined ? this.order.token = this.token : console.error('Token in of type undefined');
 
     this.order.direction = this.direction;
-    this.order.quantity = this.instrument.minQuantity;
-    this.order.instrumentId = this.instrument.instrumentId;
+    this.order.quantity = this.instrument?.minQuantity;
+    this.order.instrumentId = this.instrument?.instrumentId;
     this.order.targetPrice = this.direction === 'B' ? this.bidPrice : this.askPrice;
 
     this.order.orderId = this.orderId;
@@ -122,8 +122,6 @@ export class TradingFormComponent implements OnInit{
         console.log(this.tradeSaved);
       }); 
   }
-
-
   
 }
  
