@@ -17,7 +17,7 @@ export class ClientPreferencesService {
   getClientPreferences(clientId: string | undefined): Observable<ClientPreferences>{
     return this.http.get<ClientPreferences>(this.dataURL)
       .pipe(
-        map(clients => clients.find(client => client.clientId === clientId) || null
+        map(clients => clients.find((client: any) => client.clientId === clientId) || null
       ),catchError(this.handleError))
   }
 
