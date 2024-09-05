@@ -2,8 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SellComponent } from './sell.component';
 import { PriceService } from 'src/app/services/price.service';
-import { MatDialogModule } from '@angular/material/dialog';
-import { of } from 'rxjs';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { of, throwError } from 'rxjs';
+import { TradingFormComponent } from '../trading-form/trading-form.component';
 
 const mockPrices = [
   {
@@ -42,15 +43,18 @@ describe('SellComponent', () => {
 
   let priceMockService = jasmine.createSpyObj('PriceService', ['getPrices'])
   let getSpy = priceMockService.getPrices.and.returnValue(of(mockPrices))
+  let dialogMock: jasmine.SpyObj<MatDialog>;
 
   beforeEach(async () => {
+    dialogMock = jasmine.createSpyObj('MatDialog', ['open']);
     await TestBed.configureTestingModule({
       declarations: [ SellComponent ],
       imports: [
         MatDialogModule
       ],
       providers: [
-        {provide: PriceService, useValue: priceMockService}
+        {provide: PriceService, useValue: priceMockService},
+        { provide: MatDialog, useValue: dialogMock }
       ]
     })
     .compileComponents();
@@ -62,5 +66,39 @@ describe('SellComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call loadAllPrices on initialization', () => {
+    spyOn(component, 'loadAllPrices').and.callThrough();
+    component.ngOnInit();
+    expect(component.loadAllPrices).toHaveBeenCalled();
+  });
+
+  it('should load prices from the service and assign to the component', () => {
+    priceMockService.getPrices.and.returnValue(of(mockPrices));
+    component.loadAllPrices();
+    expect(component.prices).toEqual(mockPrices);
+  });
+
+  it('should open a dialog with the correct data', () => {
+    const price = mockPrices[0];
+    const expectedData = {
+      askPrice: price.askPrice,
+      bidPrice: price.bidPrice,
+      priceTimeStamp: price.priceTimestamp,
+      direction: 'S',
+      instrument: price.instrument
+    };
+    component.onClickSell(price);
+    expect(dialogMock.open).toHaveBeenCalledWith(TradingFormComponent, {
+      width: '50vw',
+      data: expectedData
+    });
+  });
+
+  it('should initialize params correctly', () => {
+    const params = { someParam: 'value' };
+    component.agInit(params);
+    expect(component.params).toEqual(params);
   });
 });

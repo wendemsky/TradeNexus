@@ -33,7 +33,6 @@ export class SellComponent implements OnInit {
   }
   
   onClickSell(price: Price) {
-    console.log('Sell', price.instrument);
     const tradeFormData = {
       askPrice: price.askPrice,
       bidPrice: price.bidPrice,

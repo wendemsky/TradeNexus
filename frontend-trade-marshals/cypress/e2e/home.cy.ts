@@ -18,7 +18,7 @@ describe('Home page', () => {
     cy.get('.ag-center-cols-viewport').should('exist')
   })
 
-  it('Validate Trade Hidtory page', () =>{
+  it('Validate Trade History page', () =>{
     cy.get('.mat-mdc-nav-list > :nth-child(6)').click()
     cy.get('h2').contains('Trade History')
     cy.get('.ag-center-cols-viewport').should('exist')

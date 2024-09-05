@@ -65,17 +65,14 @@ export class RoboAdvisorComponent {
       field: "instrument.categoryId",
     },
     {
-      headerName: "Price Timestamp",
-      field: "priceTimestamp",
-    },
-    {
       headerName: "Bid Price",
       field: "bidPrice",
     }, 
     {
       headerName: "Buy",
       field: "buy",
-      cellRenderer: BuyComponent
+      minWidth: 150,
+      cellRenderer: BuyComponent,
     },
 
   ]
@@ -94,16 +91,13 @@ export class RoboAdvisorComponent {
       field: "instrument.categoryId",
     },
     {
-      headerName: "Price Timestamp",
-      field: "priceTimestamp",
-    },
-    {
       headerName: "Ask Price",
       field: "askPrice",
     }, 
     {
       headerName: "Sell",
       field: "sell",
+      minWidth: 150,
       cellRenderer: SellComponent
     },
   ]
