@@ -149,7 +149,7 @@ export class RegistrationComponent implements OnInit {
               },
               error: (e) => { //Error in hitting FMTS service - Cannot register client
                 console.log(e)
-                this.snackBar.open(e, '', snackBarConfig)
+                this.snackBar.open(String(e), '', snackBarConfig)
                 this.signupForm.reset()
               }
             })
@@ -245,7 +245,7 @@ export class RegistrationComponent implements OnInit {
       },
       error: (e) => {
         console.log('Registering Client error: ', e)
-        this.snackBar.open(e, '', snackBarConfig)
+        this.snackBar.open(String(e), '', snackBarConfig)
       }
     })
 
