@@ -12,7 +12,44 @@ import { BuyComponent } from '../buy/buy.component';
 })
 export class RoboAdvisorComponent {
 
+  isBuy: boolean = false;
+
   prices: Price[] = [];
+
+  buyStocks: Price[] = [
+    {
+      "askPrice": 104.75,
+      "bidPrice": 104.25,
+      "priceTimestamp": "21-AUG-19 10.00.01.042000000 AM GMT",
+      "instrument": {
+      "instrumentId": "N123456",
+      "externalIdType": "CUSIP",
+      "externalId": "46625H100",
+      "categoryId": "STOCK",
+      "instrumentDescription": "JPMorgan Chase & Co. Capital Stock",
+      "maxQuantity": 1000,
+      "minQuantity": 1
+      }
+      },
+      {
+      "askPrice": 312500,
+      "bidPrice": 312000,
+      "priceTimestamp": "21-AUG-19 05.00.00.040000000 AM -05:00",
+      "instrument": {
+      "instrumentId": "N123789",
+      "externalIdType": "ISIN",
+      "externalId": "US0846707026",
+      "categoryId": "STOCK",
+      "instrumentDescription": "Berkshire Hathaway Inc. Class A",
+      "maxQuantity": 10,
+      "minQuantity": 1
+      }
+      },
+  ]
+
+  sellStocks: any[] = [
+
+  ]
 
   public buyColumnDefs: ColDef[] = [
     {
@@ -151,6 +188,16 @@ export class RoboAdvisorComponent {
 
   loadAllPrices() {
     this.priceService.getPrices()
-      .subscribe(data => this.prices = data);
+      .subscribe(
+        (data) => {
+          this.prices = data;
+          this.prices = this.prices.sort( () => 0.5 - Math.random())
+          this.prices = this.prices.slice(0, 5);
+        }
+      );
+  }
+
+  showPopUp(){
+    this.isBuy = true;
   }
 }
