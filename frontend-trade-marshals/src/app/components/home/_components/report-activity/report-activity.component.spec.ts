@@ -30,4 +30,16 @@ describe('ReportActivityComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should log the report value to the console on submit', () => {
+    // Spy on console.log
+    spyOn(console, 'log');
+
+    // Call the onSubmit method
+    component.onSubmit();
+
+    // Check that console.log was called with the correct arguments
+    expect(console.log).toHaveBeenCalledWith('Report type -> ' + JSON.stringify(component.report.value));
+  });
+  
 });

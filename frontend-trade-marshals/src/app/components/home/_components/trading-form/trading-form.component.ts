@@ -35,7 +35,7 @@ export class TradingFormComponent implements OnInit{
   lowerLimit!: number;
   upperLimit!: number;
   withinOnePercentOfAskOrBidPrice?: boolean;
-  private _snackBar = inject(MatSnackBar);
+  public _snackBar = inject(MatSnackBar);
 
   
   
@@ -50,8 +50,8 @@ export class TradingFormComponent implements OnInit{
     private tradeService: TradeService,
     private tradeHistoryService: TradeHistoryService,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private clientProfileService: ClientProfileService,
-    private clientPortfolioService: ClientPortfolioService,
+    public clientProfileService: ClientProfileService,
+    public clientPortfolioService: ClientPortfolioService,
   ){
     this.askPrice = data.askPrice;
     this.bidPrice = data.bidPrice;

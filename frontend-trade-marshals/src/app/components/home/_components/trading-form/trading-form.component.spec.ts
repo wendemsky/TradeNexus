@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+ 
 import { TradingFormComponent } from './trading-form.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TradeService } from 'src/app/services/trade.service';
@@ -13,14 +13,14 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-
-
+ 
+ 
 describe('TradingFormComponent', () => {
   let component: TradingFormComponent;
   let fixture: ComponentFixture<TradingFormComponent>;
-
+ 
   let tradeMockService: any = jasmine.createSpyObj('TradeService', ['getClientProfile']);
-
+ 
   let tradeHistoryMockService: any = jasmine.createSpyObj('TradeHistoryService', ['getClientProfile']);
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -43,14 +43,14 @@ describe('TradingFormComponent', () => {
     })
     .overrideTemplate(TradingFormComponent, '')
       .compileComponents();
-
+ 
     fixture = TestBed.createComponent(TradingFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-
-
+ 
+ 
   });
-
+ 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
