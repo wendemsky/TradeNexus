@@ -127,6 +127,22 @@
         }
       ],
       "isAdmin": false
+    },
+    {
+      "id": "a0c0",
+      "email": "test1@gmail.com",
+      "clientId": "1371369776",
+      "password": "Test1test",
+      "name": "Test",
+      "dateOfBirth": "06/20/2006",
+      "country": "India",
+      "identification": [
+        {
+          "type": "Aadhar",
+          "value": "876543211234"
+        }
+      ],
+      "isAdmin": false
     }
   ],
   "clients-portfolio": [
@@ -190,7 +206,7 @@
     {
       "id": "60de",
       "clientId": "541107416",
-      "currBalance": 4984.783125,
+      "currBalance": 4984.283125,
       "holdings": [
         {
           "categoryId": "GOVT",
@@ -219,6 +235,27 @@
           "instrumentDesc": "Alphabet Inc. Class C Capital Stock",
           "quantity": 1,
           "avgPrice": 1162.42
+        }
+      ]
+    },
+    {
+      "id": "ee30",
+      "clientId": "1371369776",
+      "currBalance": 9794.03125,
+      "holdings": [
+        {
+          "categoryId": "GOVT",
+          "instrumentId": "T67895",
+          "instrumentDesc": "USA, Note 2.625 31jan2026 7Y",
+          "quantity": 100,
+          "avgPrice": 1
+        },
+        {
+          "categoryId": "GOVT",
+          "instrumentId": "T67883",
+          "instrumentDesc": "USA, Bond 3.375 15nov2048 30Y",
+          "quantity": 100,
+          "avgPrice": 1.0596875
         }
       ]
     }
@@ -301,6 +338,16 @@
       "riskTolerance": 2,
       "acceptAdvisor": true,
       "id": "bb61"
+    },
+    {
+      "id": "2d36",
+      "investmentPurpose": "Major Expense",
+      "incomeCategory": "VHIG",
+      "lengthOfInvestment": "Short",
+      "percentageOfSpend": "Tier2",
+      "riskTolerance": 2,
+      "acceptAdvisor": true,
+      "clientId": "1371369776"
     }
   ],
   "trades": [
@@ -2766,6 +2813,78 @@
       },
       "tradeId": "83miirjuqs7-wm0lwla6ynq-l21jwufke7",
       "cashValue": 315.8775
+    },
+    {
+      "id": "863f",
+      "instrumentId": "Q456",
+      "quantity": 1,
+      "executionPrice": 323.39,
+      "direction": "B",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "Q456",
+        "quantity": 1,
+        "targetPrice": 322.89,
+        "direction": "B",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "2z64ldulr5q-pc5roudumej-cb3vamsujd",
+      "cashValue": 326.6239
+    },
+    {
+      "id": "af89",
+      "instrumentId": "Q456",
+      "quantity": 1,
+      "executionPrice": 322.89,
+      "direction": "S",
+      "clientId": "541107416",
+      "order": {
+        "instrumentId": "Q456",
+        "quantity": 1,
+        "targetPrice": 323.39,
+        "direction": "S",
+        "clientId": "541107416",
+        "token": 540983960
+      },
+      "tradeId": "kk2zot8a91-90mjtisg9ki-bta2jqls0l",
+      "cashValue": 326.1189
+    },
+    {
+      "id": "98bc",
+      "instrumentId": "T67895",
+      "quantity": 100,
+      "executionPrice": 1,
+      "direction": "B",
+      "clientId": "1371369776",
+      "order": {
+        "instrumentId": "T67895",
+        "quantity": 100,
+        "targetPrice": 1.00015625,
+        "direction": "B",
+        "clientId": "1371369776",
+        "token": 1371246320
+      },
+      "tradeId": "594mw5ubfai-jfa35juvp0g-vk4okpnzsi9",
+      "cashValue": 101
+    },
+    {
+      "id": "7a5f",
+      "instrumentId": "T67883",
+      "quantity": 100,
+      "executionPrice": 1.0596875,
+      "direction": "B",
+      "clientId": "1371369776",
+      "order": {
+        "instrumentId": "T67883",
+        "quantity": 100,
+        "targetPrice": 1.0596875,
+        "direction": "B",
+        "clientId": "1371369776",
+        "token": 1371246320
+      },
+      "tradeId": "v9xrk0sucy-jrvrx2jobhl-leucpzb1y9r",
+      "cashValue": 107.02843749999998
     }
   ]
 }

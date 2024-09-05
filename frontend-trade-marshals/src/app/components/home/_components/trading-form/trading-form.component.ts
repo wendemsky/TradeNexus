@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, inject, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
@@ -49,7 +48,6 @@ export class TradingFormComponent implements OnInit{
 
   constructor(
     private tradeService: TradeService,
-    private httpClient: HttpClient,
     private tradeHistoryService: TradeHistoryService,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private clientProfileService: ClientProfileService,
@@ -291,7 +289,7 @@ export class TradingFormComponent implements OnInit{
     this.clientPortfolioData[0].holdings = clientHoldings;
     console.log('Client Data before the PUT Req', this.clientPortfolioData[0]);
 
-    this.httpClient.put<ClientPortfolio>(`http://localhost:4000/clients-portfolio/${this.clientPortfolioData[0].id}`, this.clientPortfolioData[0]).pipe()
+    this.clientPortfolioService.updateClientHoldings(`http://localhost:4000/clients-portfolio/${this.clientPortfolioData[0].id}`, this.clientPortfolioData[0])
       .subscribe({
         next: (data) => {
         this.clientPortfolioDataUpdated = data;

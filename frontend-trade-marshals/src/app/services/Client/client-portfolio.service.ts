@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
+import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
 
 @Injectable({
@@ -20,8 +20,18 @@ export class ClientPortfolioService {
       map( (clientPortfolio) => 
         clientPortfolio
         .filter(portfolio => portfolio.clientId === clientId),
-      )
-    )
+      ),
+      catchError(this.handleError)
+    );
+  }
+
+  updateClientHoldings(url: string, clientPortfolioData: ClientPortfolio): Observable<ClientPortfolio> {
+    return this.http.put<ClientPortfolio>(url, clientPortfolioData).pipe(catchError(this.handleError));
+  }
+
+  handleError(response: HttpErrorResponse) {
+    return throwError(
+    () => 'Unable to contact service; please try again later.');
   }
 
   
