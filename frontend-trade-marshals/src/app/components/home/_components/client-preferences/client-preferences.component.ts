@@ -18,6 +18,8 @@ export class ClientPreferencesComponent {
   clientPreferencesData!: any
   isClientFormFilled: boolean = false
 
+  snackBarConfig = new MatSnackBarConfig();
+
   toleranceLevel = [
     { value: 1, name: "Very Low" },
     { value: 2, name: "Low" },
@@ -99,74 +101,61 @@ export class ClientPreferencesComponent {
     })
   }
 
-  // onSubmit() {
-
-  //   const snackBarConfig = new MatSnackBarConfig();
-  //   snackBarConfig.duration = 3000;
-  //   snackBarConfig.panelClass = ['form-submit-snackbar'];
-
-  //   let obj = this.preferences.getRawValue()
-  //   obj.clientId = this.clientProfileData?.client?.clientId
-  //   this.clientPreferencesService.setClientPreferences(obj).subscribe({
-  //     next: () => {
-  //       this.snackBar.open('Preferences submitted successfully', '', snackBarConfig)
-  //     },
-  //     error: (err) => {
-  //       this.snackBar.open(err, '', snackBarConfig)
-  //     }
-  //   })
-  // }
-
   savePreferences() {
-
-    const snackBarConfig = new MatSnackBarConfig();
-    snackBarConfig.duration = 3000;
-    snackBarConfig.panelClass = ['form-submit-snackbar'];
-
     let obj = this.preferences.getRawValue()
     obj.clientId = this.clientProfileData?.client?.clientId
-    if (this.isClientFormFilled) {
-      this.clientPreferencesService.updateClientPreferences(this.clientPreferencesData?.id, obj).subscribe({
-        next: (data: any) => {
-          console.log('New Preferences Submitted Data: ', data)
-          if (data && data.clientId === this.clientProfileData?.client?.clientId) {
-            this.snackBar.open('Preferences updated successfully', '', snackBarConfig)
-            this.redirectToHome()
-          }
-          else {
-            this.snackBar.open('Client preferences couldnt be updated! Unexpected error at service!', '', snackBarConfig)
-          }
-        },
-        error: (err) => {
-          this.snackBar.open(err, '', snackBarConfig)
-        }
-      })
-    }
-    else {
-      this.clientPreferencesService.setClientPreferences(obj).subscribe({
-        next: (data: any) => {
-          console.log('New Preferences Submitted Data: ', data)
-          if (data && data.clientId === this.clientProfileData?.client?.clientId) {
-            this.snackBar.open('Preferences saved successfully', '', snackBarConfig)
-            this.isClientFormFilled = true
-            this.clientPreferencesData = data
-            this.redirectToHome()
-          }
-          else {
-            this.snackBar.open('Client preferences couldnt be saved! Unexpected error at service!', '', snackBarConfig)
-          }
+    this.isClientFormFilled ? this.updatePreferences(obj) : this.setPreferences(obj)
+  }
 
-        },
-        error: (err) => {
-          this.snackBar.open(err, '', snackBarConfig)
+  updatePreferences(obj: any) {
+    this.snackBarConfig.duration = 3000;
+    this.snackBarConfig.panelClass = ['form-submit-snackbar'];
+
+    this.clientPreferencesService.updateClientPreferences(this.clientPreferencesData?.id, obj).subscribe({
+      next: (data: any) => {
+        console.log('New Preferences Submitted Data: ', data)
+        if (data && data.clientId === this.clientProfileData?.client?.clientId) {
+          this.snackBar.open('Preferences updated successfully', '', this.snackBarConfig)
+          this.redirectToHome()
         }
-      })
-    }
+        else {
+          this.snackBar.open('Client preferences couldnt be updated! Unexpected error at service!', '', this.snackBarConfig)
+        }
+      },
+      error: (err) => {
+        this.snackBar.open(err, '', this.snackBarConfig)
+      }
+    })
+  }
+
+  setPreferences(obj: any) {
+
+    this.snackBarConfig.duration = 3000;
+    this.snackBarConfig.panelClass = ['form-submit-snackbar'];
+
+    this.clientPreferencesService.setClientPreferences(obj).subscribe({
+      next: (data: any) => {
+        console.log('New Preferences Submitted Data: ', data)
+        if (data && data.clientId === this.clientProfileData?.client?.clientId) {
+          this.snackBar.open('Preferences saved successfully', '', this.snackBarConfig)
+          this.isClientFormFilled = true
+          this.clientPreferencesData = data
+          this.redirectToHome()
+        }
+        else {
+          this.snackBar.open('Client preferences couldnt be saved! Unexpected error at service!', '', this.snackBarConfig)
+        }
+
+      },
+      error: (err) => {
+        this.snackBar.open(err, '', this.snackBarConfig)
+      }
+    })
   }
 
   redirectToHome() {
-    this.router.navigateByUrl('/',{skipLocationChange:true}).then(()=>{
-      this.router.navigate(['/home']).then(()=>{
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/home']).then(() => {
         console.log(`After navigation I am on:${this.router.url}`)
       })
     })

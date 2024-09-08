@@ -97,7 +97,7 @@ describe('ClientPreferencesComponent', () => {
       {
         component.preferences.setValue({
           investmentPurpose: 'Retirement',
-          incomeCategory: 'MIG',
+          incomeCategory: '',
           lengthOfInvestment: 'Medium',
           percentageOfSpend: 'Tier2',
           riskTolerance: 3,
@@ -120,26 +120,35 @@ describe('ClientPreferencesComponent', () => {
 
 
   it('validate invalid data in the form', () =>{
+    spyOnProperty(component.preferences, 'valid').and.returnValue(false);
+    expect(component.preferences.valid).toBe(false)
+    fixture.detectChanges()
+    let addCommentBtn = fixture.debugElement.nativeElement.querySelector('.submitButton');
+    expect(addCommentBtn.disabled).toBeTruthy();
+  })
+
+  it('should update data to service', inject([ClientPreferencesService], 
+    fakeAsync((service: ClientPreferencesService) => {
     component.preferences.setValue({
-      investmentPurpose: '',
-      incomeCategory: 'MIG',
+      investmentPurpose: 'Retirement',
+      incomeCategory: '',
       lengthOfInvestment: 'Medium',
       percentageOfSpend: 'Tier2',
       riskTolerance: 3,
       acceptAdvisor: true
     });
 
-    spyOnProperty(component.preferences, 'valid').and.returnValue(false);
-    expect(component.preferences.valid).toBe(false)
-    // let addCommentBtn = fixture.debugElement.query(By.css('.submitButton')).nativeElement;
-    // expect(addCommentBtn.getAttribute('disabled')).toBeTruthy();
-  })
+    let obj = component.preferences.getRawValue()
+    obj.clientId = component.clientProfileData?.client?.clientId
 
-  // it('should populate the form with information by default', () =>{
+    component.isClientFormFilled = true
 
-  // })
-
-  // it('should update data to service', () => {
+    clientPreferencesService.updateClientPreferences.and.returnValue(of(testClientProfile));
     
-  // })
+    component.savePreferences();
+    tick();
+    expect(service.updateClientPreferences).toHaveBeenCalledWith('15b4', obj);
+    flush();
+  })))
+  
 });

@@ -65,11 +65,9 @@
         <br>
 
         <div class="center-buttons">
-            <button type="button" mat-raised-button (click)="savePreferences()" [disabled]="!preferences.valid" class="submitButton">
+            <button class="submitButton" type="button" mat-raised-button (click)="savePreferences()" [disabled]="!preferences.valid">
                 Save
             </button>
-            <!-- <button *ngIf="!clientPreferencesData?.clientId" type="submit" [disabled]="!preferences.valid"
-                mat-raised-button color="primary">Submit</button> -->
         </div>
     </form>
 </div>

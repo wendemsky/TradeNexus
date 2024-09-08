@@ -59,7 +59,7 @@ export class RegistrationComponent implements OnInit {
     else if (idType === "PAN") {
       return idValue?.length !== 10 ? { lengthNotMatched: true } : null
     }
-    return idValue?.length !== 10 ? { lengthNotMatched: true } : null
+    return idValue?.length !== 9 ? { lengthNotMatched: true } : null
   };
 
   //3 FormGroups for the Registration Step Up Forms
@@ -104,6 +104,7 @@ export class RegistrationComponent implements OnInit {
     private loginService: LoginService, private registerService: RegisterService, private clientProfileService: ClientProfileService) { }
 
   ngOnInit() {
+    this.today.setFullYear(this.today.getFullYear() - 18, 11, 31);
     this.fmtsValidatedClientData = null
     this.clientData = null
     this.clientPortfolio = null
@@ -190,7 +191,7 @@ export class RegistrationComponent implements OnInit {
         if (data) { //Which means client doesnt have unique govt id
           this.snackBar.open("Entered Govt ID details aren't unique! Couldn't register client!", '', snackBarConfig)
           this.identificationDetails.reset()
-        } 
+        }
         else {
           //To get the data that is to be saved : clientData - Every client registering from platform is not an admin
 
