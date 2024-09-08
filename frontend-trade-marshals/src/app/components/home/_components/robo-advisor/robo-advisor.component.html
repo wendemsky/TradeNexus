@@ -1,0 +1,135 @@
+<!-- <div  class="grid-container ag-theme-alpine">
+    <ag-grid-angular 
+        style="height: 100%; width:50%;"
+        [rowData]="prices"
+        [columnDefs]="buyColumnDefs"
+        [defaultColDef]="defaultColDef"
+        [sideBar] = "sidebar"
+        />
+</div>
+      
+<div  class="grid-container ag-theme-alpine">
+    <ag-grid-angular 
+        style="height: 100%; width:50%;"
+        [rowData]="prices"
+        [columnDefs]="sellColumnDefs"
+        [defaultColDef]="defaultColDef"
+        [sideBar] = "sidebar"
+        />
+</div> -->
+
+<div class="grid-container">
+    <div class="ag-theme-alpine grid-item">
+      <ag-grid-angular 
+        style="height: 100%; width:96%;"
+        [rowData]="prices"
+        [columnDefs]="buyColumnDefs"
+        [defaultColDef]="defaultColDef"
+        [sideBar]="sidebar">
+      </ag-grid-angular>
+    </div>
+    
+    <div class="ag-theme-alpine grid-item">
+      <ag-grid-angular 
+      style="height: 100%; width:96%;"
+        [rowData]="prices"
+        [columnDefs]="sellColumnDefs"
+        [defaultColDef]="defaultColDef"
+        [sideBar]="sidebar">
+      </ag-grid-angular>
+    </div>
+  </div>
+  
+      
+<!-- <div class="container">
+    <div class="column">
+      <mat-card *ngFor="let stock of buyStocks">
+        <mat-card-content>
+          <p>
+            <strong>Instrument Description:</strong>
+            {{stock.instrument.instrumentDescription}}
+          </p>
+
+          <p>
+            <strong>Category ID:</strong>
+            {{stock.instrument.categoryId}}
+          </p>
+
+          <p>
+            <strong>Bid Price:</strong>
+            {{stock.bidPrice | currency}}
+          </p>
+        </mat-card-content>
+
+        <mat-card-actions>
+            <button mat-raised-button color="primary">BUY</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+    <div class="column">
+        <mat-card *ngFor="let stock of sellStocks">
+          <mat-card-content>
+            <p>
+              <strong>Instrument Description:</strong>
+              {{stock.instrument.instrumentDescription}}
+            </p>
+  
+            <p>
+              <strong>Category ID:</strong>
+              {{stock.id}}
+            </p>
+  
+            <p>
+              <strong>Ask Price:</strong>
+              {{stock.askPrice | currency}}
+            </p>
+          </mat-card-content>
+  
+          <mat-card-actions>
+              <button mat-raised-button color="primary">BUY</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+  </div> -->
+
+  <!-- <div class="container">
+    Buy Card
+     <mat-card class="main-card">
+
+        <mat-card-header>
+            <mat-card-title>BUY</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+            <div class="inner-container">
+                <mat-card *ngFor="let stock of buyStocks">
+                    <mat-card-content>
+                        <p>
+                            <strong>Description:</strong>
+                            {{stock.instrument.instrumentDescription}}
+                        </p>
+
+                        <p>
+                            <strong>Category ID:</strong>
+                            {{stock.instrument.categoryId}}
+                        </p>
+
+                        <p>
+                            <strong>Bid Price:</strong>
+                            {{stock.bidPrice | currency}}
+                        </p>
+                    </mat-card-content>
+
+                    <mat-card-actions>
+                        <button mat-raised-button color="primary" (click)="showPopUp()">BUY</button>
+                    </mat-card-actions>
+
+                </mat-card>
+            </div>
+        </mat-card-content>
+     </mat-card>
+
+     Sell Card
+
+  </div> -->

@@ -1,0 +1,98 @@
+[
+    {
+        "email": "john.doe@gmail.com",
+        "clientId": "739982664",
+        "password": "password123",
+        "name": "John Doe",
+        "dateOfBirth": "1990-01-01",
+        "country": "USA",
+        "clientId": "C001",
+        "password": "password123",
+        "dateOfBirth": "1990-01-01",
+        "country": "USA",
+        "postalCode": "12345",
+        "identification": [
+            {
+                "type": "SSN",
+                "value": "P1234567"
+            }
+        ]
+    },
+    {
+        "email": "jane.smith@gmail.com",
+        "clientId": "1210776780",
+        "password": "password456",
+        "name": "Jane Smith",
+        "dateOfBirth": "1985-05-15",
+        "country": "India",
+        "clientId": "C002",
+        "password": "password456",
+        "dateOfBirth": "1985-05-15",
+        "country": "India",
+        "postalCode": "A1B2C3",
+        "identification": [
+            {
+                "type": "PAN",
+                "value": "P2345678"
+            }
+        ]
+    },
+    {
+        "email": "alice.jones@gmail.com",
+        "clientId": "2115946042",
+        "password": "password789",
+        "name": "Alice Jones",
+        "dateOfBirth": "1992-07-20",
+        "country": "USA",
+        "clientId": "C003",
+        "password": "password789",
+        "dateOfBirth": "1992-07-20",
+        "country": "USA",
+        "postalCode": "W1A1AA",
+        "identification": [
+            {
+                "type": "SSN",
+                "value": "P3456789"
+            }
+        ]
+    },
+    {
+        "email": "bob.brown@gmail.com",
+        "clientId": "207280046",
+        "password": "password101",
+        "name": "Bob Brown",
+        "dateOfBirth": "1988-11-30",
+        "country": "India",
+        "clientId": "C004",
+        "password": "password101",
+        "dateOfBirth": "1988-11-30",
+        "country": "India",
+        "postalCode": "2000",
+        "identification": [
+            {
+                "type": "PAN",
+                "value": "P4567890"
+            }
+        ]
+    },
+    {
+        "email": "charlie.davis@gmail.com",
+        "clientId": "1701812344",
+        "password": "password202",
+        "name": "Charlie Davis",
+        "dateOfBirth": "1995-03-10",
+        "country": "India",
+        "clientId": "C005",
+        "password": "password202",
+        "dateOfBirth": "1995-03-10",
+        "country": "India",
+        "postalCode": "600001",
+        "identification": [
+            {
+                "type": "PAN",
+                "value": "P5678901"
+            }
+        ]
+    }
+]
+

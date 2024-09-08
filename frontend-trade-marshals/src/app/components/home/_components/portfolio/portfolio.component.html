@@ -1,1 +1,9 @@
-<p>portfolio works!</p>
+<div class="balance">
+    <h2 class="title">Current Balance: {{currentBalance}}</h2>
+</div>
+<h2> My Holdings </h2>
+
+<div class="grid-container ag-theme-alpine">
+    <ag-grid-angular style="height: 100%; width:96%;" [rowData]="transformedData" [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef" [sideBar]="sidebar" />
+</div>
