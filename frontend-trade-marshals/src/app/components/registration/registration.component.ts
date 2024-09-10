@@ -59,7 +59,7 @@ export class RegistrationComponent implements OnInit {
     else if (idType === "PAN") {
       return idValue?.length !== 10 ? { lengthNotMatched: true } : null
     }
-    return idValue?.length !== 9 ? { lengthNotMatched: true } : null
+    return idValue?.length !== 10 ? { lengthNotMatched: true } : null //For SSN
   };
 
   //3 FormGroups for the Registration Step Up Forms
@@ -239,7 +239,7 @@ export class RegistrationComponent implements OnInit {
             },
             error: (e) => {
               console.log('Registering Client error: ', e)
-              this.snackBar.open(e, '', snackBarConfig)
+              this.snackBar.open(String(e), '', snackBarConfig)
             }
           })
         }

@@ -142,6 +142,7 @@ mat-drawer button:hover {
     background: #046223;
     color: white;
     text-align: center;
+    position: fixed;
 }
  
 .menu-button {
@@ -192,7 +193,7 @@ mat-sidenav-content {
     display: flex;
     transition: margin-left 0.3s ease;
     flex: 1;
-    overflow: auto;
+    /* overflow: auto; */
 }
  
 .body-content {
@@ -201,9 +202,6 @@ mat-sidenav-content {
     margin: 10px;
     flex: 1;
 }
- 
- 
-
 
 .home-content, .robo-advisor-section, .explore-section {
     padding:5px;

@@ -1,6 +1,4 @@
-import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ClientPreferences } from 'src/app/models/Client/ClientPreferences';
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
@@ -12,7 +10,7 @@ import { ClientProfileService } from 'src/app/services/Client/client-profile.ser
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 
   clientProfileData!: ClientProfile | null //Client Profile data that is set with ClientProfileService
   clientPreferencesData!: ClientPreferences | null //Client Preferences data 
