@@ -8,65 +8,71 @@ import { MaterialModule } from 'src/app/material.module';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 
-
-const testClientPreferences: any = 
-  {
-    "investmentPurpose": "Education",
-    "incomeCategory": "HIG",
-    "lengthOfInvestment": "Short",
-    "percentageOfSpend": "Tier4",
-    "riskTolerance": 2,
-    "acceptAdvisor": false,
-    "clientId": "1654658069",
-    "id": "15b4"
-  }
-
-const testClientProfile: any = 
+const testClientProfile: any =
 {
-  "client": 
+  "client":
   {
-    "id":"688f",
-    "email":"rishi@gmail.com",
-    "clientId":"1212794226",
-    "password":"Marsh2024",
-    "name":"Rishiyanth",
-    "dateOfBirth":"11/04/2002",
-    "country":"India",
-    "identification":[
+    "id": "688f",
+    "email": "rishi@gmail.com",
+    "clientId": "1212794226",
+    "password": "Marsh2024",
+    "name": "Rishiyanth",
+    "dateOfBirth": "11/04/2002",
+    "country": "India",
+    "identification": [
       {
-        "type":"Aadhar",
-        "value":"123412341234"
+        "type": "Aadhar",
+        "value": "123412341234"
       }
     ],
-    "isAdmin":false
+    "isAdmin": false
   },
-  "token":1212670770
+  "token": 1212670770
 }
 
-let clientPreferencesMockService: any = jasmine.createSpyObj('ClientPreferencesService', ['getClientPreferences', 'updateClientPreferences', "setClientPreferences"]);
-clientPreferencesMockService.getClientPreferences.and.returnValue(of(testClientPreferences));
-
-let clientProfileMockService: any = jasmine.createSpyObj('ClientProfileService', ['getClientProfile']);
-clientProfileMockService.getClientProfile.and.returnValue(of(testClientProfile));
+const testClientPreferences: any =
+{
+  "investmentPurpose": "Education",
+  "incomeCategory": "HIG",
+  "lengthOfInvestment": "Short",
+  "percentageOfSpend": "Tier4",
+  "riskTolerance": 2,
+  "acceptAdvisor": false,
+  "clientId": "1654658069",
+  "id": "15b4"
+}
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
 
+  let clientProfileMockService:any;
+  let mockGetClientProfileSpy:any;
+
+  let clientPreferencesMockService:any;
+  let mockGetClientPreferencesSpy:any;
+
   beforeEach(async () => {
+
+    clientProfileMockService = jasmine.createSpyObj('ClientProfileService', ['getClientProfile']);
+    mockGetClientProfileSpy = clientProfileMockService.getClientProfile.and.returnValue(of(testClientProfile));
+
+    clientPreferencesMockService = jasmine.createSpyObj('ClientPreferencesService', ['getClientPreferences', 'updateClientPreferences', "setClientPreferences"]);
+    mockGetClientPreferencesSpy = clientPreferencesMockService.getClientPreferences.and.returnValue(of(testClientPreferences));
+
     await TestBed.configureTestingModule({
-      declarations: [ HomeComponent ],
+      declarations: [HomeComponent],
       imports: [
         MaterialModule,
         RouterTestingModule
       ],
       providers: [
-        {provide: ClientProfileService, useValue: clientProfileMockService},
-        {provide: ClientPreferencesService, useValue: clientPreferencesMockService},
-        provideAnimations() 
+        { provide: ClientProfileService, useValue: clientProfileMockService },
+        { provide: ClientPreferencesService, useValue: clientPreferencesMockService },
+        provideAnimations()
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;

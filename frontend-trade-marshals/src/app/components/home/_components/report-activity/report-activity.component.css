@@ -1,10 +1,9 @@
-mat-form-field{
-    margin-bottom: 2%;
-    margin-right: 3%;
-    width: 100%;
+h1 {
+    color: #02310d;
+    text-align: center;
 }
 
-.form{
+.form {
     padding-top: 2%;
     padding-bottom: 2%;
     display: flex;
@@ -12,15 +11,17 @@ mat-form-field{
     align-items: center;
 }
 
-form{
+form {
     width: 23%;
 }
 
-h2{
-    text-align:  center;
+mat-form-field {
+    margin-bottom: 2%;
+    margin-right: 3%;
+    width: 100%;
 }
 
-.horizontal-fields{
+.horizontal-fields {
     display: flex;
     align-items: flex-start;
 }
@@ -30,9 +31,8 @@ button {
     width: 10rem;
 }
 
-.center-buttons{
+.center-buttons {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-

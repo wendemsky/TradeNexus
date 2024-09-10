@@ -29,7 +29,7 @@ const testExistingClient: Client = {
       "value": "123412341234"
     }
   ],
-  "isAdmin": true
+  "isAdmin": false
 }
 
 const testClient: Client = {
@@ -42,13 +42,13 @@ const testClient: Client = {
   "identification": [
     {
       "type": "Aadhar",
-      "value": "123412341234"
+      "value": "456745674567"
     }
   ],
-  "isAdmin": true
+  "isAdmin": false
 }
 
-const validatedClient: ValidatedClient = {
+const testValidatedClient: ValidatedClient = {
   "email": "sample.user@gmail.com",
   "clientId": "5411274199",
   "token": 1252630773
@@ -67,17 +67,17 @@ const testClientProfile: ClientProfile =
     "identification": [
       {
         "type": "Aadhar",
-        "value": "123412341234"
+        "value": "456745674567"
       }
     ],
-    "isAdmin": true
+    "isAdmin": false
   },
   "token": 1252630773
 }
 
 const testClientPortfolio: ClientPortfolio = {
   "clientId": "5411274199",
-  "currBalance": 10000000,
+  "currBalance": 1000000,
   "holdings": []
 }
 
@@ -106,11 +106,11 @@ describe('RegistrationComponent', () => {
     mockGetClientSpy = loginMockService.getValidClientDetails.and.returnValue(of(testExistingClient));
 
     clientProfileMockService = jasmine.createSpyObj('ClientProfileService', ['fmtsClientVerification', 'setClientProfile']);
-    mockValidatedClientSpy = clientProfileMockService.fmtsClientVerification.and.returnValue(of(validatedClient));
+    mockValidatedClientSpy = clientProfileMockService.fmtsClientVerification.and.returnValue(of(testValidatedClient));
     mockClientProfileSetSpy = clientProfileMockService.setClientProfile.and.callFake((param: any) => { return of(param) })
 
     registerMockService = jasmine.createSpyObj('RegisterService', ['checkUniqueGovtIDDetails', 'saveClientDetails', 'saveClientPortfolioDetails']);
-    mockUniqueGovtIDSpy = registerMockService.checkUniqueGovtIDDetails.and.returnValue(of(null))
+    mockUniqueGovtIDSpy = registerMockService.checkUniqueGovtIDDetails.and.returnValue(of(testExistingClient))
     mockAddClientSpy = registerMockService.saveClientDetails.and.callFake((param: any) => { return of(param) })
     mockAddClientPortfolioSpy = registerMockService.saveClientPortfolioDetails.and.callFake((param: any) => { return of(param) })
 
@@ -137,6 +137,7 @@ describe('RegistrationComponent', () => {
     datePipe = TestBed.inject(DatePipe)
     fixture = TestBed.createComponent(RegistrationComponent);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
     snackBarSpy = TestBed.inject(MatSnackBar) as jasmine.SpyObj<MatSnackBar>;
     fixture.detectChanges();
   });
@@ -257,26 +258,52 @@ describe('RegistrationComponent', () => {
   });
 
   //Registration of client - Invalid govt id
-  xit("should show error snackbar message when registering a client with invalid govt id", () => {
+  it("should show error snackbar message when registering a client with invalid govt id", () => {
     component.identificationDetails.setValue({ type: 'Aadhar', value: '123412341234' });
     component.submitRegistrationForm(); //On submitting registration form
-    registerMockService.checkUniqueGovtIDDetails.and.returnValue(throwError(() => new Error('User doesnt have unique id')))
-    expect(snackBar.open).toHaveBeenCalledWith('Error: User doesnt have unique id', '', jasmine.any(Object));
+    expect(mockUniqueGovtIDSpy).toHaveBeenCalled(); //Not a unique govt id - Client with existing govt id details are returned
+    expect(snackBar.open).toHaveBeenCalledWith("Entered Govt ID details aren't unique! Couldn't register client!", '', jasmine.any(Object));
+    expect(component.identificationDetails.value).toEqual({type:null, value:null});
   });
 
 
-  //Successful registration of client
-  xit('Successful registration of client',() => {
+  //Successful registration of client but error in saving client details
+  it('should show error snackbar message when new client details are right but there is an error in saving client details',() => {
     component.signupForm.setValue({email:testClient.email, password:testClient.password, retypePassword:testClient.password})
     component.personalDetails.setValue({name:testClient.name, doB:testClient.dateOfBirth, country:testClient.country})
     component.identificationDetails.setValue({ type: testClient.identification[0].type, value: testClient.identification[0].value });
+    registerMockService.checkUniqueGovtIDDetails.and.returnValue(of(null));   //Unique govt ID
+    registerMockService.saveClientDetails.and.returnValue(throwError(() => new Error('Couldnt register user')));
     component.submitRegistrationForm(); //On submitting registration form
-    expect(mockUniqueGovtIDSpy).toHaveBeenCalled()
-    expect(mockAddClientSpy).toHaveBeenCalledWith(testClient)
-    expect(mockAddClientPortfolioSpy).toHaveBeenCalledWith(testClientPortfolio)
-    //expect(router.navigateByUrl).toHaveBeenCalledWith('/home/client-preferences');
+    expect(snackBar.open).toHaveBeenCalledWith("Error: Couldnt register user", '', jasmine.any(Object));
   })
 
-  
+  //Successful registration of client but error in creating portfolio
+  it('should show error snackbar message when client is registered but there is an error in creating portfolio',() => {
+    component.signupForm.setValue({email:testClient.email, password:testClient.password, retypePassword:testClient.password})
+    component.personalDetails.setValue({name:testClient.name, doB:testClient.dateOfBirth, country:testClient.country})
+    component.identificationDetails.setValue({ type: testClient.identification[0].type, value: testClient.identification[0].value });
+    component.fmtsValidatedClientData = testValidatedClient; //Manually setting client ID
+    registerMockService.checkUniqueGovtIDDetails.and.returnValue(of(null));   //Unique govt ID
+    registerMockService.saveClientPortfolioDetails.and.returnValue(throwError(() => new Error('Couldnt create client portfolio')));
+    component.submitRegistrationForm(); //On submitting registration form
+    expect(mockAddClientSpy).toHaveBeenCalledWith(testClient); //Successfully saving Client details
+    expect(snackBar.open).toHaveBeenCalledWith("Client has been registered but and portfolio couldnt be created! Unexpected error at service!", '', jasmine.any(Object));
+  })
+
+  //Successful registration of client and setting of client profile
+  it('should succesfully register a client given valid details',() => {
+    component.signupForm.setValue({email:testClient.email, password:testClient.password, retypePassword:testClient.password})
+    component.personalDetails.setValue({name:testClient.name, doB:testClient.dateOfBirth, country:testClient.country})
+    component.identificationDetails.setValue({ type: testClient.identification[0].type, value: testClient.identification[0].value });
+    component.fmtsValidatedClientData = testValidatedClient; //Manually setting client ID
+    registerMockService.checkUniqueGovtIDDetails.and.returnValue(of(null));   //Unique govt ID
+    component.submitRegistrationForm(); //On submitting registration form
+    expect(mockAddClientSpy).toHaveBeenCalledWith(testClient); //Successfully saving Client details
+    expect(mockAddClientPortfolioSpy).toHaveBeenCalledWith(testClientPortfolio); //Successfully saving Client Porfolio details
+    expect(mockClientProfileSetSpy).toHaveBeenCalledWith(testClientProfile); //Succesfully setting Client Portfolio
+    //Now redirecting to client preferences page
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/home/client-preferences');
+  })
 
 });

@@ -62,8 +62,8 @@
                         </button>
                     </a>
                 </mat-list-item>
-                <mat-divider *ngIf="clientProfileData?.client?.isAdmin===true"></mat-divider>
-                <mat-list-item routerLinkActive="active" *ngIf="clientProfileData?.client?.isAdmin===true">
+                <mat-divider></mat-divider>
+                <mat-list-item routerLinkActive="active">
                     <a routerLink="/home/report-activity">
                         <button mat-button class="menu-button" (click)="isHomeContent=false">
                             <mat-icon mat-list-icon> assessment</mat-icon>
