@@ -1,8 +1,10 @@
-<h1>USER CLIENT ACTIVITY REPORT</h1>
+<h1>CLIENT ACTIVITY REPORTS</h1>
 
-<section>
+<!--If user is not admin-->
+<section *ngIf="!clientProfileData?.client?.isAdmin">
+  <h2> Please select the kind of report you'd like to download for your activity from the options below: </h2>
   <div class="form">
-    <form [formGroup]="report" (ngSubmit)="onSubmit()">
+    <form [formGroup]="yourReport" (ngSubmit)="onSubmitYourReportForm()">
       <div class="horizontal-fields">
         <mat-form-field appearance="outline">
           <mat-label>Report Type</mat-label>
@@ -14,13 +16,71 @@
         </mat-form-field>
       </div>
 
-      <div class="center-buttons">
-        <button type="submit" [disabled]="!report.valid" mat-raised-button color="primary">Download Report</button>
+      <div class="download-button">
+        <button type="submit" [disabled]="!yourReport.valid" mat-raised-button> Download Report </button>
       </div>
     </form>
   </div>
 </section>
 
-<section *ngIf="clientProfileData?.client?.isAdmin===true">
-  <h2> Client Report Activity for Multiple Users</h2>
+
+<!--If user is admin-->
+<section *ngIf="clientProfileData?.client?.isAdmin">
+  <mat-tab-group>
+    <mat-tab label="View your activity">
+      <div class="mat-tab-content">
+        <h2> Please select the kind of report you'd like to download for your activity from the options below: </h2>
+        <div class="form">
+          <form [formGroup]="yourReport" (ngSubmit)="onSubmitYourReportForm()">
+            <div class="horizontal-fields">
+              <mat-form-field appearance="outline">
+                <mat-label>Report Type</mat-label>
+                <mat-select formControlName="reportType">
+                  <mat-option *ngFor="let report of report_types" [value]="report.value">
+                    {{report.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="download-button">
+              <button type="submit" [disabled]="!yourReport.valid" mat-raised-button> Download Report </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="View other clients' activity">
+      <div class="mat-tab-content">
+        <h2> Please select the client and the kind of report you'd like to download for their activity from the options below: </h2>
+        <div class="form">
+          <form [formGroup]="othersReport" (ngSubmit)="onSubmitOthersReportForm()">
+            <div class="horizontal-fields">
+              <mat-form-field appearance="outline">
+                <mat-label>Client</mat-label>
+                <mat-select formControlName="clientId">
+                  <mat-option *ngFor="let client of clients" [value]="client.value">
+                    {{client.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Report Type</mat-label>
+                <mat-select formControlName="reportType">
+                  <mat-option *ngFor="let report of report_types" [value]="report.value">
+                    {{report.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="download-button">
+              <button type="submit" [disabled]="!othersReport.valid" mat-raised-button> Download Report </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </section>

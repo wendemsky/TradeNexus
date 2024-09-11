@@ -9,7 +9,7 @@ import { PortfolioComponent } from './components/home/_components/portfolio/port
 import { TradingHistoryComponent } from './components/home/_components/trading-history/trading-history.component';
 import { ReportActivityComponent } from './components/home/_components/report-activity/report-activity.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {path: '', component: LandingPageComponent},
   {path: 'register', component: RegistrationComponent},
   {path: 'home', component: HomeComponent,

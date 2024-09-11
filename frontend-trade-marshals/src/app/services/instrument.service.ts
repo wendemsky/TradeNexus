@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Instrument } from '../models/instrument';
 import { catchError, Observable, of, throwError } from 'rxjs';
-import { MockInstruments } from '../../assets/mock-data/mock-instruments';
+// import { MockInstruments } from '../../assets/mock-data/mock-instruments';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   providedIn: 'root'
 })
 export class InstrumentService {
-  instruments: Instrument[] = MockInstruments;
+  //instruments: Instrument[] = MockInstruments;
   private _snackBar = inject(MatSnackBar);
   url: string = 'http://localhost:3000/fmts/trades/instruments'
 
@@ -17,7 +17,7 @@ export class InstrumentService {
     private httpClient: HttpClient
   ) { }
 
-  getInstruments(): Observable<Instrument[]> {
+  getInstruments(): Observable<Instrument[] | null> {
     return this.httpClient.get<Instrument[]>(this.url).pipe(catchError(this.handleError));
   }
 
