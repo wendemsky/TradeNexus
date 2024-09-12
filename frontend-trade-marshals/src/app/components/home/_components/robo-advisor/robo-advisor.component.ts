@@ -16,6 +16,69 @@ export class RoboAdvisorComponent {
 
   prices: Price[] = [];
 
+  buyStocks: any[] = [
+    {
+      "askPrice": 0.998125,
+      "bidPrice": 0.99828125,
+      "priceTimestamp": "21-AUG-19 10.00.02.002000000 AM GMT",
+      "instrument": {
+      "instrumentId": "T67894",
+      "externalIdType": "CUSIP",
+      "externalId": "9128285Z9",
+      "categoryId": "GOVT",
+      "instrumentDescription": "USA, Note 2.5 31jan2024 5Y",
+      "maxQuantity": 10000,
+      "minQuantity": 100
+      }
+      },
+      {
+      "askPrice": 1,
+      "bidPrice": 1.00015625,
+      "priceTimestamp": "21-AUG-19 10.00.02.002000000 AM GMT",
+      "instrument": {
+      "instrumentId": "T67895",
+      "externalIdType": "CUSIP",
+      "externalId": "9128286A3",
+      "categoryId": "GOVT",
+      "instrumentDescription": "USA, Note 2.625 31jan2026 7Y",
+      "maxQuantity": 10000,
+      "minQuantity": 100
+      }
+      },
+      {
+      "askPrice": 0.999375,
+      "bidPrice": 0.999375,
+      "priceTimestamp": "21-AUG-19 10.00.02.002000000 AM GMT",
+      "instrument": {
+      "instrumentId": "T67897",
+      "externalIdType": "CUSIP",
+      "externalId": "9128285X4",
+      "categoryId": "GOVT",
+      "instrumentDescription": "USA, Note 2.5 31jan2021 2Y",
+      "maxQuantity": 10000,
+      "minQuantity": 100
+      }
+      },
+      {
+      "askPrice": 0.999375,
+      "bidPrice": 0.999375,
+      "priceTimestamp": "21-AUG-19 10.00.02.002000000 AM GMT",
+      "instrument": {
+      "instrumentId": "T67899",
+      "externalIdType": "CUSIP",
+      "externalId": "9128285V8",
+      "categoryId": "GOVT",
+      "instrumentDescription": "USA, Notes 2.5% 15jan2022 3Y",
+      "maxQuantity": 10000,
+      "minQuantity": 100
+      }
+      },
+  ]
+
+  longText = `The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog
+  from Japan. A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was
+  originally bred for hunting.`;
+
   public buyColumnDefs: ColDef[] = [
     {
       headerName: "Instrument ID",

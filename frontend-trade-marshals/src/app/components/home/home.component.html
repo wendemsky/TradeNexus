@@ -109,10 +109,21 @@
                     </div> -->
                     
 
-                    <div *ngIf="clientPreferencesData?.acceptAdvisor" class="robo-advisor-section mat-elevation-z8">
-                        <h2> Robo Advisor </h2>
-                         <app-robo-advisor></app-robo-advisor>
-                    </div>
+                    
+                        <!-- <h2> Robo Advisor </h2>
+                         <app-robo-advisor></app-robo-advisor> -->
+                         <!-- <button mat-button (click)="openDialog()">Open dialog</button> -->
+                         <!-- <div  (click)="openDialog()">
+                            
+                          </div> -->
+
+                          <div (click)="openDialog()" *ngIf="clientPreferencesData?.acceptAdvisor" class="chatbot-button mat-elevation-z9999">
+                            <div class="button-content">
+                                <img src="../../../assets/logo.png" alt="Marsh">
+                              <span class="button-text">Marsh</span>
+                            </div>
+                          </div>
+                    
 
                     <div class="explore-section mat-elevation-z8">
                         <h2> Market Overview </h2>

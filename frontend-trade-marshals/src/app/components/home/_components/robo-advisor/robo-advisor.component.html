@@ -18,7 +18,11 @@
         />
 </div> -->
 
-<div class="grid-container">
+<mat-dialog-content class="mat-typography">
+  
+  <h2> Robo Advisor </h2>
+
+  <div class="grid-container">
     <div class="ag-theme-alpine grid-item">
       <ag-grid-angular 
         style="height: 100%; width:96%;"
@@ -39,9 +43,9 @@
       </ag-grid-angular>
     </div>
   </div>
-  
+</mat-dialog-content>
       
-<!-- <div class="container">
+ <!-- <div class="container">
     <div class="column">
       <mat-card *ngFor="let stock of buyStocks">
         <mat-card-content>
@@ -66,7 +70,9 @@
         </mat-card-actions>
       </mat-card>
     </div>
+  </div> -->
 
+    <!--
     <div class="column">
         <mat-card *ngFor="let stock of sellStocks">
           <mat-card-content>
@@ -133,3 +139,17 @@
      Sell Card
 
   </div> -->
+<!-- 
+  <mat-card  *ngFor="let stock of buyStocks" class="example-card">
+    <mat-card-header>
+      <mat-card-title>{{stock.instrument.instrumentDescription}}</mat-card-title>
+      <mat-card-subtitle>{{stock.instrument.categoryId}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>{{}}</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button>BUY</button>
+    </mat-card-actions>
+  </mat-card> -->
+
