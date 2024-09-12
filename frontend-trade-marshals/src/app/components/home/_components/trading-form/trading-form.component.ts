@@ -13,6 +13,8 @@ import { TradeHistoryService } from 'src/app/services/trade-history.service';
 import { TradeService } from 'src/app/services/trade.service';
 import { v4 as uuidv4 } from 'uuid';
 
+import { Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 
 
 
@@ -36,7 +38,6 @@ export class TradingFormComponent implements OnInit{
   upperLimit!: number;
   withinOnePercentOfAskOrBidPrice?: boolean;
   public _snackBar = inject(MatSnackBar);
-
   
   
 
@@ -52,6 +53,7 @@ export class TradingFormComponent implements OnInit{
     @Inject(MAT_DIALOG_DATA) public data: any,
     public clientProfileService: ClientProfileService,
     public clientPortfolioService: ClientPortfolioService,
+    private router: Router
   ){
     this.askPrice = data.askPrice;
     this.bidPrice = data.bidPrice;
@@ -322,6 +324,13 @@ export class TradingFormComponent implements OnInit{
       duration: 3000,
       panelClass: ['form-submit-snackbar']
     });
+
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/home/client-portfolio']).then(() => {
+        console.log(`After navigation I am on:${this.router.url}`)
+      })
+    })
+    
   }
 
 }

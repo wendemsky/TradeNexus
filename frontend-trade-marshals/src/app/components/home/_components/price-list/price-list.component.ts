@@ -1,9 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Price } from 'src/app/models/price';
 import { PriceService } from 'src/app/services/price.service';
-import { ColDef, SideBarDef } from 'ag-grid-community';
+import { CellClickedEvent, ColDef, SideBarDef } from 'ag-grid-community';
 import { SellComponent } from '../sell/sell.component';
 import { BuyComponent } from '../buy/buy.component';
+import { Instrument } from 'src/app/models/instrument';
+// import {
+//   ColGroupDef,
+//   GridApi,
+//   GridOptions,
+//   ModuleRegistry,
+//   createGrid,
+// } from "@ag-grid-community/core";
+
 
 @Component({
   selector: 'app-price-list',
@@ -12,6 +21,7 @@ import { BuyComponent } from '../buy/buy.component';
 })
 export class PriceListComponent implements OnInit{
   prices: Price[] = [];
+  instrumentIdSelected?: string;
 
   public columnDefs: ColDef[] = [{ 
     headerName: "Instrument Description", 
@@ -37,14 +47,14 @@ export class PriceListComponent implements OnInit{
     field: "buy",
     cellRenderer: BuyComponent,
     cellRendererParams: {
-      
+      instrumentId: this.instrumentIdSelected
     }
   },{ 
     headerName: "Sell", 
     field: "sell",
     cellRenderer: SellComponent,
     cellRendererParams: {
-      
+      instrumentId: this.instrumentIdSelected
     }
   }
 ]
@@ -57,23 +67,23 @@ public defaultColDef: ColDef = {
   filter: true,
 }
 
-public sidebar: SideBarDef | null = {
-  toolPanels: [
-    {
-        id: 'columns',
-        labelDefault: 'Columns',
-        labelKey: 'columns',
-        iconKey: 'columns',
-        toolPanel: 'agColumnsToolPanel',
-    },{
-        id: 'filters',
-        labelDefault: 'Filters',
-        labelKey: 'filters',
-        iconKey: 'filter',
-        toolPanel: 'agFiltersToolPanel',
-  }],    
-  position: 'left',
-}
+  public sidebar: SideBarDef | null = {
+    toolPanels: [
+      {
+          id: 'columns',
+          labelDefault: 'Columns',
+          labelKey: 'columns',
+          iconKey: 'columns',
+          toolPanel: 'agColumnsToolPanel',
+      },{
+          id: 'filters',
+          labelDefault: 'Filters',
+          labelKey: 'filters',
+          iconKey: 'filter',
+          toolPanel: 'agFiltersToolPanel',
+      }],    
+      position: 'left',
+  }
 
   constructor(
     private priceService: PriceService,
@@ -87,6 +97,30 @@ public sidebar: SideBarDef | null = {
     this.priceService.getPrices()
       .subscribe(data => this.prices = data);
   }
+
+  // onGridReady(params){
+  //   this.gridApi = params.api;
+  // }
+
+  // onRowSelect(event) {
+  //   const selectedRow = this.gridApi.getSelectedRow();
+  //   console.log("On Click Button", event.data);
+  // }
+
+  // onSelectionChanged() {
+    // const selectedRows =  this.gridApi?.getSelectedRows();
+    // const instrumentId = selectedRows.length === 1 ? selectedRows[0].instrumentId : "";
+    // console.log('Selected Row: ', instrumentId);
+  // }
+ 
+
+  cellClicked(event: CellClickedEvent) {
+    if(event.node.data) {
+        console.log("Selected Node: ", event.node.data);
+        this.instrumentIdSelected = event.node.data.instrument.instrumentId;
+    }
+  }
+
 
   
 }
