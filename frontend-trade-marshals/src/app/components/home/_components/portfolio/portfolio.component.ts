@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ColDef, SideBarDef } from 'ag-grid-community';
+import { CellClickedEvent, ColDef, SideBarDef } from 'ag-grid-community';
 import { BuyComponent } from '../buy/buy.component';
 import { SellComponent } from '../sell/sell.component';
 import { ClientPortfolioService } from 'src/app/services/Client/client-portfolio.service';
@@ -7,6 +7,7 @@ import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Instrument } from 'src/app/models/instrument';
 
 
 @Component({
@@ -24,6 +25,8 @@ export class PortfolioComponent implements OnInit{
   transformedData: any[] = [];
   currentBalance: any;
   private _snackBar = inject(MatSnackBar);
+
+  instrumentIdSelected?: string;
 
   public columnDefs: ColDef[] = [
     {
@@ -47,16 +50,22 @@ export class PortfolioComponent implements OnInit{
       headerName: "Average Price", 
       field: "avgPrice",
     }, 
-    // { 
-    //   headerName: "Buy", 
-    //   field: "buy",
-    //   cellRenderer: BuyComponent
-    // },
-    // { 
-    //   headerName: "Sell", 
-    //   field: "sell",
-    //   cellRenderer: SellComponent
-    // }
+    { 
+      headerName: "Buy", 
+      field: "buy",
+      cellRenderer: BuyComponent,
+      cellRendererParams: {
+        instrumentId: this.instrumentIdSelected
+      }
+    },
+    { 
+      headerName: "Sell", 
+      field: "sell",
+      cellRenderer: SellComponent,
+      cellRendererParams: {
+        instrumentId: this.instrumentIdSelected
+      }
+    }
   ]
 
   public defaultColDef: ColDef = {
@@ -133,6 +142,21 @@ export class PortfolioComponent implements OnInit{
       this.currentBalance = portfolio.currBalance
     )
     )
+  }
+
+  cellClicked(event: CellClickedEvent) {
+    if(event.node.data) {
+        console.log("Selected Node: ", event.node.data);
+        // data.instrumentId
+        this.instrumentIdSelected = event.node.data.instrument.instrumentId;
+    }
+  }
+
+  bool?: boolean;
+  reloadPortfolio(reload: String) {
+    if(reload == "reload"){
+      this.loadPortfolio();
+    }
   }
   
 

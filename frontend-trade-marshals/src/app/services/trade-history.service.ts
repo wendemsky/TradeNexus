@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { Trade } from '../models/trade';
-import { mockTrades } from 'src/assets/mock-data/mock-trade-history';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Order } from '../models/order';

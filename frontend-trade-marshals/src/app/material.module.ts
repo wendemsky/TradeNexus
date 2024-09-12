@@ -9,6 +9,7 @@ import {MatTooltipModule} from "@angular/material/tooltip"
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatCardModule} from "@angular/material/card"
+import {MatTabsModule} from "@angular/material/tabs"
 
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input'
@@ -19,7 +20,6 @@ import {MatSelectModule} from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-
 
 @NgModule({
     exports: [
@@ -33,6 +33,7 @@ import { MatNativeDateModule } from '@angular/material/core';
         MatDialogModule,
         MatSnackBarModule,
         MatCardModule,
+        MatTabsModule,
         MatFormFieldModule,
         MatInputModule,
         MatSliderModule,

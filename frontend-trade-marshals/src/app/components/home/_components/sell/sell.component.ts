@@ -12,6 +12,7 @@ import { PriceService } from 'src/app/services/price.service';
 export class SellComponent implements OnInit {
   prices: Price[] = [];
   price?: Price;
+  instrumentId?: String;
 
   constructor(
     private priceService: PriceService,
@@ -30,20 +31,25 @@ export class SellComponent implements OnInit {
   params: any;
   agInit(params: any): void {
     this.params = params;
+    this.instrumentId = (this.params.data.instrument)? this.params.data.instrument.instrumentId : this.params.data.instrumentId;
   }
-  
-  onClickSell(price: Price) {
+
+  onClickSell() {
+    this.price =  this.prices.filter((price: Price) => price.instrument.instrumentId === this.instrumentId)[0];
+    console.log('Sell', this.price.instrument);
+    
     const tradeFormData = {
-      askPrice: price.askPrice,
-      bidPrice: price.bidPrice,
-      priceTimeStamp: price.priceTimestamp,
+      askPrice: this.price.askPrice,
+      bidPrice: this.price.bidPrice,
+      priceTimeStamp: this.price.priceTimestamp,
       direction: 'S',
-      instrument: price.instrument
+      instrument: this.price.instrument
     }
 
     this._dialog.open(TradingFormComponent, {
+      data: tradeFormData,
       width: '50vw',
-      data: tradeFormData
     });
   }
+  
 }

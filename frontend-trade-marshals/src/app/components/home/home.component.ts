@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ClientPreferences } from 'src/app/models/Client/ClientPreferences';
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
 import { ClientPreferencesService } from 'src/app/services/Client/client-preferences.service';
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
+import { RoboAdvisorComponent } from './_components/robo-advisor/robo-advisor.component';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +19,7 @@ export class HomeComponent implements OnInit {
   isSideMenuExpanded: boolean = false; //Side Menu
   isHomeContent:boolean = true; //Home Content displayed
 
-  constructor(private clientProfileService: ClientProfileService, private clientPreferencesService: ClientPreferencesService, private router: Router) { }
+  constructor(private clientProfileService: ClientProfileService, private clientPreferencesService: ClientPreferencesService, private router: Router, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.isSideMenuExpanded = false
@@ -65,4 +67,16 @@ export class HomeComponent implements OnInit {
     this.clientProfileService.removeClientProfile() //Erasing Client data
     this.router.navigateByUrl('/')
   }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(RoboAdvisorComponent, {
+      height: '65%',
+      width: '80%',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 }
+

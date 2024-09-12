@@ -7,8 +7,28 @@ import { ClientPreferencesService } from 'src/app/services/Client/client-prefere
 import { MaterialModule } from 'src/app/material.module';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Component } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import {Location} from '@angular/common'
+import {routes} from '../../app-routing.module'
 
-const testClientProfile: any =
+
+//Mock Component for Price List
+@Component({
+  selector: 'app-price-list'
+})
+class MockPriceListComponent {
+}
+
+//Mock Component for Robo Advisor
+@Component({
+  selector: 'app-robo-advisor'
+})
+class MockRoboAdvisorComponent {
+}
+
+let testClientProfile: any =
 {
   "client":
   {
@@ -30,7 +50,7 @@ const testClientProfile: any =
   "token": 1212670770
 }
 
-const testClientPreferences: any =
+let testClientPreferences: any =
 {
   "investmentPurpose": "Education",
   "incomeCategory": "HIG",
@@ -45,12 +65,14 @@ const testClientPreferences: any =
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
+  let router: Router;
+  let location: Location;
 
-  let clientProfileMockService:any;
-  let mockGetClientProfileSpy:any;
+  let clientProfileMockService: any;
+  let mockGetClientProfileSpy: any;
 
-  let clientPreferencesMockService:any;
-  let mockGetClientPreferencesSpy:any;
+  let clientPreferencesMockService: any;
+  let mockGetClientPreferencesSpy: any;
 
   beforeEach(async () => {
 
@@ -61,10 +83,13 @@ describe('HomeComponent', () => {
     mockGetClientPreferencesSpy = clientPreferencesMockService.getClientPreferences.and.returnValue(of(testClientPreferences));
 
     await TestBed.configureTestingModule({
-      declarations: [HomeComponent],
+      declarations: [HomeComponent,
+        MockPriceListComponent,
+        MockRoboAdvisorComponent
+      ],
       imports: [
         MaterialModule,
-        RouterTestingModule
+        RouterTestingModule.withRoutes(routes)
       ],
       providers: [
         { provide: ClientProfileService, useValue: clientProfileMockService },
@@ -75,11 +100,43 @@ describe('HomeComponent', () => {
       .compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
+    
+    router = TestBed.inject(Router);
+    location = TestBed.inject(Location)
+    await router.navigateByUrl('/home');
+    fixture.detectChanges();
+
     component = fixture.componentInstance;
     fixture.detectChanges();
+
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should retrieve logged in client profile details', () => {
+    expect(mockGetClientProfileSpy).toHaveBeenCalled();
+    expect(component.clientProfileData).toBe(testClientProfile);
+  })
+
+  it('should retrieve logged in client preferences details', () => {
+    expect(mockGetClientPreferencesSpy).toHaveBeenCalled();
+    expect(component.clientPreferencesData).toBe(testClientPreferences);
+  })
+
+  it('should render home content', () => {
+    expect(location.path()).toBe('/home')
+    expect(component.isHomeContent).toBeTruthy();
+  })
+
+  it('should render robo advisor component if client preferences accept advisor t&c is set to true', () => {
+    testClientPreferences.acceptAdvisor = true;
+    clientPreferencesMockService.getClientPreferences.and.returnValue(of(testClientPreferences));
+    fixture.detectChanges()
+    expect(component.clientPreferencesData).toBe(testClientPreferences)
+    const roboAdvisorComponent = fixture.debugElement.query(By.directive(MockRoboAdvisorComponent));
+    expect(roboAdvisorComponent).toBeTruthy();
+  })
+
 });
