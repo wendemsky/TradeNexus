@@ -41,19 +41,19 @@ const mockPrices = [
 describe('BuyComponent', () => {
   let component: BuyComponent;
   let fixture: ComponentFixture<BuyComponent>;
-  
+
   let priceMockService = jasmine.createSpyObj('PriceService', ['getPrices'])
   let getSpy = priceMockService.getPrices.and.returnValue(of(mockPrices))
   let dialogMock: jasmine.SpyObj<MatDialog>;
 
   beforeEach(async () => {
     dialogMock = jasmine.createSpyObj('MatDialog', ['open']);
-    
+
     await TestBed.configureTestingModule({
       declarations: [BuyComponent],
       imports: [MaterialModule],
       providers: [
-        {provide: PriceService, useValue: priceMockService},
+        { provide: PriceService, useValue: priceMockService },
         { provide: MatDialog, useValue: dialogMock }
       ]
     })
@@ -89,7 +89,10 @@ describe('BuyComponent', () => {
       direction: 'B',
       instrument: price.instrument
     };
-    component.onClickBuy(price);
+    //Fixing component's instrumentId before checking
+    component.instrumentId = price.instrument.instrumentId;
+    fixture.detectChanges();
+    component.onClickBuy();
     expect(dialogMock.open).toHaveBeenCalledWith(TradingFormComponent, {
       width: '50vw',
       data: expectedData
@@ -97,7 +100,16 @@ describe('BuyComponent', () => {
   });
 
   it('should initialize params correctly', () => {
-    const params = { someParam: 'value' };
+    const instrument = {
+      "instrumentId": "N123456",
+      "externalIdType": "CUSIP",
+      "externalId": "46625H100",
+      "categoryId": "STOCK",
+      "instrumentDescription": "JPMorgan Chase & Co. Capital Stock",
+      "maxQuantity": 1000,
+      "minQuantity": 1
+    }
+    const params = { data: instrument };
     component.agInit(params);
     expect(component.params).toEqual(params);
   });

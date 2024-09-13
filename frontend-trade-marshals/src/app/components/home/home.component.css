@@ -266,7 +266,8 @@ mat-sidenav-content {
     right: 20px;
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #007bff, #00d2ff);
+    /* background: linear-gradient(135deg, #007bff, #00d2ff); */
+    background: linear-gradient(135deg, #02310d, #046223);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -300,10 +301,12 @@ mat-sidenav-content {
   
   /* Hover Effect */
   .chatbot-button:hover {
+    cursor: pointer;
     width: 150px;
     height: 50px;
     border-radius: 10px;
-    background: linear-gradient(135deg, #0056b3, #00aaff);
+    /* background: linear-gradient(135deg, #0056b3, #00aaff); */
+    background: linear-gradient(135deg, #02310d, #046223);
     transform: scale(1.1);
   }
   

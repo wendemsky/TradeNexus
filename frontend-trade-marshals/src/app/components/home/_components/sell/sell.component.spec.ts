@@ -89,7 +89,10 @@ describe('SellComponent', () => {
       direction: 'S',
       instrument: price.instrument
     };
-    component.onClickSell(price);
+    //Fixing component's instrumentId before checking
+    component.instrumentId = price.instrument.instrumentId;
+    fixture.detectChanges();
+    component.onClickSell();
     expect(dialogMock.open).toHaveBeenCalledWith(TradingFormComponent, {
       width: '50vw',
       data: expectedData
@@ -97,7 +100,16 @@ describe('SellComponent', () => {
   });
 
   it('should initialize params correctly', () => {
-    const params = { someParam: 'value' };
+    const instrument = {
+      "instrumentId": "N123456",
+      "externalIdType": "CUSIP",
+      "externalId": "46625H100",
+      "categoryId": "STOCK",
+      "instrumentDescription": "JPMorgan Chase & Co. Capital Stock",
+      "maxQuantity": 1000,
+      "minQuantity": 1
+    }
+    const params = { data: instrument };
     component.agInit(params);
     expect(component.params).toEqual(params);
   });
