@@ -4,7 +4,6 @@ import { PriceService } from 'src/app/services/price.service';
 import { CellClickedEvent, ColDef, SideBarDef } from 'ag-grid-community';
 import { SellComponent } from '../sell/sell.component';
 import { BuyComponent } from '../buy/buy.component';
-import { Instrument } from 'src/app/models/instrument';
 // import {
 //   ColGroupDef,
 //   GridApi,
