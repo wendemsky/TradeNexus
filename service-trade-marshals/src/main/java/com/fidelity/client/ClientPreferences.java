@@ -14,6 +14,9 @@ public class ClientPreferences {
 	
 	public ClientPreferences(String clientId, String investmentPurpose, String incomeCategory,
 			String lengthOfInvestment, String percentageOfSpend, int riskTolerance, String acceptAdvisor) {
+		if(riskTolerance < 1 || riskTolerance > 5) {
+			throw new IllegalArgumentException("Tolerance should be between 1 to 5");
+		}
 		this.clientId = clientId;
 		this.investmentPurpose = investmentPurpose;
 		this.incomeCategory = incomeCategory;
