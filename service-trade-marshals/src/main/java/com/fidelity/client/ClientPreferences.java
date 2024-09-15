@@ -14,16 +14,26 @@ public class ClientPreferences {
 	
 	public ClientPreferences(String clientId, String investmentPurpose, String incomeCategory,
 			String lengthOfInvestment, String percentageOfSpend, int riskTolerance, String acceptAdvisor) {
-		if(riskTolerance < 1 || riskTolerance > 5) {
-			throw new IllegalArgumentException("Tolerance should be between 1 to 5");
+		
+		try {
+			if(clientId == null) throw new NullPointerException("Client ID cannot be null");
+				//Only checking validity of fields that are not explicitly covered in Angular
+				if(riskTolerance < 1 || riskTolerance > 5) {
+					throw new IllegalArgumentException("Tolerance should be between 1 to 5");
+				}
+				this.clientId = clientId;
+				this.investmentPurpose = investmentPurpose;
+				this.incomeCategory = incomeCategory;
+				this.lengthOfInvestment = lengthOfInvestment;
+				this.percentageOfSpend = percentageOfSpend;
+				this.riskTolerance = riskTolerance;
+				this.acceptAdvisor = acceptAdvisor;
+		} catch(NullPointerException e) {
+			throw e;
+		}	catch(IllegalArgumentException e) {
+			throw e;
 		}
-		this.clientId = clientId;
-		this.investmentPurpose = investmentPurpose;
-		this.incomeCategory = incomeCategory;
-		this.lengthOfInvestment = lengthOfInvestment;
-		this.percentageOfSpend = percentageOfSpend;
-		this.riskTolerance = riskTolerance;
-		this.acceptAdvisor = acceptAdvisor;
+		
 	}
 	
 	public String getClientId() {
