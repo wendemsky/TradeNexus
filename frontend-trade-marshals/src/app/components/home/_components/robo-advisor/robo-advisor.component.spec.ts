@@ -5,6 +5,7 @@ import { PriceService } from 'src/app/services/price.service';
 import { AgGridModule } from 'ag-grid-angular';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
+import { MaterialModule } from 'src/app/material.module';
 
 const mockPrices = [
   {
@@ -49,6 +50,7 @@ describe('RoboAdvisorComponent', () => {
       declarations: [RoboAdvisorComponent],
       imports: [
         AgGridModule,
+        MaterialModule,
         HttpClientTestingModule
       ],
       providers: [
