@@ -19,8 +19,9 @@ import com.fidelity.client.ClientPreferences;
 import com.fidelity.clientportfolio.*;
 
 public class TradeService {
-	private PortfolioService portfolioService = new PortfolioService();
-
+	
+	private PortfolioService portfolioService = null;
+	private TradeHistoryService tradeHistorySerice = null;
    
    
 	public List<Price> getAllPrices() {
@@ -86,7 +87,9 @@ public class TradeService {
     	portfolioService.addClientPortfolio(clientPortfolios.get(0));
     	portfolioService.addClientPortfolio(clientPortfolios.get(1));
     	
-		ClientPortfolio clientPortfolio = portfolioService.getClientPortfolio(order.getClientId());
+    	tradeHistorySerice = new TradeHistoryService();
+    	
+    	ClientPortfolio clientPortfolio = portfolioService.getClientPortfolio(order.getClientId());
     	
     	try {
 			 prices = getAllPrices();
@@ -100,6 +103,8 @@ public class TradeService {
         			// updatePortfolio
         			Trade trade = createTrade(order);
         			portfolioService.updateClientPortfolio(trade);
+        			//update trade history
+        			tradeHistorySerice.addTrade(trade);
         			return trade;
         		}
         	}
@@ -109,6 +114,8 @@ public class TradeService {
     				// updatePortfolio
     				Trade trade = createTrade(order);
         			portfolioService.updateClientPortfolio(trade);
+        			//update trade history
+        			tradeHistorySerice.addTrade(trade);
         			return trade;
     			}
     		}

@@ -8,7 +8,11 @@ import com.fidelity.trade.Trade;
 
 
 public class TradeHistoryService {
-	 private List<Trade> trades = new ArrayList<>();
+	 private List<Trade> trades;
+	 
+	 public TradeHistoryService() {
+		 trades = new ArrayList<>();
+	 }
 	 public List<Trade> getClientTradeHistory(String clientId) {
 	        if (clientId == null) {
 	            throw new NullPointerException("Client ID must not be null");
