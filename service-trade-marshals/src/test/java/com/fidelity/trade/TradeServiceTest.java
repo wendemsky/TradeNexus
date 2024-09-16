@@ -219,21 +219,21 @@ public class TradeServiceTest {
     
     @Test
     public void testExecuteTradeBuy() {
-    	Order order = new Order("N123456", 10, new BigDecimal("104.75"), "B", "1425922638", "order1", 123);
+    	Order order = new Order("N123456", 10, new BigDecimal("10.75"), "B", "1425922638", "order1", 123);
     	Trade trade = tradeService.executeTrade(order);
     	assertTrue(trade != null);
     }
     
     @Test
     public void testExecuteTradeSell() {
-    	Order order = new Order("N123456", 10, new BigDecimal("104.75"), "S", "1425922638", "order1", 123);
+    	Order order = new Order("N123456", 1, new BigDecimal("104.75"), "S", "1425922638", "order1", 123);
     	Trade trade = tradeService.executeTrade(order);
     	assertTrue(trade != null);
     }
     
     @Test
     public void testExecuteTradeThrowExceptionForInvalidDirection() {
-    	Order order = new Order("N123456", 10, new BigDecimal("104.75"), "X", "1425922638", "order1", 123);
+    	Order order = new Order("N123456", 1, new BigDecimal("104.75"), "X", "1425922638", "order1", 123);
     	Exception e = assertThrows(IllegalArgumentException.class, () -> {
     		tradeService.executeTrade(order);
     	});

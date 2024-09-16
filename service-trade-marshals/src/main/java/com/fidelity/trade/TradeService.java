@@ -17,7 +17,6 @@ import java.util.Map;
 
 import com.fidelity.client.ClientPreferences;
 import com.fidelity.clientportfolio.*;
-import com.fidelity.roboadvisor.PriceScorer;
 
 public class TradeService {
 	private PortfolioService portfolioService = new PortfolioService();
