@@ -1,15 +1,31 @@
 package com.fidelity.activityreport;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.fidelity.clientportfolio.ClientPortfolio;
+import com.fidelity.clientportfolio.PortfolioService;
+import com.fidelity.clientportfolio.TradeHistoryService;
+import com.fidelity.trade.Trade;
+import com.fidelity.trade.TradeService;
+
 public class ActivityReportService {
 	
+	public PortfolioService portfolioService = new PortfolioService();
+	public TradeHistoryService tradeHistoryService = new TradeHistoryService();
+	
 	//Generate Report with Clients Holdings
-	public static void generateHoldingsReport(String clientId) {
+	public ClientPortfolio generateHoldingsReport(String clientId) {
 		//Return Holdings of given client's portfolio
+		return portfolioService.getClientPortfolio(clientId);
+		
 	}
 	
 	//Generate Report with Clients Trade History
-	public static void generateTradeReport(String clientId) {
+	public List<Trade> generateTradeReport(String clientId) {
 		//Return Trade History of given client's portfolio
+		return tradeHistoryService.getClientTradeHistory(clientId);
 	}
 	
 	//Generate Report with Clients P&L Data
@@ -38,6 +54,6 @@ public class ActivityReportService {
 //	        
 //	        return profitLossMap;
 //	    }
-//	}
+	}
 	
-}
+

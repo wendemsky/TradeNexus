@@ -36,6 +36,50 @@ public class ClientPreferences {
 		
 	}
 	
+	public String getInvestmentPurpose() {
+		return investmentPurpose;
+	}
+
+	public void setInvestmentPurpose(String investmentPurpose) {
+		this.investmentPurpose = investmentPurpose;
+	}
+
+	public String getLengthOfInvestment() {
+		return lengthOfInvestment;
+	}
+
+	public void setLengthOfInvestment(String lengthOfInvestment) {
+		this.lengthOfInvestment = lengthOfInvestment;
+	}
+
+	public String getPercentageOfSpend() {
+		return percentageOfSpend;
+	}
+
+	public void setPercentageOfSpend(String percentageOfSpend) {
+		this.percentageOfSpend = percentageOfSpend;
+	}
+
+	public int getRiskTolerance() {
+		return riskTolerance;
+	}
+
+	public void setRiskTolerance(int riskTolerance) {
+		this.riskTolerance = riskTolerance;
+	}
+
+	public String getAcceptAdvisor() {
+		return acceptAdvisor;
+	}
+
+	public void setAcceptAdvisor(String acceptAdvisor) {
+		this.acceptAdvisor = acceptAdvisor;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
 	public String getClientId() {
 		return this.clientId;
 	}

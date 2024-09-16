@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 //import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,7 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fidelity.client.ClientPreferences;
 import com.fidelity.clientportfolio.*;
+import com.fidelity.roboadvisor.PriceScorer;
 
 public class TradeService {
 
@@ -178,6 +181,75 @@ public class TradeService {
 //        }
 //        return tradeHistory.getOrDefault(clientId, new ArrayList<>());
 //    }
+    
+    
+//    --------------------------------ROBO ADVISOR-------------------------------------------
+    
+    public List<Price> recommendTopTrades(List<Price> availableTrades, ClientPreferences preferences) {
+        PriceScorer scorer = new PriceScorer(preferences);
+        List<Price> recommendedPrice = new ArrayList<Price>();
+        System.out.println("Trades before sorting -> " + availableTrades);
+        for(Price trade: availableTrades) {
+        	if(calculateScore(trade, preferences).compareTo(new BigDecimal(scorer.calculateScore()).divide(new BigDecimal(25))) < 0) {
+        		recommendedPrice.add(trade);
+        	}
+        }
+    
+//        Collections.sort(availableTrades, scorer);
+        
+        System.out.println("Trades after sorting -> " + availableTrades.toString());
+        
+        // Return top 5 trades or fewer if there aren't enough trades
+        return availableTrades.size() > 5 ? recommendedPrice.subList(0, 5) : recommendedPrice;
+    }
+    
+    public List<Holding> recommendTopSellTrades(List<Holding> userHoldings){
+    	
+    	List<Holding> topSellTrades = new ArrayList<>();
+    	if(userHoldings.size() <= 5) {
+//    		return everything
+    		topSellTrades = userHoldings; 
+    	}else {
+    		for (int i = 0; i < 5; i++) 
+            {
+               // generating the index using Math.random()
+                int index = (int)(Math.random() * userHoldings.size());
+                topSellTrades.add(userHoldings.get(index));
+                
+            }
+    		
+    	}
+    	for(Holding userHolding: topSellTrades) {
+    		System.out.println("Top sell trades -> " + userHolding.getInstrumentId() + " , Description -> " + userHolding.getInstrumentDescription());
+    	}
+    	
+		return topSellTrades;
+    	
+    }
+    
+    
+    public BigDecimal calculateScore(Price trade, ClientPreferences client) {
+        BigDecimal bidAskSpread = (trade.getAskPrice().subtract(trade.getBidPrice())).setScale(4, RoundingMode.HALF_UP);
+        BigDecimal price = trade.getAskPrice().setScale(4,RoundingMode.HALF_UP);
+        BigDecimal score = BigDecimal.ZERO;
+        BigDecimal value = new BigDecimal(1000);
+        
+        score = bidAskSpread.abs();
+        
+        if(bidAskSpread.abs().compareTo(new BigDecimal(1)) > 0) {
+        	score = bidAskSpread.divide(new BigDecimal(1000));
+        }
+
+        // Calculate base score from bid-ask spread and price
+//        score = value.multiply( bidAskSpread.abs()); // Simple scoring example
+        
+//        score = score.multiply(new BigDecimal(client.getRiskTolerance()).divide(new BigDecimal(5))); // Scale by risk tolerance
+        // Adjust score based on client preferences
+
+        System.out.println("Score for trade - " + trade.getInstrument().getInstrumentDescription() + " , Score -> " + score);
+        return score;
+    }
+    
 }
 
 

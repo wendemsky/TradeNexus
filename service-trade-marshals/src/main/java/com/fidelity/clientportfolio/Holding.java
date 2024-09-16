@@ -27,6 +27,10 @@ public class Holding {
      public int getQuantity() {
          return quantity;
      }
+     
+     public String getInstrumentDescription() {
+    	 return this.instrumentDesc;
+     }
 
      public void setQuantity(int quantity) {
          this.quantity = quantity;
