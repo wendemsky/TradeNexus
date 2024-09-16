@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fidelity.client.ClientPreferences;
 import com.fidelity.clientportfolio.Holding;
+import com.fidelity.clientportfolio.PortfolioService;
 import com.fidelity.clientportfolio.ClientPortfolio;
 
 import java.math.BigDecimal;
@@ -23,11 +24,16 @@ import java.util.List;
 public class TradeServiceTest {
 
     private TradeService tradeService;
-    private ClientPortfolio clientPortfolio;
+//    private PortfolioService portfolioService;
+//    private ClientPortfolio clientPortfolio;
 
     @BeforeEach
     public void setUp() {
-        tradeService = new TradeService();    
+        tradeService = new TradeService(); 
+//        portfolioService = new PortfolioService();
+//        List<Holding> holdings = new ArrayList<>();
+//        clientPortfolio = new ClientPortfolio("1425922638", new BigDecimal("1000"), holdings);
+//        portfolioService.addClientPortfolio(clientPortfolio);
     }
 
     @Test
@@ -160,6 +166,89 @@ public class TradeServiceTest {
     	clientHoldings.add(holding6);
     	clientHoldings.add(holding7);
     	assertEquals(tradeService.recommendTopSellTrades(clientHoldings).size(), 5);
+    }
+    
+    
+    @Test
+    public void testCreateTradeValidOrder() {
+        Order order = new Order("N123456", 10, new BigDecimal("104.75"), "B", "client1", "order1", 123);
+
+        Trade trade = tradeService.createTrade(order);
+
+        assertNotNull(trade);
+        assertEquals(order.getInstrumentId(), trade.getInstrumentId());
+        assertEquals(order.getQuantity(), trade.getQuantity());
+        assertEquals(order.getTargetPrice(), trade.getExecutionPrice());
+        assertEquals(order.getDirection(), trade.getDirection());
+        assertEquals(order.getClientId(), trade.getClientId());
+        assertEquals("id", trade.getTradeId());
+    }
+
+    @Test
+    public void testCreateTradeNullOrder() {
+        assertThrows(NullPointerException.class, () -> tradeService.createTrade(null), "order cannot be null");
+    }
+
+    @Test
+    public void testCreateTradeInvalidOrderData() {
+        // Testing with an order that has invalid or edge-case data
+        Order order = new Order("N123456", 5, new BigDecimal("200.00"), "B", "clientId123", "order1", 123);
+
+        Trade trade = tradeService.createTrade(order);
+
+        assertNotNull(trade);
+        assertEquals(order.getInstrumentId(), trade.getInstrumentId());
+        assertEquals(order.getQuantity(), trade.getQuantity());
+        assertEquals(order.getTargetPrice(), trade.getExecutionPrice());
+        assertEquals(order.getDirection(), trade.getDirection());
+        assertEquals(order.getClientId(), trade.getClientId());
+        assertEquals("id", trade.getTradeId());
+    }
+    
+    
+    
+    @Test
+    public void testExecuteTradeShouldThrowExceptionForNullOrder() {
+    	Order order = null;
+    	Exception e = assertThrows(IllegalArgumentException.class, () -> {
+    		tradeService.executeTrade(order);
+    	});
+    	assertEquals("order cannot be null", e.getMessage());
+    	
+    }
+    
+    @Test
+    public void testExecuteTradeBuy() {
+    	Order order = new Order("N123456", 10, new BigDecimal("104.75"), "B", "1425922638", "order1", 123);
+    	Trade trade = tradeService.executeTrade(order);
+    	assertTrue(trade != null);
+    }
+    
+    @Test
+    public void testExecuteTradeSell() {
+    	Order order = new Order("N123456", 10, new BigDecimal("104.75"), "S", "1425922638", "order1", 123);
+    	Trade trade = tradeService.executeTrade(order);
+    	assertTrue(trade != null);
+    }
+    
+    @Test
+    public void testExecuteTradeThrowExceptionForInvalidDirection() {
+    	Order order = new Order("N123456", 10, new BigDecimal("104.75"), "X", "1425922638", "order1", 123);
+    	Exception e = assertThrows(IllegalArgumentException.class, () -> {
+    		tradeService.executeTrade(order);
+    	});
+    	assertEquals("Order direction is invalid", e.getMessage());
+    	
+    }
+    
+    @Test
+    public void testExecuteTradeThrowExceptionForNonExistingInstrument() {
+    	Order order = new Order("NonExistingInstrument", 10, new BigDecimal("104.75"), "B", "1425922638", "order1", 123);
+    	Exception e = assertThrows(IllegalArgumentException.class, () -> {
+    		tradeService.executeTrade(order);
+    	});
+    	assertEquals("Instrument is not present in the platform", e.getMessage());
+    	
     }
 
 

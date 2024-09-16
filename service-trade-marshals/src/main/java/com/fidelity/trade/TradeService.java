@@ -3,8 +3,6 @@ package com.fidelity.trade;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.fidelity.clientportfolio.Holding;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -76,10 +74,19 @@ public class TradeService {
             throw new IllegalArgumentException("order cannot be null");
         }
     	
-    	
     	List<Price> prices = new ArrayList<>();
     	List<Holding> holdings = new ArrayList<>();
-    	PortfolioService portfolioService = new PortfolioService();
+    	holdings.add(new Holding("N123456", 2, new BigDecimal("104.25")));
+    	List<ClientPortfolio> clientPortfolios = new ArrayList<ClientPortfolio>(
+				List.of(
+						new ClientPortfolio("1425922638", new BigDecimal("1000"), holdings),
+						new ClientPortfolio("1425922634", new BigDecimal("2000"), holdings)
+				)
+			);
+    	portfolioService = new PortfolioService();
+    	portfolioService.addClientPortfolio(clientPortfolios.get(0));
+    	portfolioService.addClientPortfolio(clientPortfolios.get(1));
+    	
 		ClientPortfolio clientPortfolio = portfolioService.getClientPortfolio(order.getClientId());
     	
     	try {
@@ -92,13 +99,18 @@ public class TradeService {
     		for(Price price: prices) {
         		if(price.getInstrument().getInstrumentId() == order.getInstrumentId()) {
         			// updatePortfolio
-        			return createTrade(order);
+        			Trade trade = createTrade(order);
+        			portfolioService.updateClientPortfolio(trade);
+        			return trade;
         		}
         	}
     	} else if (order.getDirection() == "S"){
     		for(Holding holding: holdings) {
     			if(holding.getInstrumentId() == order.getInstrumentId()) {
-    				return createTrade(order);
+    				// updatePortfolio
+    				Trade trade = createTrade(order);
+        			portfolioService.updateClientPortfolio(trade);
+        			return trade;
     			}
     		}
     	} else {
@@ -109,6 +121,9 @@ public class TradeService {
     }
     
     public Trade createTrade(Order order) throws IllegalArgumentException {
+    	if(order == null) {
+    		throw new NullPointerException("order cannot be null");
+    	}
     	Trade trade = new Trade(
 			order.getInstrumentId(),
 			order.getQuantity(), 
@@ -121,6 +136,8 @@ public class TradeService {
     	);
 		return trade;	
     }
+    
+    
     
     
 //    --------------------------------ROBO ADVISOR-------------------------------------------
@@ -189,6 +206,9 @@ public class TradeService {
         System.out.println("Score for trade - " + trade.getInstrument().getInstrumentDescription() + " , Score -> " + score);
         return score;
     }
+    
+    
+    
     
 }
 
