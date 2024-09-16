@@ -3,9 +3,11 @@ package com.fidelity.trade;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.fidelity.clientportfolio.Holding;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-//import java.io.OutputStream;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.HttpURLConnection;
@@ -20,167 +22,105 @@ import com.fidelity.clientportfolio.*;
 import com.fidelity.roboadvisor.PriceScorer;
 
 public class TradeService {
+	private PortfolioService portfolioService = new PortfolioService();
 
-    private static final String FETCH_PRICES_API_URL = "http://localhost:3000/fmts/trades/prices";
-//    private static final String EXECUTE_TRADE_API_URL = "http://localhost:3000/fmts/trades/trade";
-    
-    // Trade History
-    private Map<String, List<Trade>> tradeHistory = new HashMap<>();
-
-    // Get All Prices 
-    public List<Price> getAllPrices() throws Exception {
-        List<Price> prices = new ArrayList<>();
-
-        URL url = new URL(FETCH_PRICES_API_URL);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-
-        int responseCode = connection.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            JSONArray jsonArray = new JSONArray(response.toString());
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                BigDecimal askPrice = jsonObject.getBigDecimal("askPrice");
-                BigDecimal bidPrice = jsonObject.getBigDecimal("bidPrice");
-                String priceTimestamp = jsonObject.getString("priceTimestamp");
-
-                JSONObject instrumentJson = jsonObject.getJSONObject("instrument");
-                Instrument instrument = new Instrument(
-                    instrumentJson.getString("instrumentId"),
-                    instrumentJson.getString("externalIdType"),
-                    instrumentJson.getString("externalId"),
-                    instrumentJson.getString("categoryId"),
-                    instrumentJson.getString("instrumentDescription"),
-                    instrumentJson.getInt("maxQuantity"),
-                    instrumentJson.getInt("minQuantity")
-                );
-
-                // Create Price object and add to list
-                Price price = new Price(askPrice, bidPrice, priceTimestamp, instrument);
-                prices.add(price);
-            }
-        } else {
-            throw new RuntimeException("Failed to get prices. HTTP response code: " + responseCode);
-        }
-
-        return prices;
-    }
-    
-    
-//    public Trade executeTrade(Order order) throws Exception {
-//        URL url = new URL(EXECUTE_TRADE_API_URL);
-//        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//        connection.setRequestMethod("POST");
-//        connection.setRequestProperty("Content-Type", "application/json; utf-8");
-//        connection.setRequestProperty("Accept", "application/json");
-//        connection.setDoOutput(true);
-//
-//        JSONObject orderJson = new JSONObject();
-//        orderJson.put("instrumentId", order.getInstrumentId());
-//        orderJson.put("quantity", order.getQuantity());
-//        orderJson.put("targetPrice", order.getTargetPrice());
-//        orderJson.put("direction", order.getDirection());
-//        orderJson.put("clientId", order.getClientId());
-//        orderJson.put("orderId", order.getOrderId());
-//        orderJson.put("token", order.getToken());
-//
-//        try (OutputStream os = connection.getOutputStream()) {
-//            byte[] input = orderJson.toString().getBytes("utf-8");
-//            os.write(input, 0, input.length);
-//        }
-//
-//        int responseCode = connection.getResponseCode();
-//        if (responseCode == HttpURLConnection.HTTP_OK) {
-//            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//            String inputLine;
-//            StringBuilder response = new StringBuilder();
-//
-//            while ((inputLine = in.readLine()) != null) {
-//                response.append(inputLine);
-//            }
-//            in.close();
-//
-//            JSONObject responseJson = new JSONObject(response.toString());
-//
-////            JSONObject orderJsonResponse = responseJson.getJSONObject("order");
-////            Order orderResponse = new Order(
-////                orderJsonResponse.getString("instrumentId"),
-////                orderJsonResponse.getInt("quantity"),
-////                orderJsonResponse.getBigDecimal("targetPrice"),
-////                orderJsonResponse.getString("direction"),
-////                orderJsonResponse.getString("clientId"),
-////                orderJsonResponse.getString("orderId"),
-////                orderJsonResponse.getInt("token")
-////            );
-//
-//            return new Trade(
-//                responseJson.getString("instrumentId"),
-//                responseJson.getInt("quantity"),
-//                responseJson.getBigDecimal("executionPrice"),
-//                responseJson.getString("direction"),
-//                responseJson.getString("clientId"),
-//                order,
-//                responseJson.getString("tradeId"),
-//                responseJson.getBigDecimal("cashValue")
-//            );
-//        } else {
-//            throw new RuntimeException("Failed to execute trade. HTTP response code: " + responseCode);
-//        }
-//    }
    
+   
+	public List<Price> getAllPrices() {
+		List<Price> prices = new ArrayList<>();
+		prices.add(new Price(new BigDecimal("104.75"), new BigDecimal("104.25"), "21-AUG-19 10.00.01.042000000 AM GMT", 
+		    new Instrument("N123456", "CUSIP", "46625H100", "STOCK", "JPMorgan Chase & Co. Capital Stock", 1000, 1)));
 
+		prices.add(new Price(new BigDecimal("312500"), new BigDecimal("312000"), "21-AUG-19 05.00.00.040000000 AM -05:00", 
+		    new Instrument("N123789", "ISIN", "US0846707026", "STOCK", "Berkshire Hathaway Inc. Class A", 10, 1)));
+
+		prices.add(new Price(new BigDecimal("95.92"), new BigDecimal("95.42"), "21-AUG-19 10.00.02.042000000 AM GMT", 
+		    new Instrument("C100", "CUSIP", "48123Y5A0", "CD", "JPMorgan Chase Bank, National Association 01/19", 1000, 100)));
+
+		prices.add(new Price(new BigDecimal("1.03375"), new BigDecimal("1.03390625"), "21-AUG-19 10.00.02.000000000 AM GMT", 
+		    new Instrument("T67890", "CUSIP", "9128285M8", "GOVT", "USA, Note 3.125 15nov2028 10Y", 10000, 100)));
+
+		prices.add(new Price(new BigDecimal("0.998125"), new BigDecimal("0.99828125"), "21-AUG-19 10.00.02.002000000 AM GMT", 
+		    new Instrument("T67894", "CUSIP", "9128285Z9", "GOVT", "USA, Note 2.5 31jan2024 5Y", 10000, 100)));
+
+		prices.add(new Price(new BigDecimal("1"), new BigDecimal("1.00015625"), "21-AUG-19 10.00.02.002000000 AM GMT", 
+		    new Instrument("T67895", "CUSIP", "9128286A3", "GOVT", "USA, Note 2.625 31jan2026 7Y", 10000, 100)));
+
+		prices.add(new Price(new BigDecimal("0.999375"), new BigDecimal("0.999375"), "21-AUG-19 10.00.02.002000000 AM GMT", 
+		    new Instrument("T67897", "CUSIP", "9128285X4", "GOVT", "USA, Note 2.5 31jan2021 2Y", 10000, 100)));
+
+		prices.add(new Price(new BigDecimal("0.999375"), new BigDecimal("0.999375"), "21-AUG-19 10.00.02.002000000 AM GMT", 
+		    new Instrument("T67899", "CUSIP", "9128285V8", "GOVT", "USA, Notes 2.5% 15jan2022 3Y", 10000, 100)));
+
+		prices.add(new Price(new BigDecimal("1.00375"), new BigDecimal("1.00375"), "21-AUG-19 10.00.02.002000000 AM GMT", 
+		    new Instrument("T67880", "CUSIP", "9128285U0", "GOVT", "USA, Note 1.5 31dec2023 5Y", 10000, 100)));
+
+		prices.add(new Price(new BigDecimal("1.0596875"), new BigDecimal("1.0596875"), "21-AUG-19 10.00.02.002000000 AM GMT", 
+		    new Instrument("T67883", "CUSIP", "912810SE9", "GOVT", "USA, Bond 3.375 15nov2048 30Y", 10000, 100)));
+
+		prices.add(new Price(new BigDecimal("0.9853125"), new BigDecimal("0.98546875"), "21-AUG-19 10.00.02.002000000 AM GMT", 
+		    new Instrument("T67878", "CUSIP", "912810SD1", "GOVT", "USA, Bond 3 15aug2048 30Y", 10000, 100)));
+
+		prices.add(new Price(new BigDecimal("1162.42"), new BigDecimal("1161.42"), "21-AUG-19 06.52.20.350000000 PM AMERICA/NEW_YORK", 
+		    new Instrument("Q123", "CUSIP", "02079K107", "STOCK", "Alphabet Inc. Class C Capital Stock", 1000, 1)));
+
+		prices.add(new Price(new BigDecimal("323.39"), new BigDecimal("322.89"), "21-AUG-19 06.52.20.356000000 PM AMERICA/NEW_YORK", 
+		    new Instrument("Q456", "CUSIP", "88160R101", "STOCK", "Tesla, Inc. Common Stock", 1000, 1)));
+
+		return prices;
+	}
+	
+	
     public Trade executeTrade(Order order) throws IllegalArgumentException {
-        if (order == null) {
+    	if (order == null) {
             throw new IllegalArgumentException("order cannot be null");
         }
-        // Potentially add more validations for the order fields if needed
-
-        Trade tradeResponse = new Trade(
-                "N123456",
-                10,
-                new BigDecimal("104.25"),
-                "S",
-                "541107416",
-                order,
-                "aw6rqg2ee1q-pn1jh9yhg3s-ea6xxmv06bj",
-                new BigDecimal("1052.925")
-        );
+    	
+    	
+    	List<Price> prices = new ArrayList<>();
+    	List<Holding> holdings = new ArrayList<>();
+    	PortfolioService portfolioService = new PortfolioService();
+		ClientPortfolio clientPortfolio = portfolioService.getClientPortfolio(order.getClientId());
+    	
+    	try {
+			 prices = getAllPrices();
+			 holdings = clientPortfolio.getHoldings();	 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	if(order.getDirection() == "B") {
+    		for(Price price: prices) {
+        		if(price.getInstrument().getInstrumentId() == order.getInstrumentId()) {
+        			// updatePortfolio
+        			return createTrade(order);
+        		}
+        	}
+    	} else if (order.getDirection() == "S"){
+    		for(Holding holding: holdings) {
+    			if(holding.getInstrumentId() == order.getInstrumentId()) {
+    				return createTrade(order);
+    			}
+    		}
+    	} else {
+    		throw new IllegalArgumentException("Order direction is invalid");
+    	}
         
-//        addTradeToTradeHistory(tradeResponse);
-        return tradeResponse;
+        throw new IllegalArgumentException("Instrument is not present in the platform");
     }
-
-//    public void addTradeToTradeHistory(Trade trade) throws IllegalArgumentException {
-//        if (trade == null) {
-//            throw new IllegalArgumentException("trade cannot be null");
-//        }
-//        String clientId = trade.getClientId();
-//        if (clientId == null || clientId.isEmpty()) {
-//            throw new IllegalArgumentException("client ID cannot be null or empty");
-//        }
-//
-//        List<Trade> trades = tradeHistory.getOrDefault(clientId, new ArrayList<>());
-//        trades.add(trade);
-//        tradeHistory.put(clientId, trades);
-//    }
-//
-//    public List<Trade> getTrades(String clientId) throws IllegalArgumentException {
-//        if (clientId == null || clientId.isEmpty()) {
-//            throw new IllegalArgumentException("client ID cannot be null or empty");
-//        }
-//        return tradeHistory.getOrDefault(clientId, new ArrayList<>());
-//    }
+    
+    public Trade createTrade(Order order) throws IllegalArgumentException {
+    	Trade trade = new Trade(
+			order.getInstrumentId(),
+			order.getQuantity(), 
+			order.getTargetPrice(), 
+			order.getDirection(), 
+			order.getClientId(), 
+			order, 
+			"id", 
+			new BigDecimal("42")
+    	);
+		return trade;	
+    }
     
     
 //    --------------------------------ROBO ADVISOR-------------------------------------------
@@ -220,7 +160,7 @@ public class TradeService {
     		
     	}
     	for(Holding userHolding: topSellTrades) {
-    		System.out.println("Top sell trades -> " + userHolding.getInstrumentId() + " , Description -> " + userHolding.getInstrumentDescription());
+    		System.out.println("Top sell trades -> " + userHolding.getInstrumentId() + " , Description -> ");
     	}
     	
 		return topSellTrades;

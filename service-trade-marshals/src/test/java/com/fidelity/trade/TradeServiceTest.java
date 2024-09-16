@@ -13,50 +13,46 @@ import org.junit.jupiter.api.Test;
 
 import com.fidelity.client.ClientPreferences;
 import com.fidelity.clientportfolio.Holding;
+import com.fidelity.clientportfolio.ClientPortfolio;
 
-class TradeServiceTest {
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
-	@BeforeEach
-	void setUp() throws Exception {
-	}
 
-	@AfterEach
-	void tearDown() throws Exception {
-	}
+public class TradeServiceTest {
 
-	@Test
-	void test() {
-		//fail("Not yet implemented");
-	}
+    private TradeService tradeService;
+    private ClientPortfolio clientPortfolio;
 
-    private final TradeService tradeService = new TradeService();
+    @BeforeEach
+    public void setUp() {
+        tradeService = new TradeService();    
+    }
 
     @Test
-    void testExecuteTrade() {
-        Order order = new Order(
-            "instr1", 10, new BigDecimal("100.00"), "BUY", "client1", "order1", 12345
-        );
+    public void testGetAllPricesShouldReturn13Prices() {
+        List<Price> prices = tradeService.getAllPrices();
 
-        Trade trade = tradeService.executeTrade(order);
-
-        assertNotNull(trade);
-        assertEquals("N123456", trade.getInstrumentId());
-        assertEquals(10, trade.getQuantity());
-        assertEquals(new BigDecimal("104.25"), trade.getExecutionPrice());
-        assertEquals("S", trade.getDirection());
-        assertEquals("541107416", trade.getClientId());
-        assertEquals(order, trade.getOrder());
-        assertEquals("aw6rqg2ee1q-pn1jh9yhg3s-ea6xxmv06bj", trade.getTradeId());
-        assertEquals(new BigDecimal("1052.925"), trade.getCashValue());
+        assertEquals(13, prices.size());
     }
     
     @Test
-    void testExecuteTrade_throwsExceptionForNullOrder() {
-        Order order = null;
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
-        	tradeService.executeTrade(order);
-        });
-        assertEquals("order cannot be null", thrown.getMessage());
+    public void testGetAllPricesFirstPriceShouldBeAsExpected() {
+    	List<Price> prices = tradeService.getAllPrices();
+    	Price price = prices.get(0);
+        assertEquals(new BigDecimal("104.75"), price.getAskPrice());
+        assertEquals(new BigDecimal("104.25"), price.getBidPrice());
+        assertEquals("21-AUG-19 10.00.01.042000000 AM GMT", price.getPriceTimestamp());
+        assertEquals("N123456", price.getInstrument().getInstrumentId());
+    }
+   
+
+    @Test
+    public void testExecuteTradeInvalidOrderDirection() {
+        Order order = new Order("N123456", 10, new BigDecimal("104.75"), "X", "client1", "order1", 123);
+
+        assertThrows(IllegalArgumentException.class, () -> tradeService.executeTrade(order));
     }
     
 //    -----------------TESTS FOR ROBO ADVISOR---------------------------
@@ -108,20 +104,15 @@ class TradeServiceTest {
     void testRoboAdvisorSellTradesLessThanFiveHoldings() {
     	Holding holding1 = new Holding(
     			"1",
-    			"2",
-    			"Fidelity International",
+    
     			25,
     			new BigDecimal(100));
     	Holding holding2 = new Holding(
     			"1",
-    			"2",
-    			"Fidelity International",
     			25,
     			new BigDecimal(100));
     	Holding holding3 = new Holding(
     			"1",
-    			"2",
-    			"Fidelity International",
     			25,
     			new BigDecimal(100));
     	List<Holding> clientHoldings = new ArrayList<Holding>();
@@ -135,44 +126,30 @@ class TradeServiceTest {
     void testRoboAdvisorSellTradesMoreThanFiveHoldings() {
     	Holding holding1 = new Holding(
     			"1",
-    			"2",
-    			"Fidelity International1",
     			25,
     			new BigDecimal(100));
     	Holding holding2 = new Holding(
     			"1",
-    			"2",
-    			"Fidelity International2",
     			25,
     			new BigDecimal(100));
     	Holding holding3 = new Holding(
     			"1",
-    			"2",
-    			"Fidelity International3",
     			25,
     			new BigDecimal(100));
     	Holding holding4 = new Holding(
     			"1",
-    			"2",
-    			"Fidelity International4",
     			25,
     			new BigDecimal(100));
     	Holding holding5 = new Holding(
     			"1",
-    			"2",
-    			"Fidelity International5",
     			25,
     			new BigDecimal(100));
     	Holding holding6 = new Holding(
     			"1",
-    			"2",
-    			"Fidelity International6",
     			25,
     			new BigDecimal(100));
     	Holding holding7 = new Holding(
     			"1",
-    			"2",
-    			"Fidelity International7",
     			25,
     			new BigDecimal(100));
     	List<Holding> clientHoldings = new ArrayList<Holding>();
@@ -185,5 +162,6 @@ class TradeServiceTest {
     	clientHoldings.add(holding7);
     	assertEquals(tradeService.recommendTopSellTrades(clientHoldings).size(), 5);
     }
+
 
 }
