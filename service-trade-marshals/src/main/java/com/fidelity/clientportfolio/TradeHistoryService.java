@@ -3,6 +3,8 @@ package com.fidelity.clientportfolio;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fidelity.trade.Trade;
+
 
 
 public class TradeHistoryService {

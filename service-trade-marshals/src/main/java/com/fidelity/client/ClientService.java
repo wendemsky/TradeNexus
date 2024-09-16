@@ -99,9 +99,10 @@ public class ClientService {
 	//Save new Client Details
 	public void saveNewClientDetails(Client newClient) {
 		clients.add(newClient);
-		//Saving Client Portfolio details with initial value
+		//Saving Client Portfolio details with initial Balance of 100k Dollars and empty holdings
 		ClientPortfolio newClientPortfolio = new ClientPortfolio(newClient.getClientId(),new BigDecimal("100000").setScale(4),new ArrayList<Holding>());
-		//ClientPortfolio.addNewPortfolio(newClientPortfolio);
+		PortfolioService service = new PortfolioService();
+		service.addClientPortfolio(newClientPortfolio);
 	}
 	
 	//Logging in an existing client

@@ -1,15 +1,17 @@
 package com.fidelity.clientportfolio;
 
+import java.math.BigDecimal;
+
 public class Holding {
 	 private String categoryId;
      private String instrumentId;
      private String instrumentDesc;
      private int quantity;
-     private double avgPrice;
+     private BigDecimal avgPrice;
 
      // Constructors, getters, and setters
 
-     public Holding(String categoryId, String instrumentId, String instrumentDesc, int quantity, double avgPrice) {
+     public Holding(String categoryId, String instrumentId, String instrumentDesc, int quantity, BigDecimal avgPrice) {
          this.categoryId = categoryId;
          this.instrumentId = instrumentId;
          this.instrumentDesc = instrumentDesc;
@@ -47,14 +49,6 @@ public class Holding {
 
      public void setQuantity(int quantity) {
          this.quantity = quantity;
-     }
-
-     public double getAvgPrice() {
-         return avgPrice;
-     }
-
-     public void setAvgPrice(double avgPrice) {
-         this.avgPrice = avgPrice;
      }
 
 }

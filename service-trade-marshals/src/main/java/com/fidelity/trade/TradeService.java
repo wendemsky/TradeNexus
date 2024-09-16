@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fidelity.clientportfolio.*;
+
 public class TradeService {
 
     private static final String FETCH_PRICES_API_URL = "http://localhost:3000/fmts/trades/prices";
@@ -151,7 +153,7 @@ public class TradeService {
                 "aw6rqg2ee1q-pn1jh9yhg3s-ea6xxmv06bj",
                 new BigDecimal("1052.925")
         );
-
+        
 //        addTradeToTradeHistory(tradeResponse);
         return tradeResponse;
     }

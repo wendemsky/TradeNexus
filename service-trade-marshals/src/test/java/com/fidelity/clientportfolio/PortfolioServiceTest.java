@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.math.BigDecimal;
+
 
 public class PortfolioServiceTest {
 
@@ -26,22 +28,22 @@ public class PortfolioServiceTest {
     @Test
     public void testGetClientPortfolio() {
         String clientId = "123";
-        ClientPortfolio mockPortfolio = new ClientPortfolio(clientId, 1000.0, null);
+        ClientPortfolio mockPortfolio = new ClientPortfolio(clientId, new BigDecimal("1000"), null);
 
         portfolioService.setMockPortfolio(mockPortfolio);
         ClientPortfolio result = portfolioService.getClientPortfolio(clientId);
         assertEquals(clientId, result.getClientId());
-        assertEquals(1000.0, result.getCurrBalance());
+        assertEquals(new BigDecimal("1000"), result.getCurrBalance());
     }
 
     @Test
     public void testUpdateClientPortfolio() {
-        ClientPortfolio updatedPortfolio = new ClientPortfolio("123", 1500.0, null);
+        ClientPortfolio updatedPortfolio = new ClientPortfolio("123", new BigDecimal("1500"), null);
 
         portfolioService.setMockPortfolio(updatedPortfolio);
 
         ClientPortfolio result = portfolioService.updateClientPortfolio(updatedPortfolio);
-        assertEquals(1500.0, result.getCurrBalance());
+        assertEquals(new BigDecimal("1500"), result.getCurrBalance());
     }
     
     @Test

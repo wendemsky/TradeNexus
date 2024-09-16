@@ -1,13 +1,16 @@
 package com.fidelity.clientportfolio;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
+
 public class ClientPortfolio {
 	 private String clientId;
-	 private double currBalance;
+	 private BigDecimal currBalance;
 	 private List<Holding> holdings;
 
 	    // Constructors, getters, and setters
 
-	    public ClientPortfolio(String clientId, double currBalance, List<Holding> holdings) {
+	    public ClientPortfolio(String clientId, BigDecimal currBalance, List<Holding> holdings) {
 	        this.clientId = clientId;
 	        this.currBalance = currBalance;
 	        this.holdings = holdings;
@@ -17,15 +20,11 @@ public class ClientPortfolio {
 	        return clientId;
 	    }
 
-	    public void setClientId(String clientId) {
-	        this.clientId = clientId;
-	    }
-
-	    public double getCurrBalance() {
+	    public BigDecimal getCurrBalance() {
 	        return currBalance;
 	    }
 
-	    public void setCurrBalance(double currBalance) {
+	    public void setCurrBalance(BigDecimal currBalance) {
 	        this.currBalance = currBalance;
 	    }
 
@@ -36,4 +35,30 @@ public class ClientPortfolio {
 	    public void setHoldings(List<Holding> holdings) {
 	        this.holdings = holdings;
 	    }
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(clientId, currBalance, holdings);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			ClientPortfolio other = (ClientPortfolio) obj;
+			return Objects.equals(clientId, other.clientId) && Objects.equals(currBalance, other.currBalance)
+					&& Objects.equals(holdings, other.holdings);
+		}
+
+		@Override
+		public String toString() {
+			return "ClientPortfolio [clientId=" + clientId + ", currBalance=" + currBalance + ", holdings=" + holdings
+					+ "]";
+		}
+	    
+	    
 }
