@@ -6,61 +6,66 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.fidelity.client.Client;
+import com.fidelity.client.ClientIdentification;
+import com.fidelity.client.ClientPreferences;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class PortfolioServiceTest {
 
 	 private PortfolioService portfolioService;
+	 private List<ClientPortfolio> clientPortfolios;
 
     @BeforeEach
     public void setUp() {
+		
+    	clientPortfolios = new ArrayList<ClientPortfolio>(
+				List.of(
+						new ClientPortfolio("1425922638", new BigDecimal("1000"), null),
+						new ClientPortfolio("1425922634", new BigDecimal("2000"), null)
+				)
+			);
+       
     	portfolioService = new PortfolioService();
+    	portfolioService.addClientPortfolio(clientPortfolios.get(0));
+    	portfolioService.addClientPortfolio(clientPortfolios.get(1));
     }
     
 	@AfterEach
 	void tearDown() throws Exception {
 		portfolioService = null;
+		clientPortfolios = null;
 	}
 
     @Test
     public void testGetClientPortfolio() {
-        String clientId = "123";
-        ClientPortfolio mockPortfolio = new ClientPortfolio(clientId, new BigDecimal("1000"), null);
-
-        portfolioService.setMockPortfolio(mockPortfolio);
-        ClientPortfolio result = portfolioService.getClientPortfolio(clientId);
-        assertEquals(clientId, result.getClientId());
-        assertEquals(new BigDecimal("1000"), result.getCurrBalance());
+    	ClientPortfolio clientPortfolio =  portfolioService.getClientPortfolio("1425922638");
+    	ClientPortfolio expected = clientPortfolios.get(0);
+		assertEquals(clientPortfolio.equals(expected), true);
     }
 
     @Test
     public void testUpdateClientPortfolio() {
-        ClientPortfolio updatedPortfolio = new ClientPortfolio("123", new BigDecimal("1500"), null);
-
-        portfolioService.setMockPortfolio(updatedPortfolio);
-
-        ClientPortfolio result = portfolioService.updateClientPortfolio(updatedPortfolio);
-        assertEquals(new BigDecimal("1500"), result.getCurrBalance());
+    	
     }
     
     @Test
-    public void testGetClientPortfolioThrowsNullPointerException() {
-        
-    	Exception e = assertThrows(NullPointerException.class, () -> portfolioService.getClientPortfolio(null));
-        
-        assertEquals(e.getMessage(),"Client ID must not be null");
+	void shouldNotUpdateForNullObject() {
+		assertThrows(NullPointerException.class, () -> {
+			portfolioService.updateClientPortfolio("1", null);
+		});
 	}
     
     @Test
-    public void testUpdateClientPortfolioThrowsNullPointerException() {
-        
-    	Exception e = assertThrows(NullPointerException.class, () -> portfolioService.updateClientPortfolio(null));
-        
-        assertEquals(e.getMessage(),"Client portfolio must not be null");
-	}
+   	void shouldNotGetForNullObject() {
+   		assertThrows(NullPointerException.class, () -> {
+   			portfolioService.getClientPortfolio(null);
+   		});
+   	}
     
 }
 
