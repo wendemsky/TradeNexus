@@ -11,9 +11,16 @@ public class ClientPortfolio {
 	    // Constructors, getters, and setters
 
 	    public ClientPortfolio(String clientId, BigDecimal currBalance, List<Holding> holdings) {
-	        this.clientId = clientId;
-	        this.currBalance = currBalance;
-	        this.holdings = holdings;
+	    	try {
+	    		if(clientId==null || currBalance==null || holdings==null) 
+					throw new NullPointerException("Client Portfolio Details cannot be null");
+	    		this.clientId = clientId;
+	 	        this.currBalance = currBalance;
+	 	        this.holdings = holdings;
+	    	} catch(NullPointerException e) {
+	    		throw e;
+	    	}
+	        
 	    }
 
 	    public String getClientId() {
