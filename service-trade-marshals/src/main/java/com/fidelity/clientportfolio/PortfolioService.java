@@ -82,7 +82,7 @@ public class PortfolioService {
 	                    existingHolding.setAvgPrice(newAvgPrice);
 	                    existingHolding.setQuantity(existingHolding.getQuantity()+ executedTrade.getQuantity());
 	                } else {
-	                    System.err.println("Insufficient balance");
+	                    throw new IllegalArgumentException("Insufficient balance");
 	                    // You can add additional error handling or logging here
 	                }
 	            } else if ("S".equals(executedTrade.getDirection())) {
@@ -104,7 +104,7 @@ public class PortfolioService {
 	                        clientHoldings.remove(existingHolding);
 	                    }
 	                } else {
-	                    System.err.println("Insufficient quantity to sell");
+	                	 throw new IllegalArgumentException("Insufficient quantity to sell");
 	                    // You can add additional error handling or logging here
 	                }
 	            }
@@ -122,11 +122,11 @@ public class PortfolioService {
 	                    // Add new holding to the list
 	                    clientHoldings.add(newHolding);
 	                } else {
-	                    System.err.println("Insufficient balance");
+	                	 throw new IllegalArgumentException("Insufficient balance");
 	                    // You can add additional error handling or logging here
 	                }
 	            } else {
-	                System.err.println("Instrument not found for selling");
+	            	 throw new IllegalArgumentException("Instrument not found for selling");
 	                // You can add additional error handling or logging here
 	            }
 	        }
