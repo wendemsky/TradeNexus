@@ -15,8 +15,8 @@ class ClientPortfolioTest {
 	ClientPortfolio clientPortfolio;
 	
 	List<Holding> holdings = new ArrayList<Holding>(List.of(
-				new Holding("STOCK","Q123","Alphabet",2,new BigDecimal("105")),
-				new Holding("GOVT","Q456","USA Bond 3",1,new BigDecimal("340"))
+				new Holding("Q123",2,new BigDecimal("105")),
+				new Holding("Q456",1,new BigDecimal("340"))
 			));
 
 	@BeforeEach
@@ -51,8 +51,8 @@ class ClientPortfolioTest {
 		clientPortfolio = new ClientPortfolio("739982664", new BigDecimal("10000"), holdings);
 		assertNotEquals(clientPortfolio,new ClientPortfolio("739982664", new BigDecimal("10000"), 
 				new ArrayList<Holding>(List.of(
-						new Holding("STOCK","Q123","Alphabet",1,new BigDecimal("100")),
-						new Holding("GOVT","Q456","USA Bond 3",2,new BigDecimal("340"))))) , "Client Portfolio details should not be equal");
+						new Holding("Q123",1,new BigDecimal("100")),
+						new Holding("Q456",2,new BigDecimal("340"))))) , "Client Portfolio details should not be equal");
 	}
 	
 	//NullPointerException

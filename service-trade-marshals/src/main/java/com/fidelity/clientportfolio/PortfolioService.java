@@ -9,8 +9,6 @@ import com.fidelity.trade.*;
 
 
 public class PortfolioService {
-
-	private ClientPortfolio portfolio;
 	
 	private List<ClientPortfolio> clientPortfolios;
 	
@@ -18,10 +16,6 @@ public class PortfolioService {
 		this.clientPortfolios = new ArrayList<ClientPortfolio>();
 	}
 	
-
-    public void setMockPortfolio(ClientPortfolio portfolio) {
-        this.portfolio = portfolio;
-    }
     
     public ClientPortfolio addClientPortfolio(ClientPortfolio clientPortfolio) {
      try {
@@ -39,7 +33,7 @@ public class PortfolioService {
     public ClientPortfolio getClientPortfolio(String clientId) {
     	try {
 			if(clientId == null) {
-				throw new NullPointerException("Id should not be null");
+				throw new NullPointerException("Client ID should not be null");
 			}
 			Iterator<ClientPortfolio> iter = clientPortfolios.iterator();
 			while(iter.hasNext()) {

@@ -104,7 +104,6 @@ public class TradeServiceTest {
     void testRoboAdvisorSellTradesLessThanFiveHoldings() {
     	Holding holding1 = new Holding(
     			"1",
-    
     			25,
     			new BigDecimal(100));
     	Holding holding2 = new Holding(

@@ -160,7 +160,7 @@ public class TradeService {
     		
     	}
     	for(Holding userHolding: topSellTrades) {
-    		System.out.println("Top sell trades -> " + userHolding.getInstrumentId() + " , Description -> ");
+    		System.out.println("Top sell trades -> " + userHolding.getInstrumentId() );
     	}
     	
 		return topSellTrades;
