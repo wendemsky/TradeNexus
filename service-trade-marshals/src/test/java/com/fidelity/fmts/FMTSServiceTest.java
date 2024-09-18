@@ -8,6 +8,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.fidelity.models.Order;
+import com.fidelity.models.Trade;
+
 class FMTSServiceTest {
 
 	@BeforeEach
@@ -48,5 +51,19 @@ class FMTSServiceTest {
 		assertEquals(validatedClient, expectedValidatedClient, "Existing Client should be validated");	
 	}
 	
+	 @Test
+    public void testCreateTradeValidOrder() {
+        Order order = new Order("N123456", 10, new BigDecimal("104.75"), "B", "client1", "order1", 123);
+        Trade trade = FMTSService.createTrade(order);
+
+        assertNotNull(trade);
+        assertEquals(order.getInstrumentId(), trade.getInstrumentId());
+        assertEquals(order,trade.getOrder());
+    }
+
+    @Test
+    public void testShouldNotCreateTradeForNullOrder() {
+        assertThrows(NullPointerException.class, () -> FMTSService.createTrade(null), "order cannot be null");
+    }
 
 }

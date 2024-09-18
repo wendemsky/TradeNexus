@@ -1,6 +1,7 @@
 package com.fidelity.models;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Order {
     private String instrumentId;
@@ -30,9 +31,6 @@ public class Order {
         }
         if (orderId == null || orderId.isEmpty()) {
             throw new IllegalArgumentException("orderId cannot be null or empty");
-        }
-        if (token == null || token <= 0) {
-            throw new IllegalArgumentException("token must be greater than 0");
         }
 
         this.instrumentId = instrumentId;
@@ -68,8 +66,26 @@ public class Order {
         return orderId;
     }
 
-    public Integer getToken() {
-        return token;
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(clientId, direction, instrumentId, orderId, quantity, targetPrice, token);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Order other = (Order) obj;
+		return Objects.equals(clientId, other.clientId) && Objects.equals(direction, other.direction)
+				&& Objects.equals(instrumentId, other.instrumentId) && Objects.equals(orderId, other.orderId)
+				&& Objects.equals(quantity, other.quantity) && Objects.equals(targetPrice, other.targetPrice)
+				&& Objects.equals(token, other.token);
+	}
+    
+
 }
 

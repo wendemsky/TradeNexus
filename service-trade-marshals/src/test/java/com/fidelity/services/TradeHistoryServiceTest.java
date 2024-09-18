@@ -25,7 +25,7 @@ class TradeHistoryServiceTest {
 		 tradeHistoryService = new TradeHistoryService();
 	        // Setup initial data
 	     order = new Order("inst1", 100, new BigDecimal("50"), "B", "client1", "order1",123);
-	     trade = new Trade("inst1", 100, new BigDecimal("50"), "B", "client1", order, "trade1", new BigDecimal("5000"));
+	     trade = new Trade( order,new BigDecimal("50"), "trade1", new BigDecimal("5000"));
 	     tradeHistoryService.addTrade(trade);
 	}
 
@@ -47,12 +47,12 @@ class TradeHistoryServiceTest {
     public void testUpdateTradeSuccessfully() {
         // Initial trade details
 		order = new Order("inst1", 100, new BigDecimal("50"), "B", "client1", "order1",123);
-		Trade initialTrade = new Trade("inst1", 100, new BigDecimal("50"), "B", "client1", order, "trade1", new BigDecimal("5000"));
+		Trade initialTrade = new Trade(order,new BigDecimal("50"), "trade1", new BigDecimal("5000"));
         tradeHistoryService.addTrade(initialTrade);
 
         // Updated trade details
         Order updatedOrder = new Order("inst1", 150, new BigDecimal("55"), "S", "client1", "order2", 456);
-        Trade updatedTrade = new Trade("inst1", 150, new BigDecimal("55"), "S", "client1", updatedOrder, "trade1", new BigDecimal("8250"));
+        Trade updatedTrade = new Trade( updatedOrder, new BigDecimal("55"), "trade1", new BigDecimal("8250"));
 
         // Update trade
         tradeHistoryService.updateTrade(updatedTrade);
@@ -93,8 +93,8 @@ class TradeHistoryServiceTest {
 
 	 @Test
 	 public void testUpdateTradeThrowsExceptionForNonExistentTrade() {
-		 Trade updatedTrade = new Trade("inst2", 200, new BigDecimal("60"), "S", "client1", 
-				 				new Order("inst2", 200, new BigDecimal("60"), "S", "client1", "order2", 456), "nonexistentTradeId", new BigDecimal("12000"));
+		 Trade updatedTrade = new Trade(new Order("inst2", 200, new BigDecimal("60"), "S", "client1", "order2", 456), 
+				 				new BigDecimal("60"),"nonexistentTradeId", new BigDecimal("12000"));
 	    assertThrows(RuntimeException.class, () -> tradeHistoryService.updateTrade(updatedTrade));
     }
 

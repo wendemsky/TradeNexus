@@ -81,12 +81,8 @@ class PortfolioServiceTest {
        
          Order order = new Order(instrumentId, quantity, new BigDecimal("105"), "B", "1425922638", "order1",1425922638);
          Trade trade = new Trade(
-                 instrumentId,
-                 quantity,
+        		 order,
                  execPrice,
-                 "B", // Buy direction
-                 "1425922638",
-                 order,
                  "trade1",
                  execPrice.multiply(new BigDecimal(quantity))
          );
@@ -113,12 +109,8 @@ class PortfolioServiceTest {
        
          Order order = new Order(instrumentId, quantity, new BigDecimal("105"), "S", "1425922638", "order1",1425922638);
          Trade trade = new Trade(
-                 instrumentId,
-                 quantity,
+        		 order,
                  execPrice,
-                 "S", // Buy direction
-                 "1425922638",
-                 order,
                  "trade1",
                  execPrice.multiply(new BigDecimal(quantity))
          );
@@ -145,12 +137,8 @@ class PortfolioServiceTest {
        
          Order order = new Order(instrumentId, quantity, new BigDecimal("105"), "B", "1425922638", "order1",1425922638);
          Trade trade = new Trade(
-                 instrumentId,
-                 quantity,
+        		 order,
                  execPrice,
-                 "B", // Buy direction
-                 "1425922638",
-                 order,
                  "trade1",
                  execPrice.multiply(new BigDecimal(quantity))
          );
@@ -178,12 +166,8 @@ class PortfolioServiceTest {
        
          Order order = new Order(instrumentId, quantity, new BigDecimal("105"), "S", "1425922638", "order1",1425922638);
          Trade trade = new Trade(
-                 instrumentId,
-                 quantity,
+        		 order,
                  execPrice,
-                 "S", // Buy direction
-                 "1425922638",
-                 order,
                  "trade1",
                  execPrice.multiply(new BigDecimal(quantity))
          );

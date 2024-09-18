@@ -35,9 +35,9 @@ class ClientServiceTest {
 		
 		clientPreferencesList = new ArrayList<ClientPreferences>(
 				List.of(
-						new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, "true"),
-						new ClientPreferences("1654658069",  "Major Expense", "LIG", "Medium", "Tier2", 2, "false"),
-						new ClientPreferences("739982664", "Retirement", "MIG", "Long", "Tier3", 3, "true")
+						new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, true),
+						new ClientPreferences("1654658069",  "Major Expense", "LIG", "Medium", "Tier2", 2, false),
+						new ClientPreferences("739982664", "Retirement", "MIG", "Long", "Tier3", 3, true)
 				)
 			);
 		//Initializing the client service with 2 clients and their preferences

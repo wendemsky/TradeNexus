@@ -1,16 +1,25 @@
 package com.fidelity.services;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.fidelity.models.ClientPortfolio;
+import com.fidelity.models.Holding;
 import com.fidelity.models.Trade;
 
 public class ActivityReportService {
 	
-	public PortfolioService portfolioService = new PortfolioService();
-	public TradeHistoryService tradeHistoryService = new TradeHistoryService();
+	private static PortfolioService portfolioService = null;
+	private static TradeHistoryService tradeHistoryService = null; 
+	
+	public ActivityReportService() {
+		//Initializing Portfolio and Trade History Service
+		portfolioService = new PortfolioService();
+		tradeHistoryService = new TradeHistoryService();
+	}
 	
 	//Generate Report with Clients Holdings
 	public ClientPortfolio generateHoldingsReport(String clientId) {
@@ -26,31 +35,36 @@ public class ActivityReportService {
 	}
 	
 	//Generate Report with Clients P&L Data
-//	public static void generatePLReport(String clientId) {
-//		//Make use of Trade History
-//		  Map<String, Double> profitLossMap = new HashMap<>();
-//	      Map<String, Double> buyPositions = new HashMap<>();
-//
-//	      for (Trade trade : trades) {
-//	            if (!trade.getClientId().equals(clientId)) continue;
-//
-//	            String instrumentId = trade.getInstrumentId();
-//	            double tradeValue = trade.getQuantity() * trade.getExecutionPrice();
-//	            
-//	            if (trade.getDirection().equals("buy")) {
-//	                buyPositions.put(instrumentId, buyPositions.getOrDefault(instrumentId, 0.0) + tradeValue);
-//	            } else if (trade.getDirection().equals("sell")) {
-//	                double buyValue = buyPositions.getOrDefault(instrumentId, 0.0);
-//	                double profitLoss = buyValue - tradeValue;
-//	                profitLossMap.put(instrumentId, profitLossMap.getOrDefault(instrumentId, 0.0) + profitLoss);
-//	                
-//	                // After selling, we assume the position is cleared
-//	                buyPositions.remove(instrumentId);
-//	            }
-//	        }
-//	        
-//	        return profitLossMap;
-//	    }
+	public static Map<String, BigDecimal> generatePLReport(String clientId) {
+		//Make use of Trade History
+		  Map<String, BigDecimal> profitLossMap = new HashMap<>();
+	      Map<String, BigDecimal> buyPositions = new HashMap<>();
+	      
+	      List<Trade> trades = tradeHistoryService.getClientTradeHistory(clientId);
+
+	      for (Trade trade : trades) {
+	            if (!trade.getClientId().equals(clientId)) continue;
+
+	            String instrumentId = trade.getInstrumentId();
+	            BigDecimal tradeValue = trade.getCashValue();
+	            
+	            if (trade.getDirection().equals("B")) {
+	                // Use BigDecimal's add method
+	                buyPositions.put(instrumentId, tradeValue.add(buyPositions.getOrDefault(instrumentId, BigDecimal.ZERO)));
+	            } else if (trade.getDirection().equals("S")) {
+	                // Get the buyValue as BigDecimal
+	                BigDecimal buyValue = buyPositions.getOrDefault(instrumentId, BigDecimal.ZERO);
+	                
+	                // Calculate profit/loss using BigDecimal's subtract method
+	                BigDecimal profitLoss = buyValue.subtract(tradeValue);
+	                profitLossMap.put(instrumentId, profitLossMap.getOrDefault(instrumentId, BigDecimal.ZERO).add(profitLoss));
+	                
+	                // After selling, we assume the position is cleared
+	                buyPositions.remove(instrumentId);
+	            }
+	        }
+	        return profitLossMap;
+	    }
 	}
 	
 

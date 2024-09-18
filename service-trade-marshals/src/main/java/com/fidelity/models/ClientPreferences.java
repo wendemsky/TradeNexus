@@ -10,10 +10,10 @@ public class ClientPreferences {
 	private String lengthOfInvestment;
 	private String percentageOfSpend;
 	private int riskTolerance;
-	private String acceptAdvisor;
+	private boolean acceptAdvisor;
 	
 	public ClientPreferences(String clientId, String investmentPurpose, String incomeCategory,
-			String lengthOfInvestment, String percentageOfSpend, int riskTolerance, String acceptAdvisor) {
+			String lengthOfInvestment, String percentageOfSpend, int riskTolerance, boolean acceptAdvisor) {
 		
 		try {
 			if(clientId == null) throw new NullPointerException("Client ID cannot be null");
@@ -68,11 +68,11 @@ public class ClientPreferences {
 		this.riskTolerance = riskTolerance;
 	}
 
-	public String getAcceptAdvisor() {
+	public boolean getAcceptAdvisor() {
 		return acceptAdvisor;
 	}
 
-	public void setAcceptAdvisor(String acceptAdvisor) {
+	public void setAcceptAdvisor(boolean acceptAdvisor) {
 		this.acceptAdvisor = acceptAdvisor;
 	}
 
@@ -107,20 +107,11 @@ public class ClientPreferences {
 		if (getClass() != obj.getClass())
 			return false;
 		ClientPreferences other = (ClientPreferences) obj;
-		return Objects.equals(acceptAdvisor, other.acceptAdvisor) && Objects.equals(clientId, other.clientId)
+		return acceptAdvisor == other.acceptAdvisor && Objects.equals(clientId, other.clientId)
 				&& Objects.equals(incomeCategory, other.incomeCategory)
 				&& Objects.equals(investmentPurpose, other.investmentPurpose)
 				&& Objects.equals(lengthOfInvestment, other.lengthOfInvestment)
 				&& Objects.equals(percentageOfSpend, other.percentageOfSpend) && riskTolerance == other.riskTolerance;
 	}
-
-	@Override
-	public String toString() {
-		return "ClientPreferences [clientId=" + clientId + ", investmentPurpose=" + investmentPurpose
-				+ ", incomeCategory=" + incomeCategory + ", lengthOfInvestment=" + lengthOfInvestment
-				+ ", percentageOfSpend=" + percentageOfSpend + ", riskTolerance=" + riskTolerance + ", acceptAdvisor="
-				+ acceptAdvisor + "]";
-	}
-	
 	
 }

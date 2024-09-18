@@ -22,32 +22,32 @@ class ClientPreferencesTest {
 
 //	@Test
 //	void shouldCreateClientPreferenceObject() {
-//		assertNotNull(new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, "true"));
+//		assertNotNull(new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, true));
 //	}
 	
 	@Test
 	void shouldNotCreateInvalidClientPreferenceObject() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 10, "true");
+			new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 10, true);
 		});
 	}
 	
 	@Test
 	void testForEqualsClientPreferencesObject() {
-		clientPreferences = new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, "true");
-		assertEquals(clientPreferences.equals(new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, "true")), true);
+		clientPreferences = new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, true);
+		assertEquals(clientPreferences.equals(new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, true)), true);
 	}
 	
 	@Test
 	void testForNotEqualsClientPreferencesObject() {
-		clientPreferences = new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, "true");
-		assertNotEquals(clientPreferences.equals(new ClientPreferences("1425922638", "Education", "LIG", "Short", "Tier3", 2, "true")), true);
+		clientPreferences = new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, true);
+		assertNotEquals(clientPreferences.equals(new ClientPreferences("1425922638", "Education", "LIG", "Short", "Tier3", 2, true)), true);
 	}
 	
 	@Test
 	void testForHashCodeClientPreferencesObject() {
-		clientPreferences = new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, "true");
-		ClientPreferences expected = new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, "true");
+		clientPreferences = new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, true);
+		ClientPreferences expected = new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, true);
 		assertEquals(clientPreferences.hashCode(), expected.hashCode());
 	}
 

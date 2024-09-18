@@ -61,26 +61,5 @@ public class ClientPortfolio {
 			return Objects.equals(clientId, other.clientId) && Objects.equals(currBalance, other.currBalance)
 					&& Objects.equals(holdings, other.holdings);
 		}
-
-//		@Override
-//		public boolean equals(Object obj) {
-//			if (this == obj)
-//				return true;
-//			if (obj == null)
-//				return false;
-//			if (getClass() != obj.getClass())
-//				return false;
-//			ClientPortfolio other = (ClientPortfolio) obj;
-//			return Objects.equals(clientId, other.clientId) && Objects.equals(currBalance, other.currBalance)
-//					&& Objects.equals(holdings, other.holdings);
-//		}
-//
-//		@Override
-//		public String toString() {
-//			return "ClientPortfolio [clientId=" + clientId + ", currBalance=" + currBalance + ", holdings=" + holdings
-//					+ "]";
-//		}
-		
-	    
 	    
 }
