@@ -10,12 +10,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+
 //Importing models
-import com.fidelity.models.ClientPreferences;
-import com.fidelity.models.Holding;
 import com.fidelity.models.Order;
 import com.fidelity.models.Price;
 import com.fidelity.models.Trade;
+import com.fidelity.models.ClientPreferences;
+import com.fidelity.models.ClientPortfolio;
+import com.fidelity.models.Holding;
 
 //Importing utils for Robo Advisor
 import com.fidelity.utils.PriceScorer;
@@ -122,9 +124,11 @@ public class TradeServiceTest {
     }
     
     @Test
-    public void testRoboAdvisorBuyTradesWhenAcceptAdvisorIsFale() {
+    public void testRoboAdvisorBuyTradesWhenAcceptAdvisorIsFalse() {
+    	//Sample Client Portfolio and Preferences
+    	ClientPortfolio clientPortfolio = new ClientPortfolio("1425922638",new BigDecimal("1000"),new ArrayList<>());
     	ClientPreferences prefs = new ClientPreferences(
-    	        "1",
+    	        "1425922638",
     	        "Retirement",
     	        "VHIG",
     	        "Long",
@@ -133,21 +137,23 @@ public class TradeServiceTest {
     	         false
     	        );
         Exception e = assertThrows(UnsupportedOperationException.class, () -> {
-        	List<Price> topBuys = tradeService.recommendTopBuyInstruments(prefs);
+        	List<Price> topBuys = tradeService.recommendTopBuyInstruments(prefs,clientPortfolio.getCurrBalance());
         });
         assertEquals(e.getMessage(),"Cannot recommend with robo advisor without accepting to it");
     }
     
     @Test
-    public void testRoboAdvisorSellTradesWhenAcceptAdvisorIsFale() {
+    public void testRoboAdvisorSellTradesWhenAcceptAdvisorIsFalse() {
     	Holding holding = new Holding(
     			"N123456",
     			5,
     			new BigDecimal(100));
     	List<Holding> clientHoldings = new ArrayList<Holding>();
     	clientHoldings.add(holding);
+    	//Sample Client Portfolio and Preferences
+    	ClientPortfolio clientPortfolio = new ClientPortfolio("1425922638",new BigDecimal("1000"),clientHoldings);
     	ClientPreferences prefs = new ClientPreferences(
-    	        "1",
+    	        "1425922638",
     	        "Retirement",
     	        "VHIG",
     	        "Long",
@@ -156,17 +162,17 @@ public class TradeServiceTest {
     	         false
     	        );
         Exception e = assertThrows(UnsupportedOperationException.class, () -> {
-        	List<Holding> topSells = tradeService.recommendTopSellInstruments(prefs,clientHoldings);
+        	List<Price> topSells = tradeService.recommendTopSellInstruments(prefs,clientPortfolio.getHoldings());
         });
         assertEquals(e.getMessage(),"Cannot recommend with robo advisor without accepting to it");
     }
     
     @Test
     void testRoboAdvisorBuyTrades(){
-    	List<Price> topBuys = new ArrayList<Price>();
-    	List<Price> trades = new ArrayList<Price>();
+    	//Sample Client Portfolio and Preferences
+    	ClientPortfolio clientPortfolio = new ClientPortfolio("1425922638",new BigDecimal("1000"),new ArrayList<>());
     	ClientPreferences prefs = new ClientPreferences(
-    	        "1",
+    	        "1425922638",
     	        "Retirement",
     	        "VHIG",
     	        "Long",
@@ -174,22 +180,13 @@ public class TradeServiceTest {
     	         2, 
     	         true
     	        );
-    	topBuys = tradeService.recommendTopBuyInstruments(prefs);
+    	List<Price> topBuys = tradeService.recommendTopBuyInstruments(prefs,clientPortfolio.getCurrBalance());
     	assertNotEquals(topBuys.equals(null), true);
     	assertEquals(topBuys.size(), 5);
     }
     
     @Test
     void testRoboAdvisorSellTradesLessThanFiveHoldings() {
-    	ClientPreferences prefs = new ClientPreferences(
-    	        "1",
-    	        "Retirement",
-    	        "VHIG",
-    	        "Long",
-    	        "Tier3",
-    	         2, 
-    	         true
-    	        );
     	//Consider a client portfolio with the following holdings
     	Holding holding1 = new Holding(
     			"N123456",
@@ -207,13 +204,10 @@ public class TradeServiceTest {
     	clientHoldings.add(holding1);
     	clientHoldings.add(holding2);
     	clientHoldings.add(holding3);
-    	assertEquals(tradeService.recommendTopSellInstruments(prefs,clientHoldings).size(), 3);
-    }
-    
-    @Test
-    void testRoboAdvisorSellTradesMoreThanFiveHoldings() {
-    	ClientPreferences prefs = new ClientPreferences(
-    	        "1",
+    	//Sample Client Portfolio and Preferences
+    	ClientPortfolio clientPortfolio = new ClientPortfolio("1425922638",new BigDecimal("1000"),clientHoldings);
+     	ClientPreferences prefs = new ClientPreferences(
+    	        "1425922638",
     	        "Retirement",
     	        "VHIG",
     	        "Long",
@@ -221,6 +215,11 @@ public class TradeServiceTest {
     	         2, 
     	         true
     	        );
+    	assertEquals(tradeService.recommendTopSellInstruments(prefs,clientPortfolio.getHoldings()).size(), 3);
+    }
+    
+    @Test
+    void testRoboAdvisorSellTradesMoreThanFiveHoldings() {
     	//Consider a client portfolio with the following holdings
     	Holding holding1 = new Holding(
     			"N123456",
@@ -258,6 +257,17 @@ public class TradeServiceTest {
     	clientHoldings.add(holding5);
     	clientHoldings.add(holding6);
     	clientHoldings.add(holding7);
-    	assertEquals(tradeService.recommendTopSellInstruments(prefs,clientHoldings).size(), 5);
+    	//Sample Client Portfolio and Preferences
+    	ClientPortfolio clientPortfolio = new ClientPortfolio("1425922638",new BigDecimal("1000"),clientHoldings);
+     	ClientPreferences prefs = new ClientPreferences(
+    	        "1425922638",
+    	        "Retirement",
+    	        "VHIG",
+    	        "Long",
+    	        "Tier3",
+    	         2, 
+    	         true
+    	        );
+    	assertEquals(tradeService.recommendTopSellInstruments(prefs,clientPortfolio.getHoldings()).size(), 5);
     }
 }

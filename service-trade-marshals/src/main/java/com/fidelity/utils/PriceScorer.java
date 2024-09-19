@@ -91,7 +91,7 @@ public class PriceScorer{
         // This is a placeholder; actual implementation may vary
         score += Math.max(0, this.clientPreferences.getRiskTolerance() - 3); // Simple example, adjust as needed
 
-        System.out.println("Score -> " + score);
+        //System.out.println("Score -> " + score);
         return score;
     }
 

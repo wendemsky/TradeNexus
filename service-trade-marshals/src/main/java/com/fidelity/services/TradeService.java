@@ -140,7 +140,7 @@ public class TradeService {
     
 //    --------------------------------ROBO ADVISOR-------------------------------------------
     
-    public List<Price> recommendTopBuyInstruments(ClientPreferences preferences){
+    public List<Price> recommendTopBuyInstruments(ClientPreferences preferences, BigDecimal currBalance){
     	try {
     		if(preferences.getAcceptAdvisor()==false) throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
     	    PriceScorer scorer = new PriceScorer(preferences);
@@ -148,6 +148,8 @@ public class TradeService {
             System.out.println("Instruments before sorting -> " + priceList);
             for(Price trade: priceList) {
             	if(calculateScore(trade, preferences).compareTo(new BigDecimal(scorer.calculateScore()).divide(new BigDecimal(25))) < 0) {
+            		if(currBalance.subtract(trade.getBidPrice()).compareTo(BigDecimal.ZERO)<0) //Buy Condition - Not enough balance
+            			continue;
             		recommendedPrice.add(trade);
             	}
             }
@@ -162,23 +164,35 @@ public class TradeService {
     	}
     }
     
-    public List<Holding> recommendTopSellInstruments(ClientPreferences preferences, List<Holding> userHoldings){
+    public List<Price> recommendTopSellInstruments(ClientPreferences preferences, List<Holding> userHoldings){
     	try {
     		if(preferences.getAcceptAdvisor()==false) throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
-    		List<Holding> topSellTrades = new ArrayList<>();
+    		List<Holding> topSellTradesInHoldings = new ArrayList<>();
         	if(userHoldings.size() <= 5) {
 //        		return everything
-        		topSellTrades = userHoldings; 
+        		topSellTradesInHoldings = userHoldings; 
         	} else {
         		for (int i = 0; i < 5; i++) 
                 {
                    // generating the index using Math.random()
                     int index = (int)(Math.random() * userHoldings.size());
-                    topSellTrades.add(userHoldings.get(index));  
+                    topSellTradesInHoldings.add(userHoldings.get(index));  
                 }
         	}
-        	for(Holding userHolding: topSellTrades) {
-        		System.out.println("Top instruments to sell -> " + userHolding.getInstrumentId() );
+        	//Retrieve the list of prices corresponding to the holdings
+        	List<Price> topSellTrades = new ArrayList<>();
+        	for(Holding holding:topSellTradesInHoldings) {
+        		for(Price trade:priceList) {
+        			if(holding.getInstrumentId() == trade.getInstrument().getInstrumentId()) {
+        				topSellTrades.add(trade);
+        				break;
+        			}
+        				
+        		}
+        	}
+
+        	for(Price trade: topSellTrades) {
+        		System.out.println("Top instruments to sell -> " + trade.getInstrument().getInstrumentId() );
         	}
         	return topSellTrades;
     	} catch(UnsupportedOperationException e) {
