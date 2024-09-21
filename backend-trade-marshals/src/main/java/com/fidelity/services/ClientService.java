@@ -29,7 +29,6 @@ public class ClientService {
 	}
 	
 	/*Methods related to Client - Email Validation, Login and Register*/
-	
 	//Verifying Email Address - Checking if given client already exists
 	public Client verifyClientEmail(String email) {
 		try {
@@ -47,13 +46,12 @@ public class ClientService {
 			throw e;
 		}
 	}
-	
 	//Verifying Client ID Details - If already exists or not
 	public Boolean verifyClientIdentityDetails(ClientIdentification clientIdentification) {
 		try {
 			if(clientIdentification==null) 
 				throw new NullPointerException("Client Identification Details cannot be null");
-
+ 
 			Iterator<Client> iter = clients.iterator();
 			while(iter.hasNext()) {
 				Client existingClient = iter.next();
@@ -67,19 +65,16 @@ public class ClientService {
 			throw e;
 		}
 	}
-	
-	
+
 	//Registering a new client
 	public Client registerNewClient(String email, String password, String name,
 										String dateOfBirth, String country, List<ClientIdentification> identification) {
 		try {
 			Client client = null;
-			
 			//Verifying the email passed
 			client = verifyClientEmail(email); //If email already registered returns existing client
 			if(client!=null) 
 				throw new IllegalArgumentException("Client with given email is already registered");
-			
 			if(password==null || name==null || dateOfBirth==null || country==null)
 				throw new NullPointerException("Client Details cannot be null");
 			//Verifying the Client Identification information
@@ -87,12 +82,10 @@ public class ClientService {
 				if(verifyClientIdentityDetails(id)) //If identification details already present returns true
 					throw new IllegalArgumentException("Client with given Identification Details is already registered with another email");
 			}
-			
 			//Validating Client with FMTS
 			ValidatedClient validatedClient = FMTSService.verifyClient(email); 
 			if(validatedClient == null)
 				throw new NullPointerException("New Client Details couldnt be verified");
-			
 			//ON SUCCESSFUL VERIFICATION OF REGISTRATION - Saving the clients details
 			client = new Client(email,validatedClient.getClientId(), password, name, dateOfBirth, country, identification, false);
 			saveNewClientDetails(client);
@@ -103,7 +96,6 @@ public class ClientService {
 			throw e;
 		}
 	}
-	
 	//Save new Client Details
 	public void saveNewClientDetails(Client newClient) {
 		clients.add(newClient);
@@ -112,7 +104,6 @@ public class ClientService {
 		PortfolioService service = new PortfolioService();
 		service.addClientPortfolio(newClientPortfolio);
 	}
-	
 	//Logging in an existing client
 	public Client loginExistingClient(String email, String password) {
 		try {
@@ -121,18 +112,16 @@ public class ClientService {
 			existingClient = verifyClientEmail(email);
 			if(existingClient==null) //If client not existing
 				throw new IllegalArgumentException("Client with given email is not registered");
-			
 			if(password==null)
 				throw new NullPointerException("Client Password cannot be null");
 			//Verify if the password matches given client
 			if(existingClient.getPassword() != password)
 				throw new IllegalArgumentException("Password does not match given Client's credentials");
-			
 			//Validating Existing Client with FMTS
 			ValidatedClient validatedClient = FMTSService.verifyClient(email,existingClient.getClientId()); 
 			if(validatedClient == null)
 				throw new NullPointerException("New Client Details couldnt be verified");
-
+ 
 			//ON SUCCESSFUL LOGIN - Returning the client details
 			return existingClient;
 		} catch(NullPointerException e) {
@@ -166,13 +155,10 @@ public class ClientService {
 		}
 	}
 	
-	public void updateClientPreferences(String clientId, ClientPreferences preferences) {
+	public void updateClientPreferences(ClientPreferences preferences) {
 		try {
-			if(clientId == null) {
-				throw new NullPointerException("Id should not be null");
-			}
 			if(preferences == null) {
-				throw new NullPointerException("Id should not be null");
+				throw new NullPointerException("Preferences should not be null");
 			}
 			clientDao.updateClientPreferences(preferences);
 		} catch(NullPointerException e) {

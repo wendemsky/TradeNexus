@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import com.fidelity.integration.ClientDao;
+import com.fidelity.integration.DatabaseException;
 //Importing models
 import com.fidelity.models.Client;
 import com.fidelity.models.ClientIdentification;
@@ -42,12 +43,15 @@ class ClientServiceTest {
 				List.of(
 						new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, true),
 						new ClientPreferences("1654658069",  "Major Expense", "LIG", "Medium", "Tier2", 2, false),
-						new ClientPreferences("739982664", "Retirement", "MIG", "Long", "Tier3", 3, true)
+						new ClientPreferences("739982665", "Retirement", "MIG", "Long", "Tier3", 3, true)
 				)
 			);
 		//Initializing the client service with 2 clients and their preferences
 		
 		MockitoAnnotations.openMocks(this);
+		service = new ClientService(mockDao);
+		service.saveNewClientDetails(clientList.get(0));
+		service.saveNewClientDetails(clientList.get(1));
 
 	}
 
@@ -192,7 +196,7 @@ class ClientServiceTest {
 		ClientPreferences expected = clientPreferencesList.get(0);
 		Mockito.when(mockDao.getClientPreferences(id))
 			.thenReturn(expected);
-		ClientPreferences clientPreference =  service.getClientPreference("1425922638");
+		ClientPreferences clientPreference =  service.getClientPreference(id);
 		
 		assertEquals(clientPreference.equals(expected), true);
 	}
@@ -207,26 +211,25 @@ class ClientServiceTest {
 	//Updating Client Preferences
 	@Test
 	void shouldUpdateClientPreference() {
-		String id = "1425922638";
 		ClientPreferences clientPreference = clientPreferencesList.get(0);
 		assertEquals(clientPreference.getIncomeCategory(), "MIG");
 		clientPreference.setIncomeCategory("HIG");
-		service.updateClientPreferences(id, clientPreference);
+		service.updateClientPreferences(clientPreference);
 		assertEquals(clientPreference.getIncomeCategory(), "HIG");
 	}
 	
 	@Test
 	void shouldNotUpdateForNullObject() {
 		assertThrows(NullPointerException.class, () -> {
-			service.updateClientPreferences("1425922638", null);
+			service.updateClientPreferences(null);
 		});
 	}
 	
 	@Test
-	void shouldNotUpdateForNullId() {
-		assertThrows(NullPointerException.class, () -> {
-			service.updateClientPreferences(null, clientPreferencesList.get(0));
-		});
+	void testUpdationOfNonExistentClientPreferencesThrowsDatabaseException() {
+		Mockito.doThrow(new DatabaseException()).when(mockDao).updateClientPreferences(clientPreferencesList.get(2));
+		assertThrows(DatabaseException.class, () -> 
+			service.updateClientPreferences(clientPreferencesList.get(2))
+		);
 	}
-	
 }
