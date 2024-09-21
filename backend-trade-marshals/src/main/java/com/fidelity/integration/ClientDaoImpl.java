@@ -1,5 +1,11 @@
 package com.fidelity.integration;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -19,9 +25,28 @@ public class ClientDaoImpl implements ClientDao {
 	}
 
 	@Override
-	public Boolean verifyClientEmail() {
-		// TODO Auto-generated method stub
-		return null;
+	public Boolean verifyClientEmail(String email) {
+		String sql = """
+				SELECT email
+				FROM client 
+				WHERE email= ?
+				""";
+		try {
+			Connection connection = dataSource.getConnection();
+			try(PreparedStatement stmt = connection.prepareStatement(sql)) {
+				stmt.setString(1, email);
+				ResultSet rs = stmt.executeQuery();
+				//If client details could not be retrieved
+				if(!rs.next()) throw new DatabaseException("Client with given email doesnt exist");
+			}
+
+		} catch (SQLException e) {
+			logger.error("There was an error in retrieving client with given email {}",e);	
+			throw new DatabaseException("Client with given email couldnt be retrieved");
+		} catch(DatabaseException e) {
+			throw e;
+		}
+		return true;
 	}
 
 	@Override

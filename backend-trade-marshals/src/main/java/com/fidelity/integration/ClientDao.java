@@ -7,7 +7,7 @@ import com.fidelity.models.ClientPreferences;
 //Has functions related to Client related data access
 public interface ClientDao {
 	
-	Boolean verifyClientEmail();
+	Boolean verifyClientEmail(String email);
 	Client getClientAtLogin(String email); //For login
 	void addNewClient(Client client, ClientPortfolio clientPortfolio); //For register
 

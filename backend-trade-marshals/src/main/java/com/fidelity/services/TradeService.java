@@ -105,7 +105,7 @@ public class TradeService {
     		if(preferences.getAcceptAdvisor()==false) throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
     	    PriceScorer scorer = new PriceScorer(preferences);
             List<Price> recommendedPrice = new ArrayList<Price>();
-            System.out.println("Instruments before sorting -> " + priceList);
+            //System.out.println("Instruments before sorting -> " + priceList);
             for(Price trade: priceList) {
             	if(calculateScore(trade, preferences).compareTo(new BigDecimal(scorer.calculateScore()).divide(new BigDecimal(25))) < 0) {
             		if(currBalance.subtract(trade.getBidPrice()).compareTo(BigDecimal.ZERO)<0) //Buy Condition - Not enough balance
@@ -115,7 +115,7 @@ public class TradeService {
             }
 //            Collections.sort(availableTrades, scorer);
             
-            System.out.println("Instruments after sorting -> " + recommendedPrice.toString());
+            //System.out.println("Instruments after sorting -> " + recommendedPrice.toString());
             
             // Return top 5 trades or fewer if there aren't enough trades
             return priceList.size() > 5 ? recommendedPrice.subList(0, 5) : recommendedPrice;
@@ -151,9 +151,9 @@ public class TradeService {
         		}
         	}
 
-        	for(Price trade: topSellTrades) {
-        		System.out.println("Top instruments to sell -> " + trade.getInstrument().getInstrumentId() );
-        	}
+//        	for(Price trade: topSellTrades) {
+//        		System.out.println("Top instruments to sell -> " + trade.getInstrument().getInstrumentId() );
+//        	}
         	return topSellTrades;
     	} catch(UnsupportedOperationException e) {
     		throw e;
@@ -179,7 +179,7 @@ public class TradeService {
 //        score = score.multiply(new BigDecimal(client.getRiskTolerance()).divide(new BigDecimal(5))); // Scale by risk tolerance
         // Adjust score based on client preferences
 
-        System.out.println("Score for trade - " + trade.getInstrument().getInstrumentDescription() + " , Score -> " + score);
+        //System.out.println("Score for trade - " + trade.getInstrument().getInstrumentDescription() + " , Score -> " + score);
         return score;
     }
 
