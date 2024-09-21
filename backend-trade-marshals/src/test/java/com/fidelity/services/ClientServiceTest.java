@@ -8,15 +8,20 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
+import com.fidelity.integration.ClientDao;
 //Importing models
 import com.fidelity.models.Client;
 import com.fidelity.models.ClientIdentification;
 import com.fidelity.models.ClientPreferences;
 
 class ClientServiceTest {
-	
-	private ClientService service;
+	@Mock ClientDao mockDao;
+	@InjectMocks ClientService service;
 	
 	private List<Client> clientList;
 	private List<ClientPreferences> clientPreferencesList;
@@ -41,11 +46,9 @@ class ClientServiceTest {
 				)
 			);
 		//Initializing the client service with 2 clients and their preferences
-		service = new ClientService();
-		service.saveNewClientDetails(clientList.get(0));
-		service.saveNewClientDetails(clientList.get(1));
-		service.addClientPreferences(clientPreferencesList.get(0));
-		service.addClientPreferences(clientPreferencesList.get(1));
+		
+		MockitoAnnotations.openMocks(this);
+
 	}
 
 	@AfterEach
@@ -172,9 +175,7 @@ class ClientServiceTest {
 	//Adding Client Preferences
 	@Test
 	void shouldAddClientPreference() {
-		assertEquals(service.getAllClientPreferencesList().size(), 2);
 		service.addClientPreferences(clientPreferencesList.get(2));
-		assertEquals(service.getAllClientPreferencesList().size(), 3);
 	}
 	
 	@Test
@@ -187,8 +188,12 @@ class ClientServiceTest {
 	//Getting Client Preferences
 	@Test
 	void shouldGetClientPreference() {
-		ClientPreferences clientPreference =  service.getClientPreference("1425922638");
+		String id = "1425922638";
 		ClientPreferences expected = clientPreferencesList.get(0);
+		Mockito.when(mockDao.getClientPreferences(id))
+			.thenReturn(expected);
+		ClientPreferences clientPreference =  service.getClientPreference("1425922638");
+		
 		assertEquals(clientPreference.equals(expected), true);
 	}
 	
@@ -198,24 +203,16 @@ class ClientServiceTest {
 			service.getClientPreference(null);
 		});
 	}
-
-	@Test
-	void shouldHandleInvalidIdForGetClientPreference() {
-		assertThrows(IllegalArgumentException.class, () -> {
-			service.getClientPreference("1236679496");
-		});
-	}
 	
 	//Updating Client Preferences
 	@Test
 	void shouldUpdateClientPreference() {
 		String id = "1425922638";
-		ClientPreferences clientPreference =  service.getClientPreference(id);
+		ClientPreferences clientPreference = clientPreferencesList.get(0);
 		assertEquals(clientPreference.getIncomeCategory(), "MIG");
 		clientPreference.setIncomeCategory("HIG");
 		service.updateClientPreferences(id, clientPreference);
 		assertEquals(clientPreference.getIncomeCategory(), "HIG");
-		assertEquals(service.getAllClientPreferencesList().size(), 2);
 	}
 	
 	@Test
@@ -232,10 +229,4 @@ class ClientServiceTest {
 		});
 	}
 	
-	@Test
-	void shouldNotUpdateForPreferenceThatDoesntExist() {
-		assertThrows(IllegalArgumentException.class, () -> {
-			service.updateClientPreferences("1236679496", clientPreferencesList.get(2));
-		});
-	}
 }

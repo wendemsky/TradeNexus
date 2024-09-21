@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 //Importing FMTS package
 import com.fidelity.fmts.*;
+import com.fidelity.integration.ClientDao;
 //Import models package
 import com.fidelity.models.Client;
 import com.fidelity.models.ClientIdentification;
@@ -19,7 +20,10 @@ public class ClientService {
 	private List<Client> clients;
 	private List<ClientPreferences> clientPreferences;
 	
-	public ClientService() {
+	private ClientDao clientDao;
+	
+	public ClientService(ClientDao dao) {
+		this.clientDao = dao;
 		this.clients = new ArrayList<Client>();
 		this.clientPreferences = new ArrayList<ClientPreferences>();
 	}
@@ -140,16 +144,12 @@ public class ClientService {
 		
 	/*Methods Related to Adding and Updating of Client Preferences*/
 	
-	public List<ClientPreferences> getAllClientPreferencesList() {
-		return this.clientPreferences;
-	}
-	
 	public void addClientPreferences(ClientPreferences preferences) {
 		try {
 			if(preferences == null) {
 				throw new NullPointerException("preferences cannot be null");
 			}
-			clientPreferences.add(preferences);
+			clientDao.addClientPreferences(preferences);
 		} catch(NullPointerException e) {
 			throw e;
 		}	
@@ -160,20 +160,10 @@ public class ClientService {
 			if(clientId == null) {
 				throw new NullPointerException("Id should not be null");
 			}
-			Iterator<ClientPreferences> iter = clientPreferences.iterator();
-			while(iter.hasNext()) {
-				ClientPreferences member = iter.next();
-				if(member.getClientId() == clientId) {
-					return member;
-				}
-			}
-			throw new IllegalArgumentException("Invalid ID");	
+			return clientDao.getClientPreferences(clientId);
 		} catch(NullPointerException e) {
 			throw e;
-		} catch(IllegalArgumentException e) {
-			throw e;
 		}
-			
 	}
 	
 	public void updateClientPreferences(String clientId, ClientPreferences preferences) {
@@ -184,21 +174,10 @@ public class ClientService {
 			if(preferences == null) {
 				throw new NullPointerException("Id should not be null");
 			}
-			Iterator<ClientPreferences> iter = clientPreferences.iterator();
-			while(iter.hasNext()) {
-				ClientPreferences member = iter.next();
-				if(member.getClientId() == clientId) {
-					member = preferences;
-					return;
-				}
-			}
-			throw new IllegalArgumentException("No user with this ID exists");	
+			clientDao.updateClientPreferences(preferences);
 		} catch(NullPointerException e) {
-			throw e;
-		} catch(IllegalArgumentException e) {
 			throw e;
 		}
 	}
 		
-
 }
