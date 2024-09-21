@@ -22,7 +22,7 @@ import com.fidelity.fmts.FMTSService;
 public class TradeService {
 	
 	private static PortfolioService portfolioService = null;
-	private static TradeHistoryService tradeHistoryService = null;
+//	private static TradeHistoryService tradeHistoryService = null;
 	
 	private List<Price> priceList;
 	
@@ -30,7 +30,7 @@ public class TradeService {
 		priceList = FMTSService.getLivePrices(); //Get Live Prices from FMTSService
 		//Initializing Portfolio and Trade History Service
 		portfolioService = new PortfolioService();
-		tradeHistoryService = new TradeHistoryService();
+//		tradeHistoryService = new TradeHistoryService();
 		List<Holding> holdings = new ArrayList<>();
 		holdings.add(new Holding("N123456", 2, new BigDecimal("104.25")));
 		List<ClientPortfolio> clientPortfolios = new ArrayList<ClientPortfolio>(
@@ -64,10 +64,10 @@ public class TradeService {
             		if(price.getInstrument().getInstrumentId() == order.getInstrumentId()) {
             			//Call FMTS Service to create the trade
         				Trade trade = FMTSService.createTrade(order);
-            			//Update portfolio
-            			portfolioService.updateClientPortfolio(trade);
-            			//Update trade history
-            			tradeHistoryService.addTrade(trade);
+//            			//Update portfolio
+//            			portfolioService.updateClientPortfolio(trade);
+//            			//Update trade history
+//            			tradeHistoryService.addTrade(trade);
             			return trade;
             		}
             	}
@@ -76,10 +76,10 @@ public class TradeService {
         			if(holding.getInstrumentId() == order.getInstrumentId()) {
         				//Call FMTS Service to create the trade
         				Trade trade = FMTSService.createTrade(order);
-        				//Update portfolio
-            			portfolioService.updateClientPortfolio(trade);
-            			//Update trade history
-            			tradeHistoryService.addTrade(trade);
+//        				//Update portfolio
+//            			portfolioService.updateClientPortfolio(trade);
+//            			//Update trade history
+//            			tradeHistoryService.addTrade(trade);
             			return trade;
         			}
         		}
