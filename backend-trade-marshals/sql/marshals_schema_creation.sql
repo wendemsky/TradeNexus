@@ -1,3 +1,4 @@
+ DROP TABLE CLIENT_PREFERENCES;
  DROP TABLE CLIENT_IDENTIFICATION;
  DROP TABLE CLIENT;
  
@@ -59,4 +60,38 @@
  INSERT INTO client_identification (client_id, type, value)
  VALUES ('739982664','SSN','1234573532');
  
- COMMIT;
+ // Create table for Client Preferences
+ CREATE TABLE "MARSH"."CLIENT_PREFERENCES" (
+    client_id VARCHAR2(50),
+    investment_purpose VARCHAR2(30),
+    income_category VARCHAR2(6),
+    length_of_investment VARCHAR2(15),
+    percentage_of_spend VARCHAR2(6),
+    risk_tolerance NUMBER(2),
+    is_advisor_accepted VARCHAR2(5),
+    CONSTRAINT pk_client_id_type_preferences PRIMARY KEY(client_id),
+    CONSTRAINT fk_client_id_preferences FOREIGN KEY(client_id) REFERENCES CLIENT(client_id),
+    CONSTRAINT chk_is_advisor_accepted CHECK (is_advisor_accepted IN ('true', 'false'))
+ );
+ 
+//Inserting 6 records into Client Preferences table
+//Two records will have accept advisor set to false
+INSERT INTO CLIENT_PREFERENCES (client_id ,investment_purpose, income_category, length_of_investment, percentage_of_spend, risk_tolerance, is_advisor_accepted) 
+VALUES ( '1654658069', 'Education', 'HIG', 'Short', 'Tier4', 2, 'false');
+
+INSERT INTO CLIENT_PREFERENCES (client_id ,investment_purpose, income_category, length_of_investment, percentage_of_spend, risk_tolerance, is_advisor_accepted) 
+VALUES ( '541107416', 'Major Expense', 'LIG', 'Medium', 'Tier2', 1, 'true');
+
+INSERT INTO CLIENT_PREFERENCES (client_id ,investment_purpose, income_category, length_of_investment, percentage_of_spend, risk_tolerance, is_advisor_accepted) 
+VALUES ( '1425922638', 'Education', 'MIG', 'Short', 'Tier1', 5, 'true');
+
+INSERT INTO CLIENT_PREFERENCES (client_id ,investment_purpose, income_category, length_of_investment, percentage_of_spend, risk_tolerance, is_advisor_accepted) 
+VALUES ( '1644724236', 'Retirement', 'VHIG', 'Medium', 'Tier4', 3, 'false');
+
+INSERT INTO CLIENT_PREFERENCES (client_id ,investment_purpose, income_category, length_of_investment, percentage_of_spend, risk_tolerance, is_advisor_accepted) 
+VALUES ( '1236679496', 'Retirement', 'MIG', 'Long', 'Tier3', 3, 'true');
+
+INSERT INTO CLIENT_PREFERENCES (client_id ,investment_purpose, income_category, length_of_investment, percentage_of_spend, risk_tolerance, is_advisor_accepted) 
+VALUES ( '739982664', 'Retirement', 'LIG', 'Short', 'Tier4', 1, 'true'); 
+
+COMMIT;

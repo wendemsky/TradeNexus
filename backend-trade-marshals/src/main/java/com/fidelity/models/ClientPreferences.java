@@ -113,5 +113,13 @@ public class ClientPreferences {
 				&& Objects.equals(lengthOfInvestment, other.lengthOfInvestment)
 				&& Objects.equals(percentageOfSpend, other.percentageOfSpend) && riskTolerance == other.riskTolerance;
 	}
+
+	@Override
+	public String toString() {
+		return "ClientPreferences [clientId=" + clientId + ", investmentPurpose=" + investmentPurpose
+				+ ", incomeCategory=" + incomeCategory + ", lengthOfInvestment=" + lengthOfInvestment
+				+ ", percentageOfSpend=" + percentageOfSpend + ", riskTolerance=" + riskTolerance + ", acceptAdvisor="
+				+ acceptAdvisor + "]";
+	}
 	
 }
