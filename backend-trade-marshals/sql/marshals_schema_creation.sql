@@ -1,6 +1,8 @@
  DROP TABLE CLIENT_PREFERENCES;
  DROP TABLE CLIENT_IDENTIFICATION;
  DROP TABLE CLIENT;
+ DROP TABLE client_portfolio;
+ DROP TABLE holdings;
  
  //Create Table Client
  CREATE TABLE "MARSH"."CLIENT" (	
@@ -73,6 +75,21 @@
     CONSTRAINT fk_client_id_preferences FOREIGN KEY(client_id) REFERENCES CLIENT(client_id),
     CONSTRAINT chk_is_advisor_accepted CHECK (is_advisor_accepted IN ('true', 'false'))
  );
+ 
+ //client portfolio table
+ CREATE TABLE client_portfolio (
+    client_id VARCHAR(255) PRIMARY KEY,
+    curr_balance DECIMAL(19, 4) NOT NULL
+);
+
+//holdings table
+CREATE TABLE holdings (
+    client_id VARCHAR(255) NOT NULL,
+    instrument_id VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    avg_price DECIMAL(19, 4) NOT NULL,
+    FOREIGN KEY (client_id) REFERENCES client_portfolio(client_id) ON DELETE CASCADE
+);
  
 //Inserting 6 records into Client Preferences table
 //Two records will have accept advisor set to false
