@@ -23,7 +23,7 @@ public class Client {
 					||dateOfBirth==null || country==null || identification==null) 
 				throw new NullPointerException("Client Details cannot be null");
 			//Only checking validity of fields that are not explicitly covered in Angular
-			if(country!="India" && country!="USA")
+			if(!country.equals("India") && !country.equals("USA"))
 				throw new IllegalArgumentException("Country not covered");
 			this.email = email;
 			this.clientId = clientId;
@@ -54,9 +54,25 @@ public class Client {
 	public String getPassword() {
 		return password;
 	}
+
+	public String getName() {
+		return name;
+	}
 	
-	public List<ClientIdentification> getIdentificationDetails() {
+	public String getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public List<ClientIdentification> getIdentification() {
 		return identification;
+	}
+
+	public boolean getIsAdmin() {
+		return isAdmin;
 	}
 
 	@Override
@@ -85,6 +101,5 @@ public class Client {
 				+ ", dateOfBirth=" + dateOfBirth + ", country=" + country + ", identification=" + identification
 				+ ", isAdmin=" + isAdmin + "]";
 	}
-	
 	
 }
