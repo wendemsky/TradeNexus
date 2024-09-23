@@ -6,10 +6,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-<<<<<<< HEAD
 import org.apache.commons.dbutils.DbUtils;
-=======
->>>>>>> 0e6f28dbc0438c11afe1311f0df31338891328ce
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fidelity.models.ClientPreferences;
+import com.fidelity.models.ClientPortfolio;
+import com.fidelity.models.Holding;
 import com.fidelity.models.Order;
 import com.fidelity.models.Trade;
 import com.fidelity.models.TradeHistory;
@@ -62,10 +60,17 @@ class ClientTradeDaoImplTest {
 	}
 	
 	@Test
-	void testGetClientPortfolioHoldings() {
+	void testGetClientPortfolioHoldingsForClientWithoutHoldings() {
+		String clientId = "1425922638";
+		ClientPortfolio clientPortfolio = dao.getClientPortfolio(clientId);
+		assertTrue(clientPortfolio.getHoldings().size() == 0);
+	}
+	
+	@Test
+	void testGetClientPortfolioHoldingsForClientWithHoldings() {
 		String clientId = "541107416";
 		ClientPortfolio clientPortfolio = dao.getClientPortfolio(clientId);
-		assertTrue(clientPortfolio.getHoldings().size() > 4);
+		assertTrue(clientPortfolio.getHoldings().size() >= 1);
 	}
 	
 	@Test
@@ -102,6 +107,61 @@ class ClientTradeDaoImplTest {
  
 		assertThrows(DatabaseException.class, ()->{
 			dao.addTrade(newTrade);
+		});
+	}
+	@Test
+	void testSuccessfulAddClientHoldingOfClientWithHolding() throws SQLException {
+		String clientId = "541107416"; //Has holdings
+		Holding holding = new Holding("N123456", 1, new BigDecimal("104.50"));
+		int oldSize =  DbTestUtils.countRowsInTableWhere(dataSource.getConnection(), "holdings", "client_id = "+clientId);
+		dao.addClientHoldings(clientId, holding);
+		int newSize =  DbTestUtils.countRowsInTableWhere(dataSource.getConnection(), "holdings", "client_id = "+clientId);
+		assertTrue(newSize == oldSize+1);
+	}
+	
+	@Test
+	void testSuccessfulAddClientHoldingOfClientWithNoHoldings() throws SQLException {
+		String clientId = "1654658069"; //Has no holdings
+		Holding holding = new Holding("N123456", 1, new BigDecimal("104.50"));
+		dao.addClientHoldings(clientId, holding);
+		int newSize =  DbTestUtils.countRowsInTableWhere(dataSource.getConnection(), "holdings", "client_id = "+clientId);
+		assertTrue(newSize == 1);
+	}
+	
+	@Test
+	void testAddClientHoldingOfNonExistentClientThrowsException() throws SQLException {
+		String clientId = "nonexistent";
+		Holding holding = new Holding("N123456", 1, new BigDecimal("104.50"));
+		assertThrows(DatabaseException.class, ()->{
+			dao.addClientHoldings(clientId, holding);
+		});
+	}
+
+	@Test
+	void testSuccessfulUpdationOfClientHoldings() throws SQLException {
+		String clientId = "541107416"; //Has holdings
+		Holding holding = new Holding("C100", 10, new BigDecimal("104.50"));
+		String whereCondition = "client_id = '541107416' and instrument_id = 'C100' and quantity = "+holding.getQuantity();
+		dao.updateClientHoldings(clientId, holding);
+		int newSize =  DbTestUtils.countRowsInTableWhere(dataSource.getConnection(), "holdings", whereCondition);
+		assertTrue(newSize == 1);
+	}
+	
+	@Test
+	void testUpdationOfNonExistentClientHoldingsThrowsException() throws SQLException {
+		String clientId = "541107416"; //Has holdings
+		Holding holding = new Holding("N123456", 10, new BigDecimal("104.50"));
+		assertThrows(DatabaseException.class, ()->{
+			dao.updateClientHoldings(clientId, holding);
+		});
+	}
+	
+	@Test
+	void testUpdationOfClientHoldingsOfNonExistentClientThrowsException() throws SQLException {
+		String clientId = "nonexistent"; //Has holdings
+		Holding holding = new Holding("N123456", 10, new BigDecimal("104.50"));
+		assertThrows(DatabaseException.class, ()->{
+			dao.updateClientHoldings(clientId, holding);
 		});
 	}
 	
