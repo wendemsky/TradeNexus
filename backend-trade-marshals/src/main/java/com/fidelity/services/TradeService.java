@@ -36,10 +36,7 @@ public class TradeService {
 		priceList = FMTSService.getLivePrices(); //Get Live Prices from FMTSService
 		//Initializing Portfolio and Trade History Service
 		portfolioService = new PortfolioService(dao); // update
-//		tradeHistoryService = new TradeHistoryService();
-		
 		this.dao = dao;
-		tradeHistoryService = new TradeHistoryService(dao);
 	}
    
 
@@ -63,10 +60,6 @@ public class TradeService {
             		if(price.getInstrument().getInstrumentId() == order.getInstrumentId()) {
             			//Call FMTS Service to create the trade
         				Trade trade = FMTSService.createTrade(order);
-            			//Update portfolio
-            			portfolioService.updateClientPortfolio(trade);
-            			//Update trade history
-            			tradeHistoryService.addTrade(trade);
             			return trade;
             		}
             	}
@@ -75,10 +68,6 @@ public class TradeService {
         			if(holding.getInstrumentId() == order.getInstrumentId()) {
         				//Call FMTS Service to create the trade
         				Trade trade = FMTSService.createTrade(order);
-        				//Update portfolio
-            			portfolioService.updateClientPortfolio(trade);
-            			//Update trade history
-            			tradeHistoryService.addTrade(trade);
             			return trade;
         			}
         		}

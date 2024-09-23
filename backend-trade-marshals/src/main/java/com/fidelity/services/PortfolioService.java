@@ -80,6 +80,7 @@ public class PortfolioService {
 	                    BigDecimal newAvgPrice = (existingHolding.getAvgPrice().multiply(new BigDecimal(existingHolding.getQuantity()))
 	                            .subtract(totalValueOfTrade))
 	                            .divide(new BigDecimal(existingHolding.getQuantity()).subtract(new BigDecimal(executedTrade.getQuantity())), BigDecimal.ROUND_HALF_UP);
+	                    System.out.println("New Avg Price "+newAvgPrice);
 	                    existingHolding.setAvgPrice(newAvgPrice);
 	                    existingHolding.setQuantity(existingHolding.getQuantity()-(executedTrade.getQuantity()));
 	

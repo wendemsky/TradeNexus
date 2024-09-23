@@ -38,7 +38,7 @@ class PortfolioServiceTest {
 				new Holding("Q456",1,new BigDecimal("340"))
 			));
 		List<Holding> holdingsOf541107416 = new ArrayList<Holding>(List.of(
-				new Holding("C100", 1000, new BigDecimal("95.67")),
+				new Holding("C100", 10000, new BigDecimal("95.67")),
 				new Holding("T67890",10, new BigDecimal("1.033828125"))
 			));
 		//Test client portfolios
@@ -98,16 +98,15 @@ class PortfolioServiceTest {
    
     
     @Test
-    void testUpdatePortfolioForBuyTrade() {
-    	 String instrumentId = "Q123";
-         BigDecimal execPrice = new BigDecimal("105");
+    void testUpdatePortfolioForBuyTradeOfExistingHoldings() {
+    	 String instrumentId = "C100";
+         BigDecimal execPrice = new BigDecimal("100");
          Integer quantity = 2;
-         BigDecimal currentBalance = new BigDecimal("500.00");
          
          String existingClientId = "541107416"; 
 
          // Create Order object ie passed
-         Order order = new Order(instrumentId, quantity, new BigDecimal("105"), "B", existingClientId, "order1",1425922638);
+         Order order = new Order(instrumentId, quantity, new BigDecimal("99.2"), "B", existingClientId, "order1",1425922638);
          Trade trade = new Trade(
         		 order,
                  execPrice,
@@ -116,96 +115,105 @@ class PortfolioServiceTest {
          );
          
          //Get old clientportfolio
+         Mockito.when(mockDao.getClientPortfolio(existingClientId)).thenReturn(clientPortfolios.get(1));
          ClientPortfolio oldClientPortfolio =  service.getClientPortfolio(existingClientId);
          BigDecimal oldCurrBalance = oldClientPortfolio.getCurrBalance();
-         //Mockito.verify(mockDao).verifyClientEmail(validEmail);
-         service.updateClientPortfolio(trade);
-         
-         ClientPortfolio newClientPortfolio =  service.getClientPortfolio(existingClientId);
-         BigDecimal newCurrBalance = newClientPortfolio.getCurrBalance();
-         assertEquals(oldCurrBalance.compareTo(newCurrBalance)>0, true);
+         //New balance and holdings
+         BigDecimal newCurrBalance = oldCurrBalance.subtract( execPrice.multiply(new BigDecimal(quantity)));
+         Holding updatedHolding = new Holding("C100", 10002, new BigDecimal("95.67"));
+         service.updateClientPortfolio(trade); 
+         Mockito.verify(mockDao).updateClientBalance(existingClientId, newCurrBalance);
+         Mockito.verify(mockDao).updateClientHoldings(existingClientId,updatedHolding);
     	
     }
     
-//    @Test
-//    void testUpdatePortfolioForSellTrade() {
-//    	 String instrumentId = "Q123";
-//         BigDecimal execPrice = new BigDecimal("105");
-//         Integer quantity = 1;
-//         BigDecimal currentBalance = new BigDecimal("500.00");
-//
-//         // Create Order object if needed
-//       
-//         Order order = new Order(instrumentId, quantity, new BigDecimal("105"), "S", "1425922638", "order1",1425922638);
-//         Trade trade = new Trade(
-//        		 order,
-//                 execPrice,
-//                 "trade1",
-//                 execPrice.multiply(new BigDecimal(quantity))
-//         );
-//         
-//         //Get old clientportfolio
-//         ClientPortfolio oldClientPortfolio =  portfolioService.getClientPortfolio("1425922638");
-//         BigDecimal oldCurrBalance = oldClientPortfolio.getCurrBalance();
-//         portfolioService.updateClientPortfolio(trade);
-//         ClientPortfolio newClientPortfolio =  portfolioService.getClientPortfolio("1425922638");
-//         BigDecimal newCurrBalance = newClientPortfolio.getCurrBalance();
-//       
-//         assertEquals(oldCurrBalance.compareTo(newCurrBalance)<0, true);
-//    	
-//    }
-//    
-//    @Test
-//    void testUpdatePortfolioForBuyTradeOfNewInstrument() {
-//    	 String instrumentId = "Q678";
-//         BigDecimal execPrice = new BigDecimal("105");
-//         Integer quantity = 1;
-//         BigDecimal currentBalance = new BigDecimal("500.00");
-//
-//         // Create Order object if needed
-//       
-//         Order order = new Order(instrumentId, quantity, new BigDecimal("105"), "B", "1425922638", "order1",1425922638);
-//         Trade trade = new Trade(
-//        		 order,
-//                 execPrice,
-//                 "trade1",
-//                 execPrice.multiply(new BigDecimal(quantity))
-//         );
-//         
-//         //Get old clientportfolio
-//         ClientPortfolio oldClientPortfolio =  portfolioService.getClientPortfolio("1425922638");
-//         List<Holding> oldHoldings = oldClientPortfolio.getHoldings();
-//         int oldHoldingsLength = oldHoldings.size();
-//         portfolioService.updateClientPortfolio(trade);
-//         ClientPortfolio newClientPortfolio =  portfolioService.getClientPortfolio("1425922638");
-//         List<Holding> newHoldings = newClientPortfolio.getHoldings();
-//         int newHoldingsLength = newHoldings.size();
-//         assertTrue(newHoldingsLength==oldHoldingsLength+1);
-//    	
-//    }
-//    
-//    @Test
-//    void testUpdatePortfolioForNonExistentInstruemntSellTrade() {
-//    	 String instrumentId = "Q678";
-//         BigDecimal execPrice = new BigDecimal("105");
-//         Integer quantity = 1;
-//         BigDecimal currentBalance = new BigDecimal("500.00");
-//
-//         // Create Order object if needed
-//       
-//         Order order = new Order(instrumentId, quantity, new BigDecimal("105"), "S", "1425922638", "order1",1425922638);
-//         Trade trade = new Trade(
-//        		 order,
-//                 execPrice,
-//                 "trade1",
-//                 execPrice.multiply(new BigDecimal(quantity))
-//         );
-//         
-//        Exception e = assertThrows(IllegalArgumentException.class, () -> {
-//    			portfolioService.updateClientPortfolio(trade);
-//    		});
-//    	assertEquals(e.getMessage(),"Instrument not found for selling");
-//    }
-//   
+  @Test
+  void testUpdatePortfolioForBuyTradeOfNewInstrument() {
+  	 	String instrumentId = "Q678";
+       BigDecimal execPrice = new BigDecimal("105");
+       Integer quantity = 1;
+       
+       String existingClientId = "541107416";
+
+       // Create Order object if needed
+     
+       Order order = new Order(instrumentId, quantity, new BigDecimal("105"), "B", existingClientId, "order1",1425922638);
+       Trade trade = new Trade(
+      		 order,
+               execPrice,
+               "trade1",
+               execPrice.multiply(new BigDecimal(quantity))
+       );
+       
+       //Get old clientportfolio
+       Mockito.when(mockDao.getClientPortfolio(existingClientId)).thenReturn(clientPortfolios.get(1));
+       ClientPortfolio oldClientPortfolio =  service.getClientPortfolio(existingClientId);
+       BigDecimal oldCurrBalance = oldClientPortfolio.getCurrBalance();
+       //New balance and holdings
+       BigDecimal newCurrBalance = oldCurrBalance.subtract( execPrice.multiply(new BigDecimal(quantity)));
+       Holding updatedHolding = new Holding(instrumentId, quantity, execPrice);
+       service.updateClientPortfolio(trade); 
+       Mockito.verify(mockDao).updateClientBalance(existingClientId, newCurrBalance);
+       //Must call add client Portfolio
+       Mockito.verify(mockDao).addClientHoldings(existingClientId, updatedHolding);
+  }
+    
+  @Test
+  void testUpdatePortfolioForSellTradeOfExistingHoldings() {
+  	 String instrumentId = "C100";
+       BigDecimal execPrice = new BigDecimal("100");
+       Integer quantity = 100;
+       
+       String existingClientId = "541107416"; 
+
+       // Create Order object ie passed
+       Order order = new Order(instrumentId, quantity, new BigDecimal("99.2"), "S", existingClientId, "order1",1425922638);
+       Trade trade = new Trade(
+      		 order,
+               execPrice,
+               "trade1",
+               execPrice.multiply(new BigDecimal(quantity))
+       );
+       
+       //Get old clientportfolio
+       Mockito.when(mockDao.getClientPortfolio(existingClientId)).thenReturn(clientPortfolios.get(1));
+       ClientPortfolio oldClientPortfolio =  service.getClientPortfolio(existingClientId);
+       BigDecimal oldCurrBalance = oldClientPortfolio.getCurrBalance();
+       //New balance and holdings
+       BigDecimal newCurrBalance = oldCurrBalance.add( execPrice.multiply(new BigDecimal(quantity)));
+       Holding updatedHolding = new Holding(instrumentId, 9900, new BigDecimal("95.63"));
+       service.updateClientPortfolio(trade); 
+       Mockito.verify(mockDao).updateClientBalance(existingClientId, newCurrBalance);
+       Mockito.verify(mockDao).updateClientHoldings(existingClientId,updatedHolding);
+  	
+  }
+   
+    @Test
+    void testUpdatePortfolioForNonExistentInstruemntSellTrade() {
+    	 String instrumentId = "Q678";
+         BigDecimal execPrice = new BigDecimal("105");
+         Integer quantity = 1;
+         BigDecimal currentBalance = new BigDecimal("500.00");
+         
+         String existingClientId = "541107416"; //This client doesnt have above instrument
+
+         // Create Order object if needed
+       
+         Order order = new Order(instrumentId, quantity, new BigDecimal("105"), "S", existingClientId, "order1",1425922638);
+         Trade trade = new Trade(
+        		 order,
+                 execPrice,
+                 "trade1",
+                 execPrice.multiply(new BigDecimal(quantity))
+         );
+        
+        //Mocking the get client portfolio
+        Mockito.when(mockDao.getClientPortfolio(existingClientId)).thenReturn(clientPortfolios.get(1));
+        Exception e = assertThrows(IllegalArgumentException.class, () -> {
+    			service.updateClientPortfolio(trade);
+    		});
+    	assertEquals(e.getMessage(),"Instrument not found for selling");
+    }
+ 
 
 }

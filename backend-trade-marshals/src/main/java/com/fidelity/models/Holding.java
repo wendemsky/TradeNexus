@@ -40,4 +40,23 @@ public class Holding {
 		this.avgPrice = avgPrice;
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(avgPrice, instrumentId, quantity);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Holding other = (Holding) obj;
+		return Objects.equals(avgPrice, other.avgPrice) && Objects.equals(instrumentId, other.instrumentId)
+				&& quantity == other.quantity;
+	}
+
+	
 }
