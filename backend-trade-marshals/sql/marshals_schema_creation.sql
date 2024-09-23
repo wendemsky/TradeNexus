@@ -15,11 +15,10 @@
     is_admin CHAR(1) NOT NULL,
     curr_balance NUMBER NOT NULL,
     CONSTRAINT pk_client_id PRIMARY KEY(client_id),
-    
+    CONSTRAINT chk_email_format CHECK (REGEXP_LIKE(email, '^[A-Za-z0-9\._%+-]+@[A-Za-z0-9\.-]+\.[A-Za-z]{2,}$')),
     CONSTRAINT chk_is_admin CHECK (is_admin IN ('Y', 'N'))
 );
 
-//CONSTRAINT email_format CHECK (REGEXP_LIKE(email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$')),
  //Create Table Client Identification
  CREATE TABLE "MARSH"."CLIENT_IDENTIFICATION" (
     client_id VARCHAR2(50),
