@@ -13,12 +13,17 @@ import com.fidelity.models.Holding;
 import com.fidelity.models.Trade;
  
 public class ActivityReportService {
-	private static TradeHistoryService tradeHistoryService = null; 
+	
+	
 	private static ClientActivityReportDao clientActivityReportDao;
+	private static ClientTradeDao clientTradeDao;
+	
+	private static TradeHistoryService tradeHistoryService = null; 
+	
 	public ActivityReportService(ClientActivityReportDao activityDao) {
 		//Initializing Portfolio and Trade History Service
 		clientActivityReportDao = activityDao;
-		tradeHistoryService = new TradeHistoryService();
+		tradeHistoryService = new TradeHistoryService(clientTradeDao);
 	}
 	//Generate Report with Clients Holdings
 	public List<Holding> generateHoldingsReport(String clientId) {

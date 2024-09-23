@@ -97,7 +97,7 @@ public class TradeServiceTest {
     public void testExecuteTradeSell() {
     	UUID uuid=UUID.randomUUID();
     	String orderId = uuid.toString();
-    	Order order = new Order("N123456", 1, new BigDecimal("104.75"), "S", "1425922638", orderId, 123);
+    	Order order = new Order("C100", 10, new BigDecimal("104.75"), "S", "541107416", orderId, 123);
     	Trade trade = tradeService.executeTrade(order);
     	assertTrue(trade != null);
     }

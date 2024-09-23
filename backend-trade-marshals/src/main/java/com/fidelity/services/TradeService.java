@@ -35,7 +35,7 @@ public class TradeService {
 	public TradeService(ClientTradeDao dao) {
 		priceList = FMTSService.getLivePrices(); //Get Live Prices from FMTSService
 		//Initializing Portfolio and Trade History Service
-		portfolioService = new PortfolioService(); // update
+		portfolioService = new PortfolioService(dao); // update
 //		tradeHistoryService = new TradeHistoryService();
 		
 		this.dao = dao;
