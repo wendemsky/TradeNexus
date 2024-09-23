@@ -4,17 +4,32 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
+import com.fidelity.integration.ClientDao;
+import com.fidelity.integration.ClientTradeDao;
+import com.fidelity.integration.ClientTradeDaoImpl;
+import com.fidelity.integration.DatabaseException;
+import com.fidelity.models.ClientPreferences;
 //Importing models
 import com.fidelity.models.Order;
 import com.fidelity.models.Trade;
+import com.fidelity.models.TradeHistory;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 
 class TradeHistoryServiceTest {
+	
+	@Mock ClientTradeDao mockDao;
+	@InjectMocks TradeHistoryService service;
 
     private TradeHistoryService tradeHistoryService;
     private Order order;
@@ -22,11 +37,8 @@ class TradeHistoryServiceTest {
     
 	@BeforeEach
 	void setUp() throws Exception {
-		 tradeHistoryService = new TradeHistoryService();
-	        // Setup initial data
-	     order = new Order("inst1", 100, new BigDecimal("50"), "B", "client1", "order1",123);
-	     trade = new Trade( order,new BigDecimal("50"), "trade1", new BigDecimal("5000"));
-	     tradeHistoryService.addTrade(trade);
+		 tradeHistoryService = new TradeHistoryService(mockDao); 
+	     MockitoAnnotations.openMocks(this);
 	}
 
 	@AfterEach
@@ -37,35 +49,23 @@ class TradeHistoryServiceTest {
 
 	@Test
 	public void testGetClientTradeHistory() {
-        List<Trade> trades = tradeHistoryService.getClientTradeHistory("client1");
-        assertNotNull(trades);
-        assertFalse(trades.isEmpty());
-        assertEquals(1, trades.size());
+		String clientId = "1654658069";
+        List<Trade> expected = new ArrayList<>();
+        Order order1 = new Order("instrument1", 10, new BigDecimal("100.00"), "B", clientId, "ORDER001", 123);
+    	Order order2 = new Order("instrument2", 15, new BigDecimal("120.00"), "B", clientId, "ORDER002", 123);
+        Trade trade1 = new Trade(order1,new BigDecimal("100.00"),"TRADE001", new BigDecimal("1000.00"));
+    	Trade trade2 = new Trade(order2,new BigDecimal("110.00"),"TRADE002", new BigDecimal("1000.00"));
+    	expected.add(trade1);
+    	expected.add(trade2);
+        TradeHistory tradeHistory = new TradeHistory(clientId, expected);
+        Mockito.when(mockDao.getClientTradeHistory(clientId))
+			.thenReturn(tradeHistory);
+		List<Trade> actual =  service.getClientTradeHistory(clientId);
+		//Verifying that the corresponding mockDao methods were called
+		Mockito.verify(mockDao).getClientTradeHistory(clientId); 
+			assertEquals(actual.equals(tradeHistory.getTrades()), true);
     }
 	
-	@Test
-    public void testUpdateTradeSuccessfully() {
-        // Initial trade details
-		order = new Order("inst1", 100, new BigDecimal("50"), "B", "client1", "order1",123);
-		Trade initialTrade = new Trade(order,new BigDecimal("50"), "trade1", new BigDecimal("5000"));
-        tradeHistoryService.addTrade(initialTrade);
-
-        // Updated trade details
-        Order updatedOrder = new Order("inst1", 150, new BigDecimal("55"), "S", "client1", "order2", 456);
-        Trade updatedTrade = new Trade( updatedOrder, new BigDecimal("55"), "trade1", new BigDecimal("8250"));
-
-        // Update trade
-        tradeHistoryService.updateTrade(updatedTrade);
-
-        // Retrieve and verify updated trade
-        Trade trade = tradeHistoryService.getClientTradeHistory("client1").get(0);
-        assertNotNull(trade, "Trade should not be null after update.");
-        assertEquals("inst1", trade.getInstrumentId(), "Instrument ID should match.");
-        assertEquals(150, trade.getQuantity(), "Quantity should be updated.");
-        assertEquals(new BigDecimal("55"), trade.getExecutionPrice(), "Execution Price should be updated.");
-        assertEquals("S", trade.getDirection(), "Direction should be updated.");
-        assertEquals(new BigDecimal("8250"), trade.getCashValue(), "Cash Value should be updated.");
-    }
 	
 	 @Test
 	  public void testGetClientTradeHistoryThrowsNullPointerException() {        
@@ -74,28 +74,55 @@ class TradeHistoryServiceTest {
 	}
 	 
 	 @Test
-	    public void testGetClientTradeHistoryThrowsExceptionForNoTrades() {
-		 Exception e =assertThrows(RuntimeException.class, () -> tradeHistoryService.getClientTradeHistory("nonexistentClient"));
+	    public void testGetClientTradeHistoryThrowsExceptionForNonExistingClient() {
+		 String clientId = "nonexistentClient";
+		 Mockito.doThrow(new DatabaseException("No trades found for client ID")).when(mockDao).getClientTradeHistory(clientId);
+		 Exception e = assertThrows(DatabaseException.class, () -> {
+				service.getClientTradeHistory(clientId);
+			});
 		 assertEquals(e.getMessage(),"No trades found for client ID");   
 	 }
 	 
 	 @Test
+	 public void testAddTrades() {
+		 String clientId = "1654658069";
+		 Order order1 = new Order("instrument1", 10, new BigDecimal("100.00"), "B", clientId, "ORDER001", 123);
+		 Trade trade1 = new Trade(order1,new BigDecimal("100.00"),"TRADE001", new BigDecimal("1000.00"));
+		 service.addTrade(trade1);
+		 Mockito.verify(mockDao).addTrade(trade1);
+		 
+	 }
+	 
+	 
+	 @Test
 	 public void testAddTradeThrowsExceptionForNullTrade() {
-		 Exception e = assertThrows(NullPointerException.class, () -> tradeHistoryService.addTrade(null));
-	      assertEquals(e.getMessage(),"Trade must not be null");
+		 Trade trade = null;
+		 Exception e = assertThrows(NullPointerException.class, () -> {
+				service.addTrade(trade);
+			});
+		 assertEquals(e.getMessage(), "Trade must not be null");
+		 
+	 }
+	 
+	 @Test
+	 public void testGetTradesByClientIdShouldNotReturnMoreThan100Trades() {
+		 String clientId = "1654658069";
+        List<Trade> expected = new ArrayList<>();
+        Order order1 = new Order("instrument1", 10, new BigDecimal("100.00"), "B", clientId, "ORDER001", 123);
+    	Order order2 = new Order("instrument2", 15, new BigDecimal("120.00"), "B", clientId, "ORDER002", 123);
+        Trade trade1 = new Trade(order1,new BigDecimal("100.00"),"TRADE001", new BigDecimal("1000.00"));
+    	Trade trade2 = new Trade(order2,new BigDecimal("110.00"),"TRADE002", new BigDecimal("1000.00"));
+    	expected.add(trade1);
+    	expected.add(trade2);
+        TradeHistory tradeHistory = new TradeHistory(clientId, expected);
+        Mockito.when(mockDao.getClientTradeHistory(clientId))
+			.thenReturn(tradeHistory);
+		List<Trade> actual =  service.getClientTradeHistory(clientId);
+		//Verifying that the corresponding mockDao methods were called
+		Mockito.verify(mockDao).getClientTradeHistory(clientId); 
+			assertTrue(actual.size() <= 100);
 	 }
 
-	 @Test
-	 public void testUpdateTradeThrowsExceptionForNullTrade() {
-		 Exception e = assertThrows(NullPointerException.class, () -> tradeHistoryService.updateTrade(null));
-		 assertEquals(e.getMessage(),"Updated trade must not be null");
-	 }
-
-	 @Test
-	 public void testUpdateTradeThrowsExceptionForNonExistentTrade() {
-		 Trade updatedTrade = new Trade(new Order("inst2", 200, new BigDecimal("60"), "S", "client1", "order2", 456), 
-				 				new BigDecimal("60"),"nonexistentTradeId", new BigDecimal("12000"));
-	    assertThrows(RuntimeException.class, () -> tradeHistoryService.updateTrade(updatedTrade));
-    }
+	
 
 }

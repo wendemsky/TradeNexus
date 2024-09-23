@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
+import javax.sql.DataSource;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +19,9 @@ import com.fidelity.models.Order;
 import com.fidelity.models.Price;
 import com.fidelity.models.Trade;
 import com.fidelity.models.ClientPreferences;
+import com.fidelity.integration.ClientTradeDao;
+import com.fidelity.integration.ClientTradeDaoImpl;
+import com.fidelity.integration.PoolableDataSource;
 import com.fidelity.models.ClientPortfolio;
 import com.fidelity.models.Holding;
 
@@ -27,10 +33,15 @@ public class TradeServiceTest {
 
     private TradeService tradeService;
     private List<Price> prices;
+    static PoolableDataSource dataSource;
+    private ClientTradeDao dao;
+//    UUID uuid=UUID.randomUUID();
 
     @BeforeEach
     public void setUp() throws Exception {
-        tradeService = new TradeService(); 
+    	dataSource = new PoolableDataSource();
+    	dao = new ClientTradeDaoImpl(dataSource);
+        tradeService = new TradeService(dao); 
         prices = tradeService.getPriceList();
     }
     
@@ -57,7 +68,9 @@ public class TradeServiceTest {
 
     @Test
     public void testExecuteTradeInvalidOrderDirection() {
-        Order order = new Order("N123456", 10, new BigDecimal("104.75"), "X", "client1", "order1", 123);
+    	UUID uuid=UUID.randomUUID();
+    	String orderId = uuid.toString();
+        Order order = new Order("N123456", 10, new BigDecimal("104.75"), "X", "client1", orderId, 123);
         assertThrows(IllegalArgumentException.class, () -> tradeService.executeTrade(order));
     }
     
@@ -73,21 +86,27 @@ public class TradeServiceTest {
     
     @Test
     public void testExecuteTradeBuy() {
-    	Order order = new Order("N123456", 10, new BigDecimal("10.75"), "B", "1425922638", "order1", 123);
+    	UUID uuid=UUID.randomUUID();
+    	String orderId = uuid.toString();
+    	Order order = new Order("N123456", 10, new BigDecimal("10.75"), "B", "1425922638", orderId, 123);
     	Trade trade = tradeService.executeTrade(order);
     	assertTrue(trade != null);
     }
     
     @Test
     public void testExecuteTradeSell() {
-    	Order order = new Order("N123456", 1, new BigDecimal("104.75"), "S", "1425922638", "order1", 123);
+    	UUID uuid=UUID.randomUUID();
+    	String orderId = uuid.toString();
+    	Order order = new Order("N123456", 1, new BigDecimal("104.75"), "S", "1425922638", orderId, 123);
     	Trade trade = tradeService.executeTrade(order);
     	assertTrue(trade != null);
     }
     
     @Test
     public void testExecuteTradeThrowExceptionForInvalidDirection() {
-    	Order order = new Order("N123456", 1, new BigDecimal("104.75"), "X", "1425922638", "order1", 123);
+    	UUID uuid=UUID.randomUUID();
+    	String orderId = uuid.toString();
+    	Order order = new Order("N123456", 1, new BigDecimal("104.75"), "X", "1425922638", orderId, 123);
     	Exception e = assertThrows(IllegalArgumentException.class, () -> {
     		tradeService.executeTrade(order);
     	});
@@ -97,7 +116,9 @@ public class TradeServiceTest {
     
     @Test
     public void testExecuteTradeThrowExceptionForNonExistingInstrument() {
-    	Order order = new Order("NonExistingInstrument", 10, new BigDecimal("104.75"), "B", "1425922638", "order1", 123);
+    	UUID uuid=UUID.randomUUID();
+    	String orderId = uuid.toString();
+    	Order order = new Order("NonExistingInstrument", 10, new BigDecimal("104.75"), "B", "1425922638", orderId, 123);
     	Exception e = assertThrows(IllegalArgumentException.class, () -> {
     		tradeService.executeTrade(order);
     	});

@@ -6,6 +6,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 //Importing models
 import com.fidelity.models.ClientPortfolio;
 import com.fidelity.models.ClientPreferences;
@@ -18,29 +20,26 @@ import com.fidelity.models.Trade;
 import com.fidelity.utils.PriceScorer;
 //Importing FMTS
 import com.fidelity.fmts.FMTSService;
+import com.fidelity.integration.ClientTradeDao;
+import com.fidelity.integration.ClientTradeDaoImpl;
 
 public class TradeService {
 	
 	private static PortfolioService portfolioService = null;
+	private static TradeHistoryService tradeHistoryService;
+	private ClientTradeDao dao;
 //	private static TradeHistoryService tradeHistoryService = null;
 	
 	private List<Price> priceList;
 	
-	public TradeService() {
+	public TradeService(ClientTradeDao dao) {
 		priceList = FMTSService.getLivePrices(); //Get Live Prices from FMTSService
 		//Initializing Portfolio and Trade History Service
-		portfolioService = new PortfolioService();
+		portfolioService = new PortfolioService(); // update
 //		tradeHistoryService = new TradeHistoryService();
-		List<Holding> holdings = new ArrayList<>();
-		holdings.add(new Holding("N123456", 2, new BigDecimal("104.25")));
-		List<ClientPortfolio> clientPortfolios = new ArrayList<ClientPortfolio>(
-				List.of(
-						new ClientPortfolio("1425922638", new BigDecimal("1000"), holdings),
-						new ClientPortfolio("1425922634", new BigDecimal("2000"), holdings)
-				)
-			);
-		portfolioService.addClientPortfolio(clientPortfolios.get(0));
-		portfolioService.addClientPortfolio(clientPortfolios.get(1));
+		
+		this.dao = dao;
+		tradeHistoryService = new TradeHistoryService(dao);
 	}
    
 
@@ -64,10 +63,10 @@ public class TradeService {
             		if(price.getInstrument().getInstrumentId() == order.getInstrumentId()) {
             			//Call FMTS Service to create the trade
         				Trade trade = FMTSService.createTrade(order);
-//            			//Update portfolio
-//            			portfolioService.updateClientPortfolio(trade);
-//            			//Update trade history
-//            			tradeHistoryService.addTrade(trade);
+            			//Update portfolio
+            			portfolioService.updateClientPortfolio(trade);
+            			//Update trade history
+            			tradeHistoryService.addTrade(trade);
             			return trade;
             		}
             	}
@@ -76,10 +75,10 @@ public class TradeService {
         			if(holding.getInstrumentId() == order.getInstrumentId()) {
         				//Call FMTS Service to create the trade
         				Trade trade = FMTSService.createTrade(order);
-//        				//Update portfolio
-//            			portfolioService.updateClientPortfolio(trade);
-//            			//Update trade history
-//            			tradeHistoryService.addTrade(trade);
+        				//Update portfolio
+            			portfolioService.updateClientPortfolio(trade);
+            			//Update trade history
+            			tradeHistoryService.addTrade(trade);
             			return trade;
         			}
         		}
