@@ -23,6 +23,7 @@ import com.fidelity.integration.ClientTradeDao;
 import com.fidelity.integration.ClientTradeDaoImpl;
 import com.fidelity.integration.DatabaseException;
 import com.fidelity.integration.PoolableDataSource;
+import com.fidelity.integration.TransactionManager;
 import com.fidelity.models.ClientPortfolio;
 import com.fidelity.models.Holding;
 
@@ -36,18 +37,22 @@ public class TradeServiceTest {
     private List<Price> prices;
     static PoolableDataSource dataSource;
     private ClientTradeDao dao;
-//    UUID uuid=UUID.randomUUID();
+    
+    TransactionManager transactionManager;
 
     @BeforeEach
     public void setUp() throws Exception {
     	dataSource = new PoolableDataSource();
     	dao = new ClientTradeDaoImpl(dataSource);
+    	transactionManager = new TransactionManager(dataSource);
+    	transactionManager.startTransaction();
         tradeService = new TradeService(dao); 
         prices = tradeService.getPriceList();
     }
     
     @AfterEach
     public void tearDown() throws Exception {
+    	transactionManager.rollbackTransaction();
     	tradeService = null;
     	prices = null;
 	}
@@ -94,14 +99,14 @@ public class TradeServiceTest {
     	assertTrue(trade != null);
     }
     
-//    @Test
-//    public void testExecuteTradeSell() {
-//    	UUID uuid=UUID.randomUUID();
-//    	String orderId = uuid.toString();
-//    	Order order = new Order("C100", 10, new BigDecimal("104.75"), "S", "541107416", orderId, 123);
-//    	Trade trade = tradeService.executeTrade(order);
-//    	assertTrue(trade != null);
-//    }
+    @Test
+    public void testExecuteTradeSell() {
+    	UUID uuid=UUID.randomUUID();
+    	String orderId = uuid.toString();
+    	Order order = new Order("C100", 10, new BigDecimal("104.75"), "S", "541107416", orderId, 123);
+    	Trade trade = tradeService.executeTrade(order);
+    	assertTrue(trade != null);
+    }
     
     @Test
     public void testExecuteTradeThrowExceptionForInvalidDirection() {

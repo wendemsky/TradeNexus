@@ -26,7 +26,7 @@ import com.fidelity.integration.ClientTradeDaoImpl;
 public class TradeService {
 	
 	private static PortfolioService portfolioService = null;
-	private static TradeHistoryService tradeHistoryService;
+	private static TradeHistoryService tradeHistoryService = null;
 	private ClientTradeDao dao;
 //	private static TradeHistoryService tradeHistoryService = null;
 	
@@ -35,7 +35,8 @@ public class TradeService {
 	public TradeService(ClientTradeDao dao) {
 		priceList = FMTSService.getLivePrices(); //Get Live Prices from FMTSService
 		//Initializing Portfolio and Trade History Service
-		portfolioService = new PortfolioService(dao); // update
+		portfolioService = new PortfolioService(dao); // get and update client portfolio
+		tradeHistoryService = new TradeHistoryService(dao); //Add trade history
 		this.dao = dao;
 	}
    
@@ -60,14 +61,22 @@ public class TradeService {
             		if(price.getInstrument().getInstrumentId() == order.getInstrumentId()) {
             			//Call FMTS Service to create the trade
         				Trade trade = FMTSService.createTrade(order);
+        				//Updating portfolio and Trade history
+        				portfolioService.updateClientPortfolio(trade);
+        				tradeHistoryService.addTrade(trade);
             			return trade;
             		}
             	}
         	} else if (order.getDirection() == "S"){
+        		//System.out.println(order.getClientId());
         		for(Holding holding: clientPortfolio.getHoldings()) {
-        			if(holding.getInstrumentId() == order.getInstrumentId()) {
+        			//System.out.println(holding.getInstrumentId());
+        			if(holding.getInstrumentId().equals(order.getInstrumentId())) {
         				//Call FMTS Service to create the trade
         				Trade trade = FMTSService.createTrade(order);
+        				//Updating portfolio and Trade history
+        				portfolioService.updateClientPortfolio(trade);
+        				tradeHistoryService.addTrade(trade);
             			return trade;
         			}
         		}
