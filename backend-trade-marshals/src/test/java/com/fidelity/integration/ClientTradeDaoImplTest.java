@@ -52,6 +52,7 @@ class ClientTradeDaoImplTest {
 		transactionManager.rollbackTransaction();
 	}
 
+	/*GET CLIENT PORTFOLIO*/
 	@Test
 	void testGetClientPortfolioNotNull() {
 		String clientId = "541107416";
@@ -82,9 +83,10 @@ class ClientTradeDaoImplTest {
 		assertEquals("Client ID does not exist", e.getMessage());
 	}
 	
+	/*TRADES*/
 	@Test
 	void testGetClientTradeHistory() {
-		String clientId = "1654658069";
+		String clientId = "541107416";
 		TradeHistory tradeHistory = dao.getClientTradeHistory(clientId);
 		assertNotNull(tradeHistory);
 		assertTrue(tradeHistory.getTrades().size()>1);
@@ -102,13 +104,36 @@ class ClientTradeDaoImplTest {
 	}
 	@Test
 	void testAddTradeExistingOrderId() {
-		Order newOrder = new Order("NT123456", 1000, new BigDecimal(45.678), "B", "739982664", "ORDER010", 20 );
+		Order newOrder = new Order("NT123456", 1000, new BigDecimal(45.678), "B", "739982664", "ORDER001", 20 );
 		Trade newTrade = new Trade(newOrder, new BigDecimal(45.678), "TRADE010", new BigDecimal(45678));
  
 		assertThrows(DatabaseException.class, ()->{
 			dao.addTrade(newTrade);
 		});
 	}
+	
+	
+	/*UPDATE CLIENT PORTFOLIO*/
+	//Updating current balance
+	@Test
+	void testSuccessfulUpdationOfClientBalance() throws SQLException {
+		String clientId = "541107416"; //Existing client
+		BigDecimal currBalance = new BigDecimal("10453").setScale(4);
+		String whereCondition = "client_id = '541107416' and curr_balance = "+currBalance;
+		dao.updateClientBalance(clientId, currBalance);
+		int newSize =  DbTestUtils.countRowsInTableWhere(dataSource.getConnection(), "client", whereCondition);
+		assertTrue(newSize == 1);
+	}
+	
+	@Test
+	void testUpdationOfBalanceOfNonExistentClientThrowsException() throws SQLException {
+		String clientId = "nonexistent";
+		assertThrows(DatabaseException.class, ()->{
+			dao.updateClientBalance(clientId, new BigDecimal("10653"));
+		});
+	}
+	
+	//Adding holdings
 	@Test
 	void testSuccessfulAddClientHoldingOfClientWithHolding() throws SQLException {
 		String clientId = "541107416"; //Has holdings
@@ -136,7 +161,8 @@ class ClientTradeDaoImplTest {
 			dao.addClientHoldings(clientId, holding);
 		});
 	}
-
+	
+	//Updating existing holdings
 	@Test
 	void testSuccessfulUpdationOfClientHoldings() throws SQLException {
 		String clientId = "541107416"; //Has holdings
@@ -158,7 +184,7 @@ class ClientTradeDaoImplTest {
 	
 	@Test
 	void testUpdationOfClientHoldingsOfNonExistentClientThrowsException() throws SQLException {
-		String clientId = "nonexistent"; //Has holdings
+		String clientId = "nonexistent";
 		Holding holding = new Holding("N123456", 10, new BigDecimal("104.50"));
 		assertThrows(DatabaseException.class, ()->{
 			dao.updateClientHoldings(clientId, holding);

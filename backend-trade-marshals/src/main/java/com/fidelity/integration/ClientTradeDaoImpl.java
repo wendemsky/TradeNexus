@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,8 +83,32 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 		}
 		return clientPortfolio;
 	}
+
+	@Override
+	public void updateClientBalance(String clientId, BigDecimal currBalance) {
+		final String queryToAddClientHolding = """
+				UPDATE client 
+				SET curr_balance = ? 
+				WHERE client_id = ? 
+				""";
+		try {
+			Connection connection = dataSource.getConnection();
+			try(PreparedStatement stmt = connection.prepareStatement(queryToAddClientHolding)){
+				stmt.setBigDecimal(1, currBalance);
+				stmt.setString(2, clientId);
+				int rowsUpdated = stmt.executeUpdate();
+				if(rowsUpdated<=0) throw new SQLException("Client doesnt exist");
+			}
+		} catch(SQLException e) {
+			logger.error("Cannot complete get operation", e);
+			throw new DatabaseException("Client doesnt exist to update balance", e);
+		}
+
+		
+	}
 	
 	@Override
+	
 	public void addClientHoldings(String clientId, Holding holding) {
 		final String queryToAddClientHolding = """
 				INSERT INTO holdings (client_id, instrument_id, quantity, avg_price) VALUES
@@ -133,7 +158,6 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 	public TradeHistory getClientTradeHistory(String clientId) {
 		TradeHistory clientTradeHistory = null;
 		List<Trade> fetchedTrades = new ArrayList<Trade>();
- 
 		final String queryToGetClientTradeHistoryById = """
 				SELECT
 				o.client_id, o.instrument_id, o.quantity, t.execution_price, o.direction, o.client_id, t.trade_id, t.cash_value, o.order_id, o.token, o.target_price
@@ -144,6 +168,7 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 				o.ORDER_ID = t.ORDER_ID
 				WHERE
 				o.client_id=?
+				ORDER BY t.executed_at desc
 								""";
 		try {
 			Connection conn = dataSource.getConnection();
@@ -167,6 +192,9 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 					Order clientOrder = new Order(instrumentId, quantity, targetPrice, direction, clientIdFetched, orderId, token);
 					Trade clientTradeFetched = new Trade(clientOrder, executionPrice, tradeId, cashValue);
 					fetchedTrades.add(clientTradeFetched);
+					//Only get the last 100 trades of client
+					if(countFetchedRows == 100)
+						break;
 				}
 				if(countFetchedRows == 0) {
 					throw new SQLException("Invalid Client ID");
@@ -178,19 +206,19 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 			throw new DatabaseException();
 		}
 		clientTradeHistory = new TradeHistory(clientId, fetchedTrades);
- 
 		return clientTradeHistory;
 	}
-	 
+	
 	@Override
 	public void addTrade(Trade trade) {
 		// TODO Auto-generated method stub
- 
 		final String queryToAddTradeToOrderTable = """
-				INSERT INTO CLIENT_ORDER(instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES(?, ?, ?, ?, ?, ?, ?)
+				INSERT INTO CLIENT_ORDER(instrument_id, quantity, target_price, direction, client_id, order_id, token) 
+				VALUES(?, ?, ?, ?, ?, ?, ?)
 				""";
 		final String queryToAddTradeToTradeTable = """
-				INSERT INTO CLIENT_TRADE(trade_id, order_id, execution_price, cash_value) VALUES(?, ?, ?, ?)
+				INSERT INTO CLIENT_TRADE(trade_id, order_id, execution_price, cash_value, executed_at) 
+				VALUES(?, ?, ?, ?, ?)
 				""";
 		try {
 			Connection conn = dataSource.getConnection();
@@ -209,6 +237,7 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 				stmt.setString(2, trade.getOrder().getOrderId());
 				stmt.setBigDecimal(3, trade.getExecutionPrice());
 				stmt.setBigDecimal(4, trade.getCashValue());
+				stmt.setTimestamp(5, java.sql.Timestamp.valueOf(LocalDateTime.now()));
 				stmt.executeUpdate();
 			}
 		}catch(SQLException e) {
@@ -216,5 +245,7 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 			throw new DatabaseException();
 		}
 	}
+
+	
 
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.fidelity.integration.ClientTradeDao;
 //Importing models
 import com.fidelity.models.ClientPortfolio;
 import com.fidelity.models.Holding;
@@ -12,43 +13,20 @@ import com.fidelity.models.Trade;
 
 
 public class PortfolioService {
+
+	private ClientTradeDao clientTradeDao;
 	
-	private List<ClientPortfolio> clientPortfolios;
-	
-	public PortfolioService() {
-		this.clientPortfolios = new ArrayList<ClientPortfolio>();
+	public PortfolioService(ClientTradeDao dao) {
+		this.clientTradeDao = dao;
 	}
-	
-    
-    public ClientPortfolio addClientPortfolio(ClientPortfolio clientPortfolio) {
-     try {
-	   	 if (clientPortfolio == null) {
-	            throw new NullPointerException("Client portfolio must not be null");
-	      }
-	   	 clientPortfolios.add(clientPortfolio);
-	   	 return clientPortfolio;
-     } catch(NullPointerException e) {
-    	 throw e;
-     }
-    
-   }
 
     public ClientPortfolio getClientPortfolio(String clientId) {
     	try {
 			if(clientId == null) {
-				throw new NullPointerException("Client ID should not be null");
+				throw new NullPointerException("Id should not be null");
 			}
-			Iterator<ClientPortfolio> iter = clientPortfolios.iterator();
-			while(iter.hasNext()) {
-				ClientPortfolio portfolio = iter.next();
-				if(portfolio.getClientId() == clientId) {
-					return portfolio;
-				}
-			}
-			throw new IllegalArgumentException("Client Portfolio is not existing");	
+			return clientTradeDao.getClientPortfolio(clientId);
 		} catch(NullPointerException e) {
-			throw e;
-		} catch(IllegalArgumentException e) {
 			throw e;
 		}
     }
@@ -77,13 +55,15 @@ public class PortfolioService {
 	                if (clientPortfolio.getCurrBalance().compareTo(totalCostOfTrade) >= 0) {
 	                    // Update balance
 	                    clientPortfolio.setCurrBalance(clientPortfolio.getCurrBalance().subtract(totalCostOfTrade));
-	 
+	                    clientTradeDao.updateClientBalance(clientPortfolio.getClientId(), clientPortfolio.getCurrBalance());
+	                    
 	                    // Update holding
 	                    BigDecimal newAvgPrice = (existingHolding.getAvgPrice().multiply(new BigDecimal(existingHolding.getQuantity()))
 	                            .add(totalCostOfTrade))
 	                            .divide(new BigDecimal(existingHolding.getQuantity()).add(new BigDecimal(executedTrade.getQuantity())), BigDecimal.ROUND_HALF_UP);
 	                    existingHolding.setAvgPrice(newAvgPrice);
 	                    existingHolding.setQuantity(existingHolding.getQuantity()+ executedTrade.getQuantity());
+	                    clientTradeDao.updateClientHoldings(clientPortfolio.getClientId(), existingHolding);
 	                } else {
 	                    throw new IllegalArgumentException("Insufficient balance");
 	                    // You can add additional error handling or logging here
@@ -94,18 +74,17 @@ public class PortfolioService {
 	                    BigDecimal totalValueOfTrade = executedTrade.getExecutionPrice().multiply(new BigDecimal(executedTrade.getQuantity()));
 	                    // Update balance
 	                    clientPortfolio.setCurrBalance(clientPortfolio.getCurrBalance().add(totalValueOfTrade));
-	 
+	                    clientTradeDao.updateClientBalance(clientPortfolio.getClientId(), clientPortfolio.getCurrBalance());
+	                    
 	                    // Update holding
 	                    BigDecimal newAvgPrice = (existingHolding.getAvgPrice().multiply(new BigDecimal(existingHolding.getQuantity()))
 	                            .subtract(totalValueOfTrade))
 	                            .divide(new BigDecimal(existingHolding.getQuantity()).subtract(new BigDecimal(executedTrade.getQuantity())), BigDecimal.ROUND_HALF_UP);
 	                    existingHolding.setAvgPrice(newAvgPrice);
 	                    existingHolding.setQuantity(existingHolding.getQuantity()-(executedTrade.getQuantity()));
-	 
-	                    // Remove holding if quantity becomes 0
-	                    if (existingHolding.getQuantity() == 0) {
-	                        clientHoldings.remove(existingHolding);
-	                    }
+	
+	                    clientTradeDao.updateClientHoldings(clientPortfolio.getClientId(), existingHolding);
+		                
 	                } else {
 	                	 throw new IllegalArgumentException("Insufficient quantity to sell");
 	                    // You can add additional error handling or logging here
@@ -119,11 +98,11 @@ public class PortfolioService {
 	                if (clientPortfolio.getCurrBalance().compareTo(totalCostOfTrade) >= 0) {
 	                    // Update balance
 	                    clientPortfolio.setCurrBalance(clientPortfolio.getCurrBalance().subtract(totalCostOfTrade));
-	 
+	                    clientTradeDao.updateClientBalance(clientPortfolio.getClientId(), clientPortfolio.getCurrBalance());
+	                    
 	                    // Create new holding
 	                    Holding newHolding = new Holding(executedTrade.getInstrumentId(),executedTrade.getQuantity(), totalCostOfTrade.divide(new BigDecimal(executedTrade.getQuantity()), BigDecimal.ROUND_HALF_UP));
-	                    // Add new holding to the list
-	                    clientHoldings.add(newHolding);
+	                    clientTradeDao.addClientHoldings(clientPortfolio.getClientId(), newHolding);
 	                } else {
 	                	 throw new IllegalArgumentException("Insufficient balance");
 	                    // You can add additional error handling or logging here

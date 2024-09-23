@@ -104,57 +104,26 @@ CREATE TABLE "MARSH"."CLIENT_ORDER"(
 );
 --Insert 10 values into ORDER table
 INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
-('N123456', 1000, 104.75, 'B', '1654658069', 'ORDER001', 1);
+('C100', 1000, 95.92, 'B', '541107416', 'ORDER001', 3);
 INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
-('N123789', 10, 312500, 'S', '1654658069', 'ORDER002', 2);
-INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
-('C100', 1000, 95.92, 'B', '541107416', 'ORDER003', 3);
-INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
-('T67890', 10000, 1.03375, 'S', '541107416', 'ORDER004', 4);
-INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
-('T67894', 10000, 0.998125, 'S', '1425922638', 'ORDER005', 5);
-INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
-('T67895', 10000, 1, 'B', '1425922638', 'ORDER006', 6);
-INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
-('T67897', 10000, 0.999375, 'B', '1644724236', 'ORDER007', 7);
-INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
-('T67899', 10000, 0.999375, 'B', '1644724236', 'ORDER008', 8);
-INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
-('T67880', 10000, 1.00375, 'S', '1236679496', 'ORDER009', 9);
-INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
-('T67883', 10000, 1.0596875, 'S', '1236679496', 'ORDER010', 10);
+('T67890', 10000, 1.03375, 'S', '541107416', 'ORDER002', 4);
 --Create table TRADE
 CREATE TABLE "MARSH"."CLIENT_TRADE" (
     trade_id VARCHAR2(50),
     order_id VARCHAR2(50),
     execution_price DECIMAL(25,10) NOT NULL,
     cash_value DECIMAL(25,10) NOT NULL,
+    executed_at TIMESTAMP NOT NULL,
     CONSTRAINT pk_trade_id PRIMARY KEY(trade_id),
 --    FOREIGN KEY(order_id) REFERENCES CLIENT_ORDER(order_id) ON DELETE CASCADE
     CONSTRAINT fk_trade FOREIGN KEY(order_id) REFERENCES CLIENT_ORDER(order_id) ON DELETE CASCADE
 );
 --Insert 10 values into Trade table
-INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value) VALUES
-('TRADE001', 'ORDER001', 104.75, 104750.00);
-INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value) VALUES
-('TRADE002', 'ORDER002', 312500, 3125000.00);
-INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value) VALUES
-('TRADE003', 'ORDER003', 95.92, 95920.00);
-INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value) VALUES
-('TRADE004', 'ORDER004', 1.03375, 10337.50);
-INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value) VALUES
-('TRADE005', 'ORDER005', 0.998125, 9981.25);
-INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value) VALUES
-('TRADE006', 'ORDER006', 1, 10000.00);
-INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value) VALUES
-('TRADE007', 'ORDER007', 0.999375, 9993.75);
-INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value) VALUES
-('TRADE008', 'ORDER008', 0.999375, 9993.75);
-INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value) VALUES
-('TRADE009', 'ORDER009', 1.00375, 10037.50);
-INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value) VALUES
-('TRADE010', 'ORDER010', 1.0596875, 10596.88);
-
+INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value, executed_at) VALUES
+('TRADE001', 'ORDER001', 95.92, 95920.00, to_date('2024-09-22 21:31:04', 'yyyy-mm-dd hh24-mi-ss'));
+INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value, executed_at) VALUES
+('TRADE002', 'ORDER002', 1.03375, 10337.50, to_date('2024-09-22 22:01:34', 'yyyy-mm-dd hh24-mi-ss'));
+ 
 // Add holdings
 INSERT INTO holdings (client_id, instrument_id, quantity, avg_price) VALUES
 ('541107416', 'C100', 1000, 95.67);  -- JPMorgan Chase Bank
