@@ -41,37 +41,37 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 				LEFT JOIN
 				    holdings h ON cp.client_id = h.client_id
 				WHERE
-				    cp.client_id = ?;
+				    cp.client_id = ?
 			""";
 		ClientPortfolio clientPortfolio = null;
 		try {
 			Connection connection = dataSource.getConnection();
-			int countOfRows = 0;
 			try (PreparedStatement stmt = 
 				connection.prepareStatement(queryToGetClientPortfolio)) {
+				int countOfRows = 0;
 				stmt.setString(1, clientId);
 				ResultSet rs = stmt.executeQuery();
-				if (rs.next()) {
+				String id = "";
+				BigDecimal currBalance = new BigDecimal(0);
+				List<Holding> holdings = new ArrayList<>();
+				while (rs.next()) {
 					countOfRows++;
-					String id = rs.getString("client_id");
-					BigDecimal currBalance = rs.getBigDecimal("curr_balance");
+					id = rs.getString("client_id");
+					currBalance = rs.getBigDecimal("curr_balance");
 					String instrumentId = rs.getString("instrument_id");
 					int quantity = rs.getInt("quantity");
 					BigDecimal avgPrice = rs.getBigDecimal("avg_price");
-					
-					List<Holding> holdings = new ArrayList<Holding>();
-					holdings = List.of( new Holding( instrumentId, quantity,avgPrice ));
-					
-					clientPortfolio = new ClientPortfolio(
-							id, 
-							currBalance,
-							holdings
-						);
+					holdings.add( new Holding( instrumentId, quantity, avgPrice ));
 				}
+				clientPortfolio = new ClientPortfolio(
+						id, 
+						currBalance,
+						holdings
+					);
 				if(countOfRows == 0) {
 					throw new SQLException("Invalid Client ID");
 				}
-			} 
+			}
 		}
 		catch(SQLException e) {
 			logger.error("Cannot complete get operation", e);
@@ -121,13 +121,13 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 
 	@Override
 	public void updateClientPortfolio(ClientPortfolio clientPortfolio) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	@Override
 	public void getClientTradeHistory(String clientId) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
