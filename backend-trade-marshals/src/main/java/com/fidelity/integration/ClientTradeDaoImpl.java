@@ -33,17 +33,17 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 	public ClientPortfolio getClientPortfolio(String clientId) {
 		final String queryToGetClientPortfolio = """
 				SELECT 
-				    cp.client_id,
-				    cp.curr_balance,
+				    c.client_id,
+				    c.curr_balance,
 				    h.instrument_id,
 				    h.quantity,
 				    h.avg_price
 				FROM
-				    client_portfolio cp
-				LEFT JOIN
-				    holdings h ON cp.client_id = h.client_id
+				    client c
+				LEFT OUTER JOIN
+				    holdings h ON c.client_id = h.client_id
 				WHERE
-				    cp.client_id = ?
+				    c.client_id = ?
 			""";
 		ClientPortfolio clientPortfolio = null;
 		try {
@@ -60,16 +60,16 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 					countOfRows++;
 					id = rs.getString("client_id");
 					currBalance = rs.getBigDecimal("curr_balance");
+					if(rs.getString("instrument_id") != null) { //InstrumentId was null - Client has no holdings
+						clientPortfolio = new ClientPortfolio(id,currBalance,holdings);
+						break;
+					}
 					String instrumentId = rs.getString("instrument_id");
 					int quantity = rs.getInt("quantity");
 					BigDecimal avgPrice = rs.getBigDecimal("avg_price");
 					holdings.add( new Holding( instrumentId, quantity, avgPrice ));
 				}
-				clientPortfolio = new ClientPortfolio(
-						id, 
-						currBalance,
-						holdings
-					);
+				clientPortfolio = new ClientPortfolio(id,  currBalance, holdings);
 				if(countOfRows == 0) {
 					throw new SQLException("Invalid Client ID");
 				}
@@ -81,48 +81,30 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 		}
 		return clientPortfolio;
 	}
-
+	
 	@Override
-	public void addClientPortfolio(ClientPortfolio clientPortfolio) {
-		// TODO Auto-generated method stub
-		final String queryToAddClientPortfolio = """
-				INSERT INTO client_portfolio (client_id, curr_balance)
-				) VALUES (?, ?)
-			""";
-		final String queryToAddHoldings = """
-				INSERT INTO holdings (client_id, instrument_id, quantity, avg_price)
-				) VALUES (?, ?, ?, ?)
-			""";
-		
-	try {
-		Connection connection = dataSource.getConnection();
-		try (PreparedStatement stmt = 
-			connection.prepareStatement(queryToAddClientPortfolio)) {
-			stmt.setString(1, clientPortfolio.getClientId());
-			stmt.setBigDecimal(2, clientPortfolio.getCurrBalance());
-			stmt.executeUpdate();
+	public void addClientHoldings(String clientId, Holding holding) {
+		final String queryToAddClientHolding = """
+				INSERT INTO holdings (client_id, instrument_id, quantity, avg_price) VALUES
+					(?, ?, ?, ?)
+				""";
+		try {
+			Connection connection = dataSource.getConnection();
+			try(PreparedStatement stmt = connection.prepareStatement(queryToAddClientHolding)){
+				stmt.setString(1, clientId);
+				stmt.setString(2, holding.getInstrumentId());
+				stmt.setInt(3,  holding.getQuantity());
+				stmt.setBigDecimal(4, holding.getAvgPrice());
+			}
+		} catch(SQLException e) {
+			logger.error("Cannot complete get operation", e);
+			throw new DatabaseException("Client ID does not exist", e);
 		}
-		try (PreparedStatement holdingStmt = 
-                connection.prepareStatement(queryToAddHoldings)) {
-            for (Holding holding : clientPortfolio.getHoldings()) {
-                holdingStmt.setString(1, clientPortfolio.getClientId());
-                holdingStmt.setString(2, holding.getInstrumentId());
-                holdingStmt.setInt(3, holding.getQuantity());
-                holdingStmt.setBigDecimal(4, holding.getAvgPrice());
-                holdingStmt.executeUpdate();
-            }
-        }
-	}
-	catch (SQLException e) {
-		// TODO Auto-generated catch block
-		logger.error("Cannot complete insert operation", e);
-			throw new DatabaseException("Cannot insert for Client portfolio");
-	}
 		
-}
-
+	}
+	
 	@Override
-	public void updateClientPortfolio(ClientPortfolio clientPortfolio) {
+	public void updateClientHoldings(Holding holding) {
 		
 		
 	}

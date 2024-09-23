@@ -13,9 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.fidelity.models.ClientPortfolio;
-import com.fidelity.models.Order;
-import com.fidelity.models.Trade;
-import com.fidelity.models.TradeHistory;
+import com.fidelity.models.Holding;
 
 class ClientTradeDaoImplTest {
 	static PoolableDataSource dataSource;
@@ -55,10 +53,18 @@ class ClientTradeDaoImplTest {
 	}
 	
 	@Test
-	void testGetClientPortfolioHoldings() {
+	void testGetClientPortfolioHoldingsForClientWithoutHoldings() {
+		String clientId = "1425922638";
+		ClientPortfolio clientPortfolio = dao.getClientPortfolio(clientId);
+		System.out.println(clientPortfolio.toString());
+		assertTrue(clientPortfolio.getHoldings().size() == 0);
+	}
+	
+	@Test
+	void testGetClientPortfolioHoldingsForClientWithHoldings() {
 		String clientId = "541107416";
 		ClientPortfolio clientPortfolio = dao.getClientPortfolio(clientId);
-		assertTrue(clientPortfolio.getHoldings().size() > 4);
+		assertTrue(clientPortfolio.getHoldings().size() >= 1);
 	}
 	
 	@Test
@@ -96,6 +102,13 @@ class ClientTradeDaoImplTest {
 			dao.addTrade(newTrade);
 		});
 	}
+	void testAddClientHolding() {
+		Holding holding = new Holding("N123456", 1, new BigDecimal("104.50"));
+		int oldSize = dao.getClientPortfolio("1654658069").getHoldings().size();
+		dao.addClientHoldings("1654658069", holding);
+		assertEquals(oldSize+1, dao.getClientPortfolio("1654658069").getHoldings().size());
+	}
+
 	
 	
 

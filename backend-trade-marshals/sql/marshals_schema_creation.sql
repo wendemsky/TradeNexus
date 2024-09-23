@@ -1,11 +1,10 @@
-DROP TABLE holdings;
-DROP TABLE CLIENT_TRADE;
-DROP TABLE CLIENT_ORDER;
-DROP TABLE CLIENT_PREFERENCES;
-DROP TABLE CLIENT_IDENTIFICATION;
-DROP TABLE CLIENT;
-//Create Table Client
-CREATE TABLE "MARSH"."CLIENT" (	
+ DROP TABLE CLIENT_PREFERENCES;
+ DROP TABLE CLIENT_IDENTIFICATION;
+ DROP TABLE CLIENT;
+ DROP TABLE holdings;
+ 
+ //Create Table Client
+ CREATE TABLE "MARSH"."CLIENT" (	
     client_id VARCHAR2(50),
     email VARCHAR2(50) UNIQUE NOT NULL,
     password VARCHAR2(255) NOT NULL,
@@ -66,6 +65,16 @@ CREATE TABLE "MARSH"."CLIENT_PREFERENCES" (
     CONSTRAINT pk_client_id_type_preferences PRIMARY KEY(client_id),
     CONSTRAINT fk_client_id_preferences FOREIGN KEY(client_id) REFERENCES CLIENT(client_id),
     CONSTRAINT chk_is_advisor_accepted CHECK (is_advisor_accepted IN ('true', 'false'))
+ );
+ 
+
+//holdings table
+CREATE TABLE holdings (
+    client_id VARCHAR(255) NOT NULL,
+    instrument_id VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    avg_price DECIMAL(19, 4) NOT NULL,
+    FOREIGN KEY (client_id) REFERENCES client_portfolio(client_id) ON DELETE CASCADE
 );
  
 //Inserting 6 records into Client Preferences table
