@@ -246,7 +246,28 @@ class ClientServiceTest {
 	//Adding Client Preferences
 	@Test
 	void shouldAddClientPreference() {
-		service.addClientPreferences(clientPreferencesList.get(2));
+		ClientPreferences newClientPref = clientPreferencesList.get(2);
+		service.addClientPreferences(newClientPref);
+		//Verifying that the corresponding mockDao methods were called
+		Mockito.verify(mockDao).addClientPreferences(newClientPref); 
+	}
+	@Test
+	void shouldHandleDatabaseExceptionWhileAddingAlreadyExistingClient() {
+		ClientPreferences clientPreference = clientPreferencesList.get(0);
+		Mockito.doThrow(new DatabaseException()).when(mockDao).addClientPreferences(clientPreference);
+		assertThrows(DatabaseException.class, () -> {
+			service.addClientPreferences(clientPreference);
+			//Verifying that the corresponding mockDao methods were called
+			Mockito.verify(mockDao).addClientPreferences(clientPreference);
+		});
+	}
+	@Test
+	void shouldHandleDatabaseExceptionWhileGettingNonExistentClientPreference() {
+		String clientPreferenceId = clientPreferencesList.get(2).getClientId();
+		Mockito.doThrow(new DatabaseException()).when(mockDao).getClientPreferences(clientPreferenceId);
+		assertThrows(DatabaseException.class, () -> {
+			service.getClientPreference(clientPreferenceId);
+		});
 	}
 	
 	@Test
