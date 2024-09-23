@@ -10,7 +10,7 @@ public interface ClientTradeDao {
 	//Client Portoflio
 	ClientPortfolio getClientPortfolio(String clientId); 
 	void addClientHoldings(String clientId, Holding holdoing); 
-	void updateClientHoldings(Holding holding); 
+	void updateClientHoldings(String clientId, Holding holding); 
 	
 	
 	//Trade history 

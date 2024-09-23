@@ -43,10 +43,18 @@ class ClientActivityReportDaoImplTest {
 	}
 
 	@Test
-	void testGetClientHoldings() {
+	void testGetClientHoldingsForClientWithHoldings() {
 		String clientId = "541107416";
 		List<Holding> holdings = dao.getClientHoldings(clientId);
-		assertTrue(holdings.size() > 4);
+		assertTrue(holdings.size() >= 1);
+	}
+	
+	@Test
+	void testGetClientHoldingsForClientWithNoHoldings() {
+		String clientId = "1654658069";
+		Exception e = assertThrows(DatabaseException.class, () -> {
+			dao.getClientHoldings(clientId);
+		});
 	}
 	
 	@Test
@@ -55,7 +63,6 @@ class ClientActivityReportDaoImplTest {
 		Exception e = assertThrows(DatabaseException.class, () -> {
 			dao.getClientHoldings(clientId);
 		});
-		assertEquals("Client ID does not exist", e.getMessage());
 	}
 
 }

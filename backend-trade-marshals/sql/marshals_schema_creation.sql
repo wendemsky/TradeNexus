@@ -1,10 +1,11 @@
- DROP TABLE CLIENT_PREFERENCES;
- DROP TABLE CLIENT_IDENTIFICATION;
- DROP TABLE CLIENT;
- DROP TABLE holdings;
- 
- //Create Table Client
- CREATE TABLE "MARSH"."CLIENT" (	
+DROP TABLE holdings;
+DROP TABLE CLIENT_TRADE;
+DROP TABLE CLIENT_ORDER;
+DROP TABLE CLIENT_PREFERENCES;
+DROP TABLE CLIENT_IDENTIFICATION;
+DROP TABLE CLIENT;
+//Create Table Client
+CREATE TABLE "MARSH"."CLIENT" (	
     client_id VARCHAR2(50),
     email VARCHAR2(50) UNIQUE NOT NULL,
     password VARCHAR2(255) NOT NULL,
@@ -25,7 +26,6 @@ CREATE TABLE "MARSH"."CLIENT_IDENTIFICATION" (
     CONSTRAINT pk_client_id_type PRIMARY KEY(client_id,type),
     CONSTRAINT fk_client_id_identification FOREIGN KEY(client_id) REFERENCES CLIENT(client_id)
 );
- 
 //Populate 5 Admin values and 1 non admin client value
 //Initializing each client with $10k balance
 INSERT INTO client (client_id, email, password, name, date_of_birth, country, is_admin, curr_balance) 
@@ -52,7 +52,6 @@ INSERT INTO client (client_id, email, password, name, date_of_birth, country, is
 VALUES ('739982664', 'john.doe@gmail.com', 'Marsh2024', 'John Doe', to_date('1998-03-15', 'yyyy-mm-dd'), 'USA', 'N', 10000);
 INSERT INTO client_identification (client_id, type, value)
 VALUES ('739982664','SSN','1234573532');
- 
 // Create table for Client Preferences
 CREATE TABLE "MARSH"."CLIENT_PREFERENCES" (
     client_id VARCHAR2(50),
@@ -65,18 +64,7 @@ CREATE TABLE "MARSH"."CLIENT_PREFERENCES" (
     CONSTRAINT pk_client_id_type_preferences PRIMARY KEY(client_id),
     CONSTRAINT fk_client_id_preferences FOREIGN KEY(client_id) REFERENCES CLIENT(client_id),
     CONSTRAINT chk_is_advisor_accepted CHECK (is_advisor_accepted IN ('true', 'false'))
- );
- 
-
-//holdings table
-CREATE TABLE holdings (
-    client_id VARCHAR(255) NOT NULL,
-    instrument_id VARCHAR(255) NOT NULL,
-    quantity INT NOT NULL,
-    avg_price DECIMAL(19, 4) NOT NULL,
-    FOREIGN KEY (client_id) REFERENCES client_portfolio(client_id) ON DELETE CASCADE
 );
- 
 //Inserting 6 records into Client Preferences table
 //Two records will have accept advisor set to false
 INSERT INTO CLIENT_PREFERENCES (client_id ,investment_purpose, income_category, length_of_investment, percentage_of_spend, risk_tolerance, is_advisor_accepted) 
@@ -91,18 +79,16 @@ INSERT INTO CLIENT_PREFERENCES (client_id ,investment_purpose, income_category, 
 VALUES ( '1236679496', 'Retirement', 'MIG', 'Long', 'Tier3', 3, 'true');
 INSERT INTO CLIENT_PREFERENCES (client_id ,investment_purpose, income_category, length_of_investment, percentage_of_spend, risk_tolerance, is_advisor_accepted) 
 VALUES ( '739982664', 'Retirement', 'LIG', 'Short', 'Tier4', 1, 'true');
- 
 //Create holdings table
 CREATE TABLE holdings (
     client_id VARCHAR(255) NOT NULL,
     instrument_id VARCHAR(255) NOT NULL,
     quantity INT NOT NULL,
     avg_price DECIMAL(19, 4) NOT NULL,
+    PRIMARY KEY (client_id, instrument_id),
     FOREIGN KEY (client_id) REFERENCES client(client_id) ON DELETE CASCADE
 );
- 
 --Create table ORDER
- 
 CREATE TABLE "MARSH"."CLIENT_ORDER"(
     instrument_id VARCHAR2(50) NOT NULL,
     quantity NUMBER NOT NULL,
@@ -116,9 +102,7 @@ CREATE TABLE "MARSH"."CLIENT_ORDER"(
 --    FOREIGN KEY(client_id) REFERENCES CLIENT(client_id) ON DELETE CASCADE
     CONSTRAINT fk_order FOREIGN KEY(client_id) REFERENCES CLIENT(client_id) ON DELETE CASCADE
 );
- 
 --Insert 10 values into ORDER table
- 
 INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
 ('N123456', 1000, 104.75, 'B', '1654658069', 'ORDER001', 1);
 INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
@@ -139,9 +123,7 @@ INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direc
 ('T67880', 10000, 1.00375, 'S', '1236679496', 'ORDER009', 9);
 INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
 ('T67883', 10000, 1.0596875, 'S', '1236679496', 'ORDER010', 10);
- 
 --Create table TRADE
- 
 CREATE TABLE "MARSH"."CLIENT_TRADE" (
     trade_id VARCHAR2(50),
     order_id VARCHAR2(50),
@@ -151,9 +133,7 @@ CREATE TABLE "MARSH"."CLIENT_TRADE" (
 --    FOREIGN KEY(order_id) REFERENCES CLIENT_ORDER(order_id) ON DELETE CASCADE
     CONSTRAINT fk_trade FOREIGN KEY(order_id) REFERENCES CLIENT_ORDER(order_id) ON DELETE CASCADE
 );
- 
 --Insert 10 values into Trade table
- 
 INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value) VALUES
 ('TRADE001', 'ORDER001', 104.75, 104750.00);
 INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value) VALUES
@@ -174,5 +154,10 @@ INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_va
 ('TRADE009', 'ORDER009', 1.00375, 10037.50);
 INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value) VALUES
 ('TRADE010', 'ORDER010', 1.0596875, 10596.88);
- 
+
+// Add holdings
+INSERT INTO holdings (client_id, instrument_id, quantity, avg_price) VALUES
+('541107416', 'C100', 1000, 95.67);  -- JPMorgan Chase Bank
+INSERT INTO holdings (client_id, instrument_id, quantity, avg_price) VALUES
+('541107416', 'T67890', 10, 1.033828125);  -- USA Note 3.125
 COMMIT;

@@ -50,27 +50,28 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 			Connection connection = dataSource.getConnection();
 			try (PreparedStatement stmt = 
 				connection.prepareStatement(queryToGetClientPortfolio)) {
-				int countOfRows = 0;
 				stmt.setString(1, clientId);
 				ResultSet rs = stmt.executeQuery();
 				String id = "";
 				BigDecimal currBalance = new BigDecimal(0);
 				List<Holding> holdings = new ArrayList<>();
 				while (rs.next()) {
-					countOfRows++;
 					id = rs.getString("client_id");
 					currBalance = rs.getBigDecimal("curr_balance");
-					if(rs.getString("instrument_id") != null) { //InstrumentId was null - Client has no holdings
+					if(rs.getString("instrument_id") == null) { //InstrumentId was null - Client has no holdings
 						clientPortfolio = new ClientPortfolio(id,currBalance,holdings);
 						break;
 					}
-					String instrumentId = rs.getString("instrument_id");
-					int quantity = rs.getInt("quantity");
-					BigDecimal avgPrice = rs.getBigDecimal("avg_price");
-					holdings.add( new Holding( instrumentId, quantity, avgPrice ));
+					else {
+						String instrumentId = rs.getString("instrument_id");
+						int quantity = rs.getInt("quantity");
+						BigDecimal avgPrice = rs.getBigDecimal("avg_price");
+						holdings.add( new Holding( instrumentId, quantity, avgPrice ));
+					}	
 				}
-				clientPortfolio = new ClientPortfolio(id,  currBalance, holdings);
-				if(countOfRows == 0) {
+				if(holdings.size()>0)
+					clientPortfolio = new ClientPortfolio(id,  currBalance, holdings);
+				if(clientPortfolio == null) {
 					throw new SQLException("Invalid Client ID");
 				}
 			}
@@ -95,17 +96,36 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 				stmt.setString(2, holding.getInstrumentId());
 				stmt.setInt(3,  holding.getQuantity());
 				stmt.setBigDecimal(4, holding.getAvgPrice());
+				stmt.executeUpdate();
 			}
 		} catch(SQLException e) {
 			logger.error("Cannot complete get operation", e);
-			throw new DatabaseException("Client ID does not exist", e);
+			throw new DatabaseException("Client does not exist", e);
 		}
 		
 	}
 	
 	@Override
-	public void updateClientHoldings(Holding holding) {
-		
+	public void updateClientHoldings(String clientId, Holding holding) {
+		final String queryToAddClientHolding = """
+				UPDATE holdings 
+				SET quantity = ?, avg_price = ? 
+				WHERE client_id = ? and instrument_id = ?
+				""";
+		try {
+			Connection connection = dataSource.getConnection();
+			try(PreparedStatement stmt = connection.prepareStatement(queryToAddClientHolding)){
+				stmt.setInt(1,  holding.getQuantity());
+				stmt.setBigDecimal(2, holding.getAvgPrice());
+				stmt.setString(3, clientId);
+				stmt.setString(4, holding.getInstrumentId());
+				int rowsUpdated = stmt.executeUpdate();
+				if(rowsUpdated<=0) throw new SQLException("Client Holdings dont exist to get updated");
+			}
+		} catch(SQLException e) {
+			logger.error("Cannot complete get operation", e);
+			throw new DatabaseException("Client Holdings dont exist to get updated", e);
+		}
 		
 	}
 
