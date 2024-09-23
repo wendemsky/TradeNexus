@@ -9,4 +9,6 @@ public interface ClientActivityReportDao {
 	//Holdings report
 	List<Holding> getClientHoldings(String clientId);
 	
+	
+	
 }

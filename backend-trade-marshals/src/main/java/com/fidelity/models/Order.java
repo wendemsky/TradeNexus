@@ -66,6 +66,10 @@ public class Order {
         return orderId;
     }
 
+	public Integer getToken() {
+		return token;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(clientId, direction, instrumentId, orderId, quantity, targetPrice, token);

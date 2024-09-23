@@ -8,6 +8,7 @@ import java.util.ArrayList;
 //Importing FMTS package
 import com.fidelity.fmts.*;
 import com.fidelity.integration.ClientDao;
+import com.fidelity.integration.DatabaseException;
 //Import models package
 import com.fidelity.models.Client;
 import com.fidelity.models.ClientIdentification;
@@ -15,50 +16,47 @@ import com.fidelity.models.ClientPortfolio;
 import com.fidelity.models.ClientPreferences;
 import com.fidelity.models.Holding;
 
-public class ClientService {
+//Importing Utils - Email validator
+import com.fidelity.utils.EmailValidator;
 
-	private List<Client> clients;
-	private List<ClientPreferences> clientPreferences;
+public class ClientService {
 	
+	//Client Dao Object which interacts with DB
 	private ClientDao clientDao;
 	
 	public ClientService(ClientDao dao) {
-		this.clientDao = dao;
-		this.clients = new ArrayList<Client>();
-		this.clientPreferences = new ArrayList<ClientPreferences>();
+		this.clientDao = dao; //Intializing the Dao Object
 	}
 	
 	/*Methods related to Client - Email Validation, Login and Register*/
+	
 	//Verifying Email Address - Checking if given client already exists
-	public Client verifyClientEmail(String email) {
+	public Boolean verifyClientEmail(String email) {
 		try {
 			if(email==null) 
 				throw new NullPointerException("Client Email cannot be null");
-			Iterator<Client> iter = clients.iterator();
-			while(iter.hasNext()) {
-				Client client = iter.next();
-				if(client.getEmail() == email) { //If client found - Return true
-					return client;
-				}
-			}
-			return null; //If not found
+			Boolean isClientExists = clientDao.verifyClientEmail(email);
+			return isClientExists;
 		} catch(NullPointerException e) {
 			throw e;
+		} catch(IllegalArgumentException e) { //Email format is invalid
+			throw e;
+		} catch(DatabaseException e) { //Email not found
+			return false;
 		}
 	}
-	//Verifying Client ID Details - If already exists or not
-	public Boolean verifyClientIdentityDetails(ClientIdentification clientIdentification) {
+	
+	//Helper method - To verifying Client ID Details - If already exists or not - For registration
+	private Boolean verifyClientIdentityDetails(ClientIdentification clientIdentification) {
 		try {
 			if(clientIdentification==null) 
 				throw new NullPointerException("Client Identification Details cannot be null");
- 
-			Iterator<Client> iter = clients.iterator();
-			while(iter.hasNext()) {
-				Client existingClient = iter.next();
-				for(ClientIdentification id: existingClient.getIdentificationDetails()) { //Iterating through each client's ID details
-					if(id.equals(clientIdentification))  //If client ID details found - Return true
-						return true;
-				}	
+			 //Get the list of existing client identification details with dao
+			 List<ClientIdentification> clientIdentifications = clientDao.getAllClientIdentificationDetails();
+			Iterator<ClientIdentification> iter = clientIdentifications.iterator();
+			for(ClientIdentification identification:clientIdentifications) {
+				if(identification.equals(clientIdentification)) //If given clientIdentification exists
+					return true;
 			}
 			return false;
 		} catch(NullPointerException e) {
@@ -71,21 +69,23 @@ public class ClientService {
 										String dateOfBirth, String country, List<ClientIdentification> identification) {
 		try {
 			Client client = null;
-			//Verifying the email passed
-			client = verifyClientEmail(email); //If email already registered returns existing client
-			if(client!=null) 
+			//Verifying the email passed to check if client already exists or not
+			if(verifyClientEmail(email))  //If email already registered
 				throw new IllegalArgumentException("Client with given email is already registered");
 			if(password==null || name==null || dateOfBirth==null || country==null)
 				throw new NullPointerException("Client Details cannot be null");
+			
 			//Verifying the Client Identification information
 			for(ClientIdentification id: identification) {
 				if(verifyClientIdentityDetails(id)) //If identification details already present returns true
 					throw new IllegalArgumentException("Client with given Identification Details is already registered with another email");
 			}
+			
 			//Validating Client with FMTS
 			ValidatedClient validatedClient = FMTSService.verifyClient(email); 
 			if(validatedClient == null)
 				throw new NullPointerException("New Client Details couldnt be verified");
+			
 			//ON SUCCESSFUL VERIFICATION OF REGISTRATION - Saving the clients details
 			client = new Client(email,validatedClient.getClientId(), password, name, dateOfBirth, country, identification, false);
 			saveNewClientDetails(client);
@@ -96,27 +96,29 @@ public class ClientService {
 			throw e;
 		}
 	}
+	
 	//Save new Client Details
-	public void saveNewClientDetails(Client newClient) {
-		clients.add(newClient);
-		//Saving Client Portfolio details with initial Balance of 100k Dollars and empty holdings
-		ClientPortfolio newClientPortfolio = new ClientPortfolio(newClient.getClientId(),new BigDecimal("100000").setScale(4),new ArrayList<Holding>());
-		PortfolioService service = new PortfolioService();
-		service.addClientPortfolio(newClientPortfolio);
+	private void saveNewClientDetails(Client newClient) {
+		//Setting Client Portfolio details with initial Balance of 10k Dollars and empty holdings
+		ClientPortfolio newClientPortfolio = new ClientPortfolio(newClient.getClientId(),new BigDecimal("10000").setScale(4),new ArrayList<Holding>());
+		//Calling dao to add the new client details
+		clientDao.addNewClient(newClient, newClientPortfolio);
 	}
+	
 	//Logging in an existing client
 	public Client loginExistingClient(String email, String password) {
 		try {
 			Client existingClient = null;
-			//Verifying the email passed
-			existingClient = verifyClientEmail(email);
-			if(existingClient==null) //If client not existing
+			
+			//Verifying the email passed to check if client already exists or not
+			if(!verifyClientEmail(email)) //If client not existing
 				throw new IllegalArgumentException("Client with given email is not registered");
 			if(password==null)
 				throw new NullPointerException("Client Password cannot be null");
-			//Verify if the password matches given client
-			if(existingClient.getPassword() != password)
-				throw new IllegalArgumentException("Password does not match given Client's credentials");
+			
+			//Calling dao to retrieve client details
+			existingClient = clientDao.getClientAtLogin(email, password);
+			
 			//Validating Existing Client with FMTS
 			ValidatedClient validatedClient = FMTSService.verifyClient(email,existingClient.getClientId()); 
 			if(validatedClient == null)

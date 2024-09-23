@@ -6,7 +6,10 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+<<<<<<< HEAD
 import org.apache.commons.dbutils.DbUtils;
+=======
+>>>>>>> 0e6f28dbc0438c11afe1311f0df31338891328ce
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -52,6 +55,29 @@ class ClientTradeDaoImplTest {
 	}
 
 	@Test
+	void testGetClientPortfolioNotNull() {
+		String clientId = "541107416";
+		ClientPortfolio clientPortfolio = dao.getClientPortfolio(clientId);
+		assertNotNull(clientPortfolio);
+	}
+	
+	@Test
+	void testGetClientPortfolioHoldings() {
+		String clientId = "541107416";
+		ClientPortfolio clientPortfolio = dao.getClientPortfolio(clientId);
+		assertTrue(clientPortfolio.getHoldings().size() > 4);
+	}
+	
+	@Test
+	void testGetClientPortfolioThrowsExceptionForInvalidClientId() {
+		String clientId = "nonExistingClientId";
+		Exception e = assertThrows(DatabaseException.class, () -> {
+			dao.getClientPortfolio(clientId);
+		});
+		assertEquals("Client ID does not exist", e.getMessage());
+	}
+	
+	@Test
 	void testGetClientTradeHistory() {
 		String clientId = "1654658069";
 		TradeHistory tradeHistory = dao.getClientTradeHistory(clientId);
@@ -69,16 +95,16 @@ class ClientTradeDaoImplTest {
 		int newSize = DbTestUtils.countRowsInTable(dataSource.getConnection(), "CLIENT_TRADE");
 		assertEquals(newSize, oldSize+1);
 	}
-	
 	@Test
-	void testAddTradeExistingOrderId() throws SQLException {
+	void testAddTradeExistingOrderId() {
 		Order newOrder = new Order("NT123456", 1000, new BigDecimal(45.678), "B", "739982664", "ORDER010", 20 );
-		
 		Trade newTrade = new Trade(newOrder, new BigDecimal(45.678), "TRADE010", new BigDecimal(45678));
-
+ 
 		assertThrows(DatabaseException.class, ()->{
 			dao.addTrade(newTrade);
 		});
 	}
+	
+	
 
 }

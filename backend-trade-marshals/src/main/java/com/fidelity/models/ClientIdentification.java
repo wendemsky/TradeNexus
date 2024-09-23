@@ -11,7 +11,7 @@ public class ClientIdentification {
 		try {
 			if(type==null || value==null) throw new NullPointerException("Govt ID Details cannot be null");
 			//Only checking validity of fields that are not explicitly covered in Angular
-			if(type!="Aadhar" && type!="PAN" && type!="SSN")
+			if(!type.equals("Aadhar") && !type.equals("PAN") && !type.equals("SSN"))
 				throw new IllegalArgumentException("Invalid Govt ID Type");
 			this.type = type;
 			this.value = value;
@@ -21,6 +21,15 @@ public class ClientIdentification {
 		} catch(IllegalArgumentException e) {
 			throw e;
 		}
+	}
+
+	//Getters
+	public String getType() {
+		return type;
+	}
+
+	public String getValue() {
+		return value;
 	}
 
 	@Override
