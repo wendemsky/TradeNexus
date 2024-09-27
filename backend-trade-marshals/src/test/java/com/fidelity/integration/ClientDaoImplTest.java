@@ -1,7 +1,7 @@
 package com.fidelity.integration;
 
-import static com.fidelity.integration.DbTestUtils.countRowsInTable;
-import static com.fidelity.integration.DbTestUtils.countRowsInTableWhere;
+import static com.fidelity.integration.DbTestUtilsOld.countRowsInTable;
+import static com.fidelity.integration.DbTestUtilsOld.countRowsInTableWhere;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;

@@ -97,9 +97,9 @@ class ClientTradeDaoImplTest {
 		Order newOrder = new Order("NT123456", 1000, new BigDecimal(45.678), "B", "739982664", "ORDER020", 20 );
 		
 		Trade newTrade = new Trade(newOrder, new BigDecimal(45.678), "TRADE020", new BigDecimal(45678));
-		int oldSize = DbTestUtils.countRowsInTable(dataSource.getConnection(), "CLIENT_TRADE");
+		int oldSize = DbTestUtilsOld.countRowsInTable(dataSource.getConnection(), "CLIENT_TRADE");
 		dao.addTrade(newTrade);
-		int newSize = DbTestUtils.countRowsInTable(dataSource.getConnection(), "CLIENT_TRADE");
+		int newSize = DbTestUtilsOld.countRowsInTable(dataSource.getConnection(), "CLIENT_TRADE");
 		assertEquals(newSize, oldSize+1);
 	}
 	@Test
@@ -121,7 +121,7 @@ class ClientTradeDaoImplTest {
 		BigDecimal currBalance = new BigDecimal("10453").setScale(4);
 		String whereCondition = "client_id = '541107416' and curr_balance = "+currBalance;
 		dao.updateClientBalance(clientId, currBalance);
-		int newSize =  DbTestUtils.countRowsInTableWhere(dataSource.getConnection(), "client", whereCondition);
+		int newSize =  DbTestUtilsOld.countRowsInTableWhere(dataSource.getConnection(), "client", whereCondition);
 		assertTrue(newSize == 1);
 	}
 	
@@ -138,9 +138,9 @@ class ClientTradeDaoImplTest {
 	void testSuccessfulAddClientHoldingOfClientWithHolding() throws SQLException {
 		String clientId = "541107416"; //Has holdings
 		Holding holding = new Holding("N123456", 1, new BigDecimal("104.50"));
-		int oldSize =  DbTestUtils.countRowsInTableWhere(dataSource.getConnection(), "holdings", "client_id = "+clientId);
+		int oldSize =  DbTestUtilsOld.countRowsInTableWhere(dataSource.getConnection(), "holdings", "client_id = "+clientId);
 		dao.addClientHoldings(clientId, holding);
-		int newSize =  DbTestUtils.countRowsInTableWhere(dataSource.getConnection(), "holdings", "client_id = "+clientId);
+		int newSize =  DbTestUtilsOld.countRowsInTableWhere(dataSource.getConnection(), "holdings", "client_id = "+clientId);
 		assertTrue(newSize == oldSize+1);
 	}
 	
@@ -149,7 +149,7 @@ class ClientTradeDaoImplTest {
 		String clientId = "1654658069"; //Has no holdings
 		Holding holding = new Holding("N123456", 1, new BigDecimal("104.50"));
 		dao.addClientHoldings(clientId, holding);
-		int newSize =  DbTestUtils.countRowsInTableWhere(dataSource.getConnection(), "holdings", "client_id = "+clientId);
+		int newSize =  DbTestUtilsOld.countRowsInTableWhere(dataSource.getConnection(), "holdings", "client_id = "+clientId);
 		assertTrue(newSize == 1);
 	}
 	
@@ -169,7 +169,7 @@ class ClientTradeDaoImplTest {
 		Holding holding = new Holding("C100", 10, new BigDecimal("104.50"));
 		String whereCondition = "client_id = '541107416' and instrument_id = 'C100' and quantity = "+holding.getQuantity();
 		dao.updateClientHoldings(clientId, holding);
-		int newSize =  DbTestUtils.countRowsInTableWhere(dataSource.getConnection(), "holdings", whereCondition);
+		int newSize =  DbTestUtilsOld.countRowsInTableWhere(dataSource.getConnection(), "holdings", whereCondition);
 		assertTrue(newSize == 1);
 	}
 	
