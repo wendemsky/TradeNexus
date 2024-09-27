@@ -14,30 +14,20 @@ import com.fidelity.models.Trade;
 import com.fidelity.models.TradeHistory;
  
 public class TradeHistoryService {
-	
-	 private List<TradeHistory> tradeHistory;
+
 	 private ClientTradeDao dao;
 	 
 	 public TradeHistoryService(ClientTradeDao dao) {
-		 this.tradeHistory = new ArrayList<>();
 		 this.dao = dao;
 	 }
-	 public void addTrade(Trade trade) {
-		 if (trade == null) {
-	         throw new NullPointerException("Trade must not be null");
-		 }
-
-	    dao.addTrade(trade);
-	 }
-	 public List<Trade> getClientTradeHistory(String clientId) {
+	
+	 public TradeHistory getClientTradeHistory(String clientId) {
         if (clientId == null) {
             throw new NullPointerException("Client ID must not be null");
         }
-        TradeHistory tradeHistory;
-        
+        TradeHistory tradeHistory;      
         tradeHistory = dao.getClientTradeHistory(clientId);
-        
-        return tradeHistory.getTrades();
+        return tradeHistory;
  
     }
  

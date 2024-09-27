@@ -21,31 +21,36 @@ import com.fidelity.utils.PriceScorer;
 //Importing FMTS
 import com.fidelity.fmts.FMTSService;
 import com.fidelity.integration.ClientTradeDao;
-import com.fidelity.integration.ClientTradeDaoImpl;
 
 public class TradeService {
 	
-	private static PortfolioService portfolioService = null;
-	private static TradeHistoryService tradeHistoryService = null;
-	private ClientTradeDao dao;
-//	private static TradeHistoryService tradeHistoryService = null;
+	private PortfolioService portfolioService;
+	
+	private ClientTradeDao dao; //Client Trade Dao that interacts with DB
 	
 	private List<Price> priceList;
 	
-	public TradeService(ClientTradeDao dao) {
-		priceList = FMTSService.getLivePrices(); //Get Live Prices from FMTSService
-		//Initializing Portfolio and Trade History Service
-		portfolioService = new PortfolioService(dao); // get and update client portfolio
-		tradeHistoryService = new TradeHistoryService(dao); //Add trade history
+	public TradeService(ClientTradeDao dao, PortfolioService portfolioService) {
+		//Initializing Portfolio Service
+//		this.portfolioService = new PortfolioService(dao); // For getting and updating client portfolio
 		this.dao = dao;
+		this.portfolioService = portfolioService;
+		priceList = FMTSService.getLivePrices(); //Get Live Prices from FMTSService
 	}
    
-
-	
 	public List<Price> getPriceList() {
 		return priceList;
 	}
 	
+	//Adding the trade to the DB
+	public void addTrade(Trade trade) {
+		 if (trade == null) {
+	         throw new NullPointerException("Trade must not be null");
+		 }
+	    dao.addTrade(trade);
+	}
+	
+	//Executing the trade
     public Trade executeTrade(Order order) {
     	try {
     		if (order == null) {
@@ -61,29 +66,41 @@ public class TradeService {
             		if(price.getInstrument().getInstrumentId() == order.getInstrumentId()) {
             			//Call FMTS Service to create the trade
         				Trade trade = FMTSService.createTrade(order);
-        				//Updating portfolio and Trade history
-        				portfolioService.updateClientPortfolio(trade);
-        				tradeHistoryService.addTrade(trade);
-            			return trade;
+        				//Buy Condition Validation
+        				//Getting the cost of trade and checking if its lesser than or equal to balance
+        				BigDecimal totalCostOfTrade = trade.getCashValue();
+    	                if (clientPortfolio.getCurrBalance().compareTo(totalCostOfTrade) >= 0) {	
+	        				//Updating portfolio and adding trade
+	        				portfolioService.updateClientPortfolio(trade);
+	        				this.addTrade(trade);	
+    	                } else {
+    	                    throw new IllegalArgumentException("Insufficient balance! Cannot buy the instrument");
+    	                }
+    	                return trade;
             		}
             	}
         	} else if (order.getDirection() == "S"){
-        		//System.out.println(order.getClientId());
         		for(Holding holding: clientPortfolio.getHoldings()) {
-        			//System.out.println(holding.getInstrumentId());
+        			//Sell condition checking
         			if(holding.getInstrumentId().equals(order.getInstrumentId())) {
-        				//Call FMTS Service to create the trade
-        				Trade trade = FMTSService.createTrade(order);
-        				//Updating portfolio and Trade history
-        				portfolioService.updateClientPortfolio(trade);
-        				tradeHistoryService.addTrade(trade);
-            			return trade;
+        				//One more sell validation checking - To check if user has more quantity to sell
+        				if(holding.getQuantity() >= order.getQuantity()) {
+        					//Call FMTS Service to create the trade
+            				Trade trade = FMTSService.createTrade(order);
+            				//Updating portfolio and adding Trade 
+            				portfolioService.updateClientPortfolio(trade);
+            				this.addTrade(trade);	
+                			return trade;
+        				} else {
+        					throw new IllegalArgumentException("Insufficient quantity in holdings to sell the instrument");
+        				}
         			}
         		}
+        		//If above loop was completely executed, instrument wasnt part of holdings - SELL CONDITION VALIDATION
+        		 throw new IllegalArgumentException("Instrument not part of holdings! Cannot sell the instrument");
         	} else {
         		throw new IllegalArgumentException("Order direction is invalid");
-        	}
-            
+        	}    
             throw new IllegalArgumentException("Instrument is not present in the platform");
     	} catch(NullPointerException e) {
     		throw e;
@@ -110,7 +127,6 @@ public class TradeService {
             		recommendedPrice.add(trade);
             	}
             }
-//            Collections.sort(availableTrades, scorer);
             
             //System.out.println("Instruments after sorting -> " + recommendedPrice.toString());
             

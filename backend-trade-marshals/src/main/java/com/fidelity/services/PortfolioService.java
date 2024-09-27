@@ -48,55 +48,46 @@ public class PortfolioService {
 	            }
 	        }
 			if (existingHolding != null) {
-	            // Handle the trade depending on the direction
-	            if ("B".equals(executedTrade.getDirection())) {
-	                // Buy
-	                BigDecimal totalCostOfTrade = executedTrade.getExecutionPrice().multiply(new BigDecimal(executedTrade.getQuantity()));
-	                if (clientPortfolio.getCurrBalance().compareTo(totalCostOfTrade) >= 0) {
-	                    // Update balance
-	                    clientPortfolio.setCurrBalance(clientPortfolio.getCurrBalance().subtract(totalCostOfTrade));
-	                    clientTradeDao.updateClientBalance(clientPortfolio.getClientId(), clientPortfolio.getCurrBalance());
-	                    
-	                    // Update holding
-	                    BigDecimal newAvgPrice = (existingHolding.getAvgPrice().multiply(new BigDecimal(existingHolding.getQuantity()))
-	                            .add(totalCostOfTrade))
-	                            .divide(new BigDecimal(existingHolding.getQuantity()).add(new BigDecimal(executedTrade.getQuantity())), BigDecimal.ROUND_HALF_UP);
-	                    existingHolding.setAvgPrice(newAvgPrice);
-	                    existingHolding.setQuantity(existingHolding.getQuantity()+ executedTrade.getQuantity());
-	                    clientTradeDao.updateClientHoldings(clientPortfolio.getClientId(), existingHolding);
-	                } else {
-	                    throw new IllegalArgumentException("Insufficient balance");
-	                    // You can add additional error handling or logging here
-	                }
-	            } else if ("S".equals(executedTrade.getDirection())) {
-	                // Sell
-	                if (existingHolding.getQuantity() >= executedTrade.getQuantity()) {
-	                    BigDecimal totalValueOfTrade = executedTrade.getExecutionPrice().multiply(new BigDecimal(executedTrade.getQuantity()));
-	                    // Update balance
-	                    clientPortfolio.setCurrBalance(clientPortfolio.getCurrBalance().add(totalValueOfTrade));
-	                    clientTradeDao.updateClientBalance(clientPortfolio.getClientId(), clientPortfolio.getCurrBalance());
-	                    
-	                    // Update holding
-	                    BigDecimal newAvgPrice = (existingHolding.getAvgPrice().multiply(new BigDecimal(existingHolding.getQuantity()))
-	                            .subtract(totalValueOfTrade))
-	                            .divide(new BigDecimal(existingHolding.getQuantity()).subtract(new BigDecimal(executedTrade.getQuantity())), BigDecimal.ROUND_HALF_UP);
-	                    System.out.println("New Avg Price "+newAvgPrice);
-	                    existingHolding.setAvgPrice(newAvgPrice);
-	                    existingHolding.setQuantity(existingHolding.getQuantity()-(executedTrade.getQuantity()));
-	
-	                    clientTradeDao.updateClientHoldings(clientPortfolio.getClientId(), existingHolding);
-		                
-	                } else {
-	                	 throw new IllegalArgumentException("Insufficient quantity to sell");
-	                    // You can add additional error handling or logging here
-	                }
+	            // If holding exists - update holding
+	            if ("B".equals(executedTrade.getDirection())) { //Buy
+	                // Calculating total cost of trade
+	                BigDecimal totalCostOfTrade = executedTrade.getCashValue();  
+                    
+	                // Update balance
+                    clientPortfolio.setCurrBalance(clientPortfolio.getCurrBalance().subtract(totalCostOfTrade));
+                    clientTradeDao.updateClientBalance(clientPortfolio.getClientId(), clientPortfolio.getCurrBalance());
+                    
+                    // Update holding
+                    BigDecimal newAvgPrice = (existingHolding.getAvgPrice().multiply(new BigDecimal(existingHolding.getQuantity()))
+                            .add(totalCostOfTrade))
+                            .divide(new BigDecimal(existingHolding.getQuantity()).add(new BigDecimal(executedTrade.getQuantity())), BigDecimal.ROUND_HALF_UP);
+                    existingHolding.setAvgPrice(newAvgPrice);
+                    existingHolding.setQuantity(existingHolding.getQuantity()+ executedTrade.getQuantity());
+                    clientTradeDao.updateClientHoldings(clientPortfolio.getClientId(), existingHolding);
+	                
+	            } else if ("S".equals(executedTrade.getDirection())) {  // Sell	
+	                          
+                    BigDecimal totalValueOfTrade = executedTrade.getCashValue();
+                    
+                    // Update balance
+                    clientPortfolio.setCurrBalance(clientPortfolio.getCurrBalance().add(totalValueOfTrade));
+                    clientTradeDao.updateClientBalance(clientPortfolio.getClientId(), clientPortfolio.getCurrBalance());
+                    
+                    // Update holding
+                    BigDecimal newAvgPrice = (existingHolding.getAvgPrice().multiply(new BigDecimal(existingHolding.getQuantity()))
+                            .subtract(totalValueOfTrade))
+                            .divide(new BigDecimal(existingHolding.getQuantity()).subtract(new BigDecimal(executedTrade.getQuantity())), BigDecimal.ROUND_HALF_UP);
+                    System.out.println("New Avg Price "+newAvgPrice);
+                    existingHolding.setAvgPrice(newAvgPrice);
+                    existingHolding.setQuantity(existingHolding.getQuantity()-(executedTrade.getQuantity()));
+
+                    clientTradeDao.updateClientHoldings(clientPortfolio.getClientId(), existingHolding);             
 	            }
 	        } else {
-	            // Holding doesn't exist, handle accordingly
-	            if ("B".equals(executedTrade.getDirection())) {
-	                // Buy
-	                BigDecimal totalCostOfTrade = executedTrade.getExecutionPrice().multiply(new BigDecimal(executedTrade.getQuantity()));
-	                if (clientPortfolio.getCurrBalance().compareTo(totalCostOfTrade) >= 0) {
+	            // Holding doesn't exist, add holding
+	            if ("B".equals(executedTrade.getDirection())) { //Buy
+	             
+	                BigDecimal totalCostOfTrade = executedTrade.getCashValue();
 	                    // Update balance
 	                    clientPortfolio.setCurrBalance(clientPortfolio.getCurrBalance().subtract(totalCostOfTrade));
 	                    clientTradeDao.updateClientBalance(clientPortfolio.getClientId(), clientPortfolio.getCurrBalance());
@@ -104,13 +95,8 @@ public class PortfolioService {
 	                    // Create new holding
 	                    Holding newHolding = new Holding(executedTrade.getInstrumentId(),executedTrade.getQuantity(), totalCostOfTrade.divide(new BigDecimal(executedTrade.getQuantity()), BigDecimal.ROUND_HALF_UP));
 	                    clientTradeDao.addClientHoldings(clientPortfolio.getClientId(), newHolding);
-	                } else {
-	                	 throw new IllegalArgumentException("Insufficient balance");
-	                    // You can add additional error handling or logging here
-	                }
-	            } else {
-	            	 throw new IllegalArgumentException("Instrument not found for selling");
-	                // You can add additional error handling or logging here
+	            } else { //Cannot sell if holding doesnt exist
+	            	 throw new IllegalArgumentException("Instrument not part of holdings! Cannot sell and update the portfolio");
 	            }
 	        }
     

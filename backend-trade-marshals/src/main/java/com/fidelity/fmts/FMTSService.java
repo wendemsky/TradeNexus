@@ -109,8 +109,8 @@ public class FMTSService {
         	Trade trade = new Trade(
     			order, 
     			order.getTargetPrice(), //Executing at target price
-    			order.getOrderId()+"T", 
-    			new BigDecimal("42")
+    			"T"+order.getOrderId(), 
+    			order.getTargetPrice().multiply(new BigDecimal(order.getQuantity())) //Cash value
         	);
     		return trade;
     	} catch(NullPointerException e) {

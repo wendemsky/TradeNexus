@@ -187,33 +187,5 @@ class PortfolioServiceTest {
        Mockito.verify(mockDao).updateClientHoldings(existingClientId,updatedHolding);
   	
   }
-   
-    @Test
-    void testUpdatePortfolioForNonExistentInstruemntSellTrade() {
-    	 String instrumentId = "Q678";
-         BigDecimal execPrice = new BigDecimal("105");
-         Integer quantity = 1;
-         BigDecimal currentBalance = new BigDecimal("500.00");
-         
-         String existingClientId = "541107416"; //This client doesnt have above instrument
-
-         // Create Order object if needed
-       
-         Order order = new Order(instrumentId, quantity, new BigDecimal("105"), "S", existingClientId, "order1",1425922638);
-         Trade trade = new Trade(
-        		 order,
-                 execPrice,
-                 "trade1",
-                 execPrice.multiply(new BigDecimal(quantity))
-         );
-        
-        //Mocking the get client portfolio
-        Mockito.when(mockDao.getClientPortfolio(existingClientId)).thenReturn(clientPortfolios.get(1));
-        Exception e = assertThrows(IllegalArgumentException.class, () -> {
-    			service.updateClientPortfolio(trade);
-    		});
-    	assertEquals(e.getMessage(),"Instrument not found for selling");
-    }
- 
 
 }

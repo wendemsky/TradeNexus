@@ -1,29 +1,40 @@
 package com.fidelity.services;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.sql.DataSource;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 //Importing models
 import com.fidelity.models.Order;
 import com.fidelity.models.Price;
 import com.fidelity.models.Trade;
 import com.fidelity.models.ClientPreferences;
+import com.fidelity.fmts.FMTSService;
+import com.fidelity.integration.ClientDao;
 import com.fidelity.integration.ClientTradeDao;
 import com.fidelity.integration.ClientTradeDaoImpl;
 import com.fidelity.integration.DatabaseException;
 import com.fidelity.integration.PoolableDataSource;
 import com.fidelity.integration.TransactionManager;
+import com.fidelity.models.Client;
 import com.fidelity.models.ClientPortfolio;
 import com.fidelity.models.Holding;
 
@@ -32,28 +43,46 @@ import com.fidelity.utils.PriceScorer;
 
 
 public class TradeServiceTest {
+	//@InjectMocks TradeService service;
+	
+	ClientTradeDao mockDao;
+	PortfolioService mockPortfolioService;
+	
+	TradeService service;
+	
+//	//Mock of fmtsService
+//	static MockedStatic<FMTSService> mockFMTSService;
+	
+	List<Holding> holdingsOf1425922638 = new ArrayList<Holding>(List.of(
+			new Holding("C100",100,new BigDecimal("95.67")),
+			new Holding("Q456",1,new BigDecimal("340"))
+		));
+	//Test client portfolios
+	List<ClientPortfolio> clientPortfolios = new ArrayList<ClientPortfolio>(
+			List.of(
+					new ClientPortfolio("1425922638", new BigDecimal("10000"), holdingsOf1425922638), //Client portfolio with sufficient balance
+					new ClientPortfolio("1425922638", new BigDecimal("20"), holdingsOf1425922638) //Client portfolio with insufficient balance
+			)
+		);
 
-    private TradeService tradeService;
     private List<Price> prices;
-    static PoolableDataSource dataSource;
-    private ClientTradeDao dao;
-    
-    TransactionManager transactionManager;
+
 
     @BeforeEach
     public void setUp() throws Exception {
-    	dataSource = new PoolableDataSource();
-    	dao = new ClientTradeDaoImpl(dataSource);
-    	transactionManager = new TransactionManager(dataSource);
-    	transactionManager.startTransaction();
-        tradeService = new TradeService(dao); 
-        prices = tradeService.getPriceList();
+      //Initializing the Trade Service with Mock Dao and Mock PortfolioService
+      mockDao = mock(ClientTradeDao.class);
+      mockPortfolioService = mock(PortfolioService.class);
+      service = new TradeService(mockDao,mockPortfolioService);
+      prices = service.getPriceList();
+      System.out.println("Price: "+prices);
     }
     
     @AfterEach
     public void tearDown() throws Exception {
-    	transactionManager.rollbackTransaction();
-    	tradeService = null;
+    	service = null;
+    	mockDao = null;
+    	mockPortfolioService = null;
     	prices = null;
 	}
 
@@ -72,90 +101,191 @@ public class TradeServiceTest {
     }
    
 
+    /*TESTING WITH MOCKITO - ADD TRADE TESTS*/
+    
+     @Test
+	 public void testAddTrades() {
+		 String clientId = "1654658069";
+		 Order order = mock(Order.class); //new Order("instrument1", 10, new BigDecimal("100.00"), "B", clientId, "ORDER001", 123);
+		 Trade trade = mock(Trade.class);
+		 service.addTrade(trade);
+		 Mockito.verify(mockDao).addTrade(trade);
+		 
+	 }
+     
+     @Test
+	 public void testAddExistingTradeThrowsException() {
+		 String clientId = "1654658069";
+		 Order order = mock(Order.class); //new Order("instrument1", 10, new BigDecimal("100.00"), "B", clientId, "ORDER001", 123);
+		 Trade trade = mock(Trade.class);
+		 //Mocking my dao to throw an exception
+		 Mockito.doThrow(new DatabaseException()).when(mockDao).addTrade(trade);
+		 assertThrows(DatabaseException.class, () -> {
+			 	service.addTrade(trade);
+			 	Mockito.verify(mockDao).addTrade(trade);
+			});
+	 }
+	 
+	 @Test
+	 public void testAddTradeThrowsExceptionForNullTrade() {
+		 Trade trade = null;
+		 Exception e = assertThrows(NullPointerException.class, () -> {
+				service.addTrade(trade);
+			});
+		 assertEquals(e.getMessage(), "Trade must not be null");
+		 
+	 }
+	 
+	 /*EXECUTE TRADE TESTS*/ 
+  
+	 @Test
+	  public void testExecuteTradeShouldThrowExceptionForNullOrder() {
+	    	Exception e = assertThrows(NullPointerException.class, () -> {
+	    		service.executeTrade(null);
+	    	});
+	    	assertEquals("order cannot be null", e.getMessage());	
+	    }
+	 
     @Test
     public void testExecuteTradeInvalidOrderDirection() {
+    	String clientId = "1654658069";
     	UUID uuid=UUID.randomUUID();
     	String orderId = uuid.toString();
-        Order order = new Order("N123456", 10, new BigDecimal("104.75"), "X", "client1", orderId, 123);
-        assertThrows(DatabaseException.class, () -> tradeService.executeTrade(order));
+        Order order = new Order("N123456", 10, new BigDecimal("104.75"), "X", clientId, orderId, 123);
+        
+        //Mocking portfolio service fns
+    	Mockito.when(mockPortfolioService.getClientPortfolio(clientId)).thenReturn(clientPortfolios.get(0));
+        
+        Exception e = assertThrows(IllegalArgumentException.class, () -> 
+        service.executeTrade(order));
+        assertEquals("Order direction is invalid", e.getMessage());
     }
     
+	@Test
+	public void testExecuteTradeThrowExceptionForNonExistingInstrument() {
+		String clientId = "1654658069";
+	  	UUID uuid=UUID.randomUUID();
+	  	String orderId = uuid.toString();
+	  	Order order = new Order("NonExistingInstrument", 10, new BigDecimal("104.75"), "B", clientId, orderId, 123);
+	  	
+	  	//Mocking portfolio service fns
+    	Mockito.when(mockPortfolioService.getClientPortfolio(clientId)).thenReturn(clientPortfolios.get(0));
+    	
+	  	Exception e = assertThrows(IllegalArgumentException.class, () -> {
+	  		service.executeTrade(order);
+	  	});
+	  	assertEquals("Instrument is not present in the platform", e.getMessage());
+	  }
    
+	 
+	  
+	  /*TESTING WITH MOCKITO - EXECUTE TRADE TESTS*/
+	  
+	  @Test
+	  public void testExecuteSuccessfulBuyTrade() {
+		  	String existingClientId = "1425922638";
+	    	UUID uuid=UUID.randomUUID();
+	    	String orderId = uuid.toString();
+	    	Order order = new Order("N123456", 10, new BigDecimal("10.75"), "B", existingClientId, orderId, 123);
+	    	
+//	    	Trade trade = new Trade(order, new BigDecimal("10.75"), "T"+orderId, new BigDecimal("107.5"));
+//	    	//Mocking fmts service and mock it to return trade
+//	    	mockFMTSService = mockStatic(FMTSService.class);
+//	    	mockFMTSService.when(()-> FMTSService.createTrade(order)).thenReturn(trade);
+	    	
+	    	//Mocking portfolio service fns
+	    	Mockito.when(mockPortfolioService.getClientPortfolio(existingClientId)).thenReturn(clientPortfolios.get(0));
+	    	//Executing trade
+	    	Trade trade = service.executeTrade(order);
+	    	//Verifying if mock portfolio service to update portfolio is called
+	    	Mockito.verify(mockPortfolioService).updateClientPortfolio(trade);
+	    	//Verifying if add Trade dao is called
+	    	Mockito.verify(mockDao).addTrade(trade);
+	    }
+ 
+		@Test
+		public void testExecuteTradeSell() {
+			String existingClientId = "1425922638";
+			UUID uuid=UUID.randomUUID();
+			String orderId = uuid.toString();
+			Order order = new Order("C100", 10, new BigDecimal("104.75"), "S", existingClientId, orderId, 123);
+			
+			//Mocking portfolio service fns
+	    	Mockito.when(mockPortfolioService.getClientPortfolio(existingClientId)).thenReturn(clientPortfolios.get(0));
+	    	
+	    	//Executing trade
+			Trade trade = service.executeTrade(order);
+			//Verifying if mock portfolio service to update portfolio is called
+	    	Mockito.verify(mockPortfolioService).updateClientPortfolio(trade);
+	    	//Verifying if add Trade dao is called
+	    	Mockito.verify(mockDao).addTrade(trade);
+		}   
+		
+	  @Test
+	  public void testExecuteBuyTradeWithInsufficientBalanceThrowsException() {
+		  	String existingClientId = "1425922638";
+	    	UUID uuid=UUID.randomUUID();
+	    	String orderId = uuid.toString();
+	    	Order order = new Order("N123456", 10, new BigDecimal("10.75"), "B", existingClientId, orderId, 123);
+	    	
+	    	//Mocking portfolio service fns
+	    	Mockito.when(mockPortfolioService.getClientPortfolio(existingClientId)).thenReturn(clientPortfolios.get(1));
+	    	
+	    	Exception e = assertThrows(IllegalArgumentException.class, () -> {
+		  		service.executeTrade(order);
+		  	});
+		  	assertEquals("Insufficient balance! Cannot buy the instrument", e.getMessage());
+	    }
+    
     @Test
-    public void testExecuteTradeShouldThrowExceptionForNullOrder() {
-    	Exception e = assertThrows(NullPointerException.class, () -> {
-    		tradeService.executeTrade(null);
-    	});
-    	assertEquals("order cannot be null", e.getMessage());
-    	
+    public void testExecuteSellTradeForNonExistentInstrument() {
+    	 String nonExistentInstrumentId = "N123456";
+         String existingClientId = "1425922638"; //This client doesnt have above instrument
+         UUID uuid=UUID.randomUUID();
+         String orderId = uuid.toString();
+         
+         Order order = new Order(nonExistentInstrumentId, 10, new BigDecimal("105"), "S", existingClientId, orderId, 1425922638);
+         
+         //Mocking portfolio service fns
+	    Mockito.when(mockPortfolioService.getClientPortfolio(existingClientId)).thenReturn(clientPortfolios.get(1));
+	    
+	    Exception e = assertThrows(IllegalArgumentException.class, () -> {
+	  		service.executeTrade(order);
+	  	});
+	  	assertEquals("Instrument not part of holdings! Cannot sell the instrument", e.getMessage());
+        
     }
     
     @Test
-    public void testExecuteTradeBuy() {
-    	UUID uuid=UUID.randomUUID();
-    	String orderId = uuid.toString();
-    	Order order = new Order("N123456", 10, new BigDecimal("10.75"), "B", "1425922638", orderId, 123);
-    	Trade trade = tradeService.executeTrade(order);
-    	assertTrue(trade != null);
+    public void testExecuteSellTradeForInsufficientQuantity() {
+    	 String existentInstrumentId = "C100";
+    	 int exceededQuantity = 1000;
+         String existingClientId = "1425922638"; //This client doesnt have above instrument
+         UUID uuid=UUID.randomUUID();
+         String orderId = uuid.toString();
+         
+         Order order = new Order(existentInstrumentId, exceededQuantity, new BigDecimal("105"), "S", existingClientId, orderId, 1425922638);
+         
+         //Mocking portfolio service fns
+	    Mockito.when(mockPortfolioService.getClientPortfolio(existingClientId)).thenReturn(clientPortfolios.get(1));
+	    
+	    Exception e = assertThrows(IllegalArgumentException.class, () -> {
+	  		service.executeTrade(order);
+	  	});
+	  	assertEquals("Insufficient quantity in holdings to sell the instrument", e.getMessage());
+        
     }
-    
-    @Test
-    public void testExecuteTradeSell() {
-    	UUID uuid=UUID.randomUUID();
-    	String orderId = uuid.toString();
-    	Order order = new Order("C100", 10, new BigDecimal("104.75"), "S", "541107416", orderId, 123);
-    	Trade trade = tradeService.executeTrade(order);
-    	assertTrue(trade != null);
-    }
-    
-    @Test
-    public void testExecuteTradeThrowExceptionForInvalidDirection() {
-    	UUID uuid=UUID.randomUUID();
-    	String orderId = uuid.toString();
-    	Order order = new Order("N123456", 1, new BigDecimal("104.75"), "X", "1425922638", orderId, 123);
-    	Exception e = assertThrows(IllegalArgumentException.class, () -> {
-    		tradeService.executeTrade(order);
-    	});
-    	assertEquals("Order direction is invalid", e.getMessage());
-    	
-    }
-    
-    @Test
-    public void testExecuteTradeThrowExceptionForNonExistingInstrument() {
-    	UUID uuid=UUID.randomUUID();
-    	String orderId = uuid.toString();
-    	Order order = new Order("NonExistingInstrument", 10, new BigDecimal("104.75"), "B", "1425922638", orderId, 123);
-    	Exception e = assertThrows(IllegalArgumentException.class, () -> {
-    		tradeService.executeTrade(order);
-    	});
-    	assertEquals("Instrument is not present in the platform", e.getMessage());
-    	
-    }
+ 
     
 //    -----------------TESTS FOR ROBO ADVISOR---------------------------
     
     @Test
-    void testPriceScorerClass() {
-    	ClientPreferences prefs = new ClientPreferences(
-    	        "1",
-    	        "Retirement",
-    	        "VHIG",
-    	        "Long",
-    	        "Tier3",
-    	         2, 
-    	         true
-    	        );
-    	PriceScorer score = new PriceScorer(prefs);
-    	
-    	assertEquals(score.calculateScore(), 15);
-    }
-    
-    @Test
     public void testRoboAdvisorBuyTradesWhenAcceptAdvisorIsFalse() {
     	//Sample Client Portfolio and Preferences
-    	ClientPortfolio clientPortfolio = new ClientPortfolio("1425922638",new BigDecimal("1000"),new ArrayList<>());
+    	String existingClientId = "1425922638";
+    	ClientPortfolio clientPortfolio = clientPortfolios.get(0);
     	ClientPreferences prefs = new ClientPreferences(
-    	        "1425922638",
+    			existingClientId,
     	        "Retirement",
     	        "VHIG",
     	        "Long",
@@ -164,23 +294,17 @@ public class TradeServiceTest {
     	         false
     	        );
         Exception e = assertThrows(UnsupportedOperationException.class, () -> {
-        	List<Price> topBuys = tradeService.recommendTopBuyInstruments(prefs,clientPortfolio.getCurrBalance());
+        	List<Price> topBuys = service.recommendTopBuyInstruments(prefs,clientPortfolio.getCurrBalance());
         });
         assertEquals(e.getMessage(),"Cannot recommend with robo advisor without accepting to it");
     }
     
     @Test
     public void testRoboAdvisorSellTradesWhenAcceptAdvisorIsFalse() {
-    	Holding holding = new Holding(
-    			"N123456",
-    			5,
-    			new BigDecimal(100));
-    	List<Holding> clientHoldings = new ArrayList<Holding>();
-    	clientHoldings.add(holding);
-    	//Sample Client Portfolio and Preferences
-    	ClientPortfolio clientPortfolio = new ClientPortfolio("1425922638",new BigDecimal("1000"),clientHoldings);
+    	String existingClientId = "1425922638";
+    	ClientPortfolio clientPortfolio = clientPortfolios.get(0);
     	ClientPreferences prefs = new ClientPreferences(
-    	        "1425922638",
+    			existingClientId,
     	        "Retirement",
     	        "VHIG",
     	        "Long",
@@ -189,17 +313,18 @@ public class TradeServiceTest {
     	         false
     	        );
         Exception e = assertThrows(UnsupportedOperationException.class, () -> {
-        	List<Price> topSells = tradeService.recommendTopSellInstruments(prefs,clientPortfolio.getHoldings());
+        	List<Price> topSells = service.recommendTopSellInstruments(prefs,clientPortfolio.getHoldings());
         });
         assertEquals(e.getMessage(),"Cannot recommend with robo advisor without accepting to it");
     }
-    
+//    
     @Test
     void testRoboAdvisorBuyTrades(){
     	//Sample Client Portfolio and Preferences
-    	ClientPortfolio clientPortfolio = new ClientPortfolio("1425922638",new BigDecimal("1000"),new ArrayList<>());
+    	String existingClientId = "1425922638";
+    	ClientPortfolio clientPortfolio = clientPortfolios.get(0);
     	ClientPreferences prefs = new ClientPreferences(
-    	        "1425922638",
+    	        existingClientId,
     	        "Retirement",
     	        "VHIG",
     	        "Long",
@@ -207,7 +332,7 @@ public class TradeServiceTest {
     	         2, 
     	         true
     	        );
-    	List<Price> topBuys = tradeService.recommendTopBuyInstruments(prefs,clientPortfolio.getCurrBalance());
+    	List<Price> topBuys = service.recommendTopBuyInstruments(prefs,clientPortfolio.getCurrBalance());
     	assertNotEquals(topBuys.equals(null), true);
     	assertEquals(topBuys.size(), 5);
     }
@@ -242,7 +367,7 @@ public class TradeServiceTest {
     	         2, 
     	         true
     	        );
-    	assertEquals(tradeService.recommendTopSellInstruments(prefs,clientPortfolio.getHoldings()).size(), 3);
+    	assertEquals(service.recommendTopSellInstruments(prefs,clientPortfolio.getHoldings()).size(), 3);
     }
     
     @Test
@@ -295,6 +420,6 @@ public class TradeServiceTest {
     	         2, 
     	         true
     	        );
-    	assertEquals(tradeService.recommendTopSellInstruments(prefs,clientPortfolio.getHoldings()).size(), 5);
+    	assertEquals(service.recommendTopSellInstruments(prefs,clientPortfolio.getHoldings()).size(), 5);
     }
 }

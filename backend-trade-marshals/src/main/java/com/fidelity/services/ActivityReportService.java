@@ -1,51 +1,56 @@
 package com.fidelity.services;
  
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
  
 import com.fidelity.integration.ClientActivityReportDao;
 import com.fidelity.integration.ClientTradeDao;
-import com.fidelity.models.ClientPortfolio;
 import com.fidelity.models.Holding;
 import com.fidelity.models.Trade;
+import com.fidelity.models.TradeHistory;
  
 public class ActivityReportService {
 	
+	private ClientActivityReportDao dao;
 	
-	private static ClientActivityReportDao clientActivityReportDao;
-	private static ClientTradeDao clientTradeDao;
+	private TradeHistoryService tradeHistoryService; 
 	
-	private static TradeHistoryService tradeHistoryService = null; 
-	
-	public ActivityReportService(ClientActivityReportDao activityDao) {
-		//Initializing Portfolio and Trade History Service
-		clientActivityReportDao = activityDao;
-		tradeHistoryService = new TradeHistoryService(clientTradeDao);
+	public ActivityReportService(ClientActivityReportDao activityDao, TradeHistoryService service) {
+		//Initializing the reqd Daos and TradeHistory Service
+		this.dao = activityDao;
+		this.tradeHistoryService = service;
 	}
+	
 	//Generate Report with Clients Holdings
 	public List<Holding> generateHoldingsReport(String clientId) {
-		//Return Holdings of given client's portfolio
 		if(clientId == null) {
-			throw new NullPointerException("Client Id should not be null");
+			throw new NullPointerException("Client Id should not be null for Holdings");
 		}
-		return clientActivityReportDao.getClientHoldings(clientId);
+		return dao.getClientHoldings(clientId);
 	}
+	
 	//Generate Report with Clients Trade History
-	public List<Trade> generateTradeReport(String clientId) {
+	public TradeHistory generateTradeReport(String clientId) {
 		//Return Trade History of given client's portfolio
+		if(clientId == null) {
+			throw new NullPointerException("Client Id should not be null for Trade History");
+		}
 		return tradeHistoryService.getClientTradeHistory(clientId);
 	}
+	
 	//Generate Report with Clients P&L Data
-	public static Map<String, BigDecimal> generatePLReport(String clientId) {
+	public Map<String, BigDecimal> generatePLReport(String clientId) {
 		//Make use of Trade History
+		  if(clientId == null) {
+			 throw new NullPointerException("Client Id should not be null to calculate Profit Loss");
+		  }
 		  Map<String, BigDecimal> profitLossMap = new HashMap<>();
 	      Map<String, BigDecimal> buyPositions = new HashMap<>();
-	      List<Trade> trades = tradeHistoryService.getClientTradeHistory(clientId);
+	      TradeHistory tradeHistory = tradeHistoryService.getClientTradeHistory(clientId);
  
-	      for (Trade trade : trades) {
+	      for (Trade trade : tradeHistory.getTrades()) {
 	            if (!trade.getClientId().equals(clientId)) continue;
  
 	            String instrumentId = trade.getInstrumentId();

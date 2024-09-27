@@ -30,21 +30,16 @@ class TradeHistoryServiceTest {
 	
 	@Mock ClientTradeDao mockDao;
 	@InjectMocks TradeHistoryService service;
-
-    private TradeHistoryService tradeHistoryService;
-    private Order order;
-    private Trade trade;
     
 	@BeforeEach
 	void setUp() throws Exception {
-		 tradeHistoryService = new TradeHistoryService(mockDao); 
+		 //tradeHistoryService = new TradeHistoryService(mockDao); 
 	     MockitoAnnotations.openMocks(this);
 	}
 
 	@AfterEach
 	void tearDown() throws Exception {
-		order = null;
-		trade = null;
+		service = null;
 	}
 
 	@Test
@@ -60,16 +55,16 @@ class TradeHistoryServiceTest {
         TradeHistory tradeHistory = new TradeHistory(clientId, expected);
         Mockito.when(mockDao.getClientTradeHistory(clientId))
 			.thenReturn(tradeHistory);
-		List<Trade> actual =  service.getClientTradeHistory(clientId);
+		TradeHistory actualTradeHistory =  service.getClientTradeHistory(clientId);
 		//Verifying that the corresponding mockDao methods were called
 		Mockito.verify(mockDao).getClientTradeHistory(clientId); 
-			assertEquals(actual.equals(tradeHistory.getTrades()), true);
+		assertEquals(actualTradeHistory,tradeHistory);
     }
 	
 	
 	 @Test
 	  public void testGetClientTradeHistoryThrowsNullPointerException() {        
-		 Exception e = assertThrows(NullPointerException.class, () -> tradeHistoryService.getClientTradeHistory(null));
+		 Exception e = assertThrows(NullPointerException.class, () -> service.getClientTradeHistory(null));
 	     assertEquals(e.getMessage(),"Client ID must not be null");
 	}
 	 
@@ -81,27 +76,6 @@ class TradeHistoryServiceTest {
 				service.getClientTradeHistory(clientId);
 			});
 		 assertEquals(e.getMessage(),"No trades found for client ID");   
-	 }
-	 
-	 @Test
-	 public void testAddTrades() {
-		 String clientId = "1654658069";
-		 Order order1 = new Order("instrument1", 10, new BigDecimal("100.00"), "B", clientId, "ORDER001", 123);
-		 Trade trade1 = new Trade(order1,new BigDecimal("100.00"),"TRADE001", new BigDecimal("1000.00"));
-		 service.addTrade(trade1);
-		 Mockito.verify(mockDao).addTrade(trade1);
-		 
-	 }
-	 
-	 
-	 @Test
-	 public void testAddTradeThrowsExceptionForNullTrade() {
-		 Trade trade = null;
-		 Exception e = assertThrows(NullPointerException.class, () -> {
-				service.addTrade(trade);
-			});
-		 assertEquals(e.getMessage(), "Trade must not be null");
-		 
 	 }
 	 
 	 @Test
@@ -117,10 +91,10 @@ class TradeHistoryServiceTest {
         TradeHistory tradeHistory = new TradeHistory(clientId, expected);
         Mockito.when(mockDao.getClientTradeHistory(clientId))
 			.thenReturn(tradeHistory);
-		List<Trade> actual =  service.getClientTradeHistory(clientId);
+        TradeHistory actualTradeHistory =  service.getClientTradeHistory(clientId);
 		//Verifying that the corresponding mockDao methods were called
 		Mockito.verify(mockDao).getClientTradeHistory(clientId); 
-			assertTrue(actual.size() <= 100);
+			assertTrue(actualTradeHistory.getTrades().size() <= 100);
 	 }
 
 	
