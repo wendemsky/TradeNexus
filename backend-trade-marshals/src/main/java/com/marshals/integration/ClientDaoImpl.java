@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.sql.DataSource;
+import javax.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,24 +16,28 @@ import java.time.LocalDate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Repository;
 
+import com.marshals.integration.mapper.ClientMapper;
 import com.marshals.models.Client;
 import com.marshals.models.ClientIdentification;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.ClientPreferences;
 import com.marshals.utils.EmailValidator;
 
-public class ClientDaoImpl implements ClientDao {
+@Repository("clientDao")
+public class ClientDaoImpl implements ClientDao{
 	
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private DataSource dataSource;
 	
+	@Autowired 
+	private ClientMapper clientMapper;
+	
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy"); //doB Format stored in client model
 	
-	public ClientDaoImpl(DataSource ds) {
-		dataSource = ds;
-	}
-
 	@Override
 	public Boolean verifyClientEmail(String email) {
 		final String sql = """
@@ -223,129 +228,35 @@ public class ClientDaoImpl implements ClientDao {
 
 	@Override
 	public ClientPreferences getClientPreferences(String clientId) {
-		final String queryToGetClientPreference = """
-					SELECT cp.client_id, 
-					    cp.investment_purpose,
-					    cp.income_category,
-					    cp.length_of_investment,
-					    cp.percentage_of_spend,
-					    cp.risk_tolerance,
-					    cp.is_advisor_accepted
-					FROM CLIENT_PREFERENCES cp
-					WHERE cp.client_id = ?
-				""";
-		ClientPreferences clientPreference = null;
-		try {
-			Connection connection = dataSource.getConnection();
-			int countOfRows = 0;
-			try (PreparedStatement stmt = 
-				connection.prepareStatement(queryToGetClientPreference)) {
-				stmt.setString(1, clientId);
-				ResultSet rs = stmt.executeQuery();
-				while (rs.next()) {
-					countOfRows++;
-					String id = rs.getString("client_id");
-					String investmentPurpose = rs.getString("investment_purpose");
-					String incomeCategory = rs.getString("income_category");
-					String lengthOfInvestment = rs.getString("length_of_investment");
-					String percentageOfSpend = rs.getString("percentage_of_spend");
-					int riskTolerance = rs.getInt("risk_tolerance");
-					boolean isAdvisorAccepted = rs.getBoolean("is_advisor_accepted");
-					clientPreference = new ClientPreferences(
-							id, 
-							investmentPurpose, 
-							incomeCategory, 
-							lengthOfInvestment, 
-							percentageOfSpend, 
-							riskTolerance, 
-							isAdvisorAccepted
-						);
-				}
-				if(countOfRows == 0) {
-					throw new SQLException("Invalid Client ID");
-				}
-			} 
-		}
-		catch(SQLException e) {
-			logger.error("Cannot complete get operation", e);
-			throw new DatabaseException("Client ID does not exist", e);
-		}
-		return clientPreference;
+		return clientMapper.getClientPreferences(clientId);
 	}
 
 	@Override
+	@Transactional
 	public void addClientPreferences(ClientPreferences clientPreferences) {
-		final String queryToAddClientPreferences = """
-					INSERT INTO client_preferences (
-					    client_id,
-					    investment_purpose,
-					    income_category,
-					    length_of_investment,
-					    percentage_of_spend,
-					    risk_tolerance,
-					    is_advisor_accepted
-					) VALUES (?, ?, ?, ?, ?, ?, ?)
-				""";
 		try {
-			Connection connection = dataSource.getConnection();
-			try (PreparedStatement stmt = 
-				connection.prepareStatement(queryToAddClientPreferences)) {
-				stmt.setString(1, clientPreferences.getClientId());
-				stmt.setString(2, clientPreferences.getInvestmentPurpose());
-				stmt.setString(3, clientPreferences.getIncomeCategory());
-				stmt.setString(4, clientPreferences.getLengthOfInvestment());
-				stmt.setString(5, clientPreferences.getPercentageOfSpend());
-				stmt.setInt(6, clientPreferences.getRiskTolerance());
-				stmt.setString(7, String.valueOf(clientPreferences.getAcceptAdvisor()));
-				stmt.executeUpdate();
+			int rowsAffected = clientMapper.addClientPreferences(clientPreferences);
+			if(rowsAffected == 0) {
+				throw new DatabaseException("Invalid client preferences");
 			}
 		}
-		catch (SQLException e) {
-			// TODO Auto-generated catch block
-			logger.error("Cannot complete insert operation", e);
-			if(e.getErrorCode() == 2291) { //Fkey error
-				throw new DatabaseException("Cannot insert preferences for Client that doenst exist", e);
-			}
-			else if(e.getErrorCode() == 1) {
-				throw new DatabaseException("Cannot insert preferences for Client with existing preferences", e);
-			}
+		catch(DataIntegrityViolationException e) {
+			logger.error("Error inserting client preferences - Should satisfy integrity constraints",e);
+			throw new DatabaseException("Error inserting client preferences - Should satisfy integrity constraints");
 		}
 	}
 
 	@Override
 	public void updateClientPreferences(ClientPreferences clientPreferences) {
-		final String queryToUpdateClientPreferences = """
-					UPDATE client_preferences cp
-					SET cp.investment_purpose = ?,
-						cp.income_category = ?,
-						cp.length_of_investment = ?,
-						cp.percentage_of_spend = ?,
-						cp.risk_tolerance = ?,
-						cp.is_advisor_accepted = ?
-					WHERE cp.client_id = ?
-				""";
-		int rowsAffected = 0;
 		try {
-			Connection connection = dataSource.getConnection();
-			try (PreparedStatement stmt = 
-				connection.prepareStatement(queryToUpdateClientPreferences)) {
-				stmt.setString(1, clientPreferences.getInvestmentPurpose());
-				stmt.setString(2, clientPreferences.getIncomeCategory());
-				stmt.setString(3, clientPreferences.getLengthOfInvestment());
-				stmt.setString(4, clientPreferences.getPercentageOfSpend());
-				stmt.setInt(5, clientPreferences.getRiskTolerance());
-				stmt.setString(6, String.valueOf(clientPreferences.getAcceptAdvisor()));
-				stmt.setString(7, clientPreferences.getClientId());
-				rowsAffected = stmt.executeUpdate();
-				if(rowsAffected == 0) {
-					throw new SQLException("Invalid Client ID");
-				}
+			int rowsAffected = clientMapper.updateClientPreferences(clientPreferences);
+			if(rowsAffected == 0) {
+				throw new DatabaseException("Invalid client preferences");
 			}
 		}
-		catch (SQLException e) {
-			// TODO Auto-generated catch block
-			logger.error("Cannot complete update operation", e);
-			throw new DatabaseException("Cannot update preferences for Client that doenst exist");
+		catch(DataIntegrityViolationException e) {
+			logger.error("Error updating client preferences - Should satisfy integrity constraints", e);
+			throw new DatabaseException("Error updating client preferences - Should satisfy integrity constraints");
 		}
 	}
 
