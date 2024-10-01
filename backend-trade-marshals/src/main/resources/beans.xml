@@ -46,7 +46,7 @@
 	<!-- Enable component scanning and autowire for the integration and services 
 		packages (beware that this does not enable mapper scanning!) -->
 	<context:component-scan
-		base-package="com.fidelity.integration" />
+		base-package="com.marshals.integration, com.marshals.configuration" />
 
 	<!-- Enable transaction demarcation with annotations -->
 	<tx:annotation-driven />
@@ -56,13 +56,13 @@
 		class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="datasource" />
 		<property name="typeAliasesPackage"
-			value="com.fidelity.models" />
+			value="com.marshals.models" />
 		<property name="mapperLocations"
-			value="classpath*:com/fidelity/**/*.xml" />
+			value="classpath*:com/marshals/**/*.xml" />
 	</bean>
 
 	<!-- Scan for mappers and let them be autowired -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.fidelity.integration.mapper" />
+		<property name="basePackage" value="com.marshals.integration.mapper" />
 	</bean>
 </beans>
