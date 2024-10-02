@@ -3,7 +3,46 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.marshals.integration.mapper.ClientTradeMapper">
- 
+ <resultMap id="clientPortfolioResultMap" type="com.marshals.models.ClientPortfolio">
+    <result property="clientId" column="client_id"/>
+    <result property="currBalance" column="curr_balance"/>
+    <collection property="holdings" ofType="com.marshals.models.Holding">
+        <result property="instrumentId" column="instrument_id"/>
+        <result property="quantity" column="quantity"/>
+        <result property="avgPrice" column="avg_price"/>
+    </collection>
+</resultMap>
 
+<select id="getClientPortfolio" resultMap="clientPortfolioResultMap">
+        SELECT 
+            c.client_id,
+            c.curr_balance,
+            h.instrument_id,
+            h.quantity,
+            h.avg_price
+        FROM
+            client c
+        LEFT OUTER JOIN
+            holdings h ON c.client_id = h.client_id
+        WHERE
+            c.client_id = #{clientId}
+    </select>
+    
+    <update id="updateClientBalance">
+        UPDATE client 
+        SET curr_balance = #{currBalance} 
+        WHERE client_id = #{clientId}
+    </update>
+
+    <insert id="addClientHoldings">
+        INSERT INTO holdings (client_id, instrument_id, quantity, avg_price) 
+        VALUES (#{clientId}, #{holdings.instrumentId}, #{holdings.quantity}, #{holdings.avgPrice})
+    </insert>
+
+    <update id="updateClientHoldings"  parameterType="Holding">
+        UPDATE holdings 
+        SET quantity = #{quantity}, avg_price = #{avgPrice} 
+        WHERE client_id = #{clientId} AND instrument_id = #{instrumentId}
+    </update>
 
 </mapper>

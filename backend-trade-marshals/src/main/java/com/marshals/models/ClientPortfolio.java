@@ -1,6 +1,7 @@
 package com.marshals.models;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,11 +14,11 @@ public class ClientPortfolio {
 
 	    public ClientPortfolio(String clientId, BigDecimal currBalance, List<Holding> holdings) {
 	    	try {
-	    		if(clientId==null || currBalance==null || holdings==null) 
+	    		if(clientId==null || currBalance==null ) 
 					throw new NullPointerException("Client Portfolio Details cannot be null");
 	    		this.clientId = clientId;
 	 	        this.currBalance = currBalance;
-	 	        this.holdings = holdings;
+	 	        this.holdings = (holdings == null) ? new ArrayList<>() : holdings;
 	    	} catch(NullPointerException e) {
 	    		throw e;
 	    	}

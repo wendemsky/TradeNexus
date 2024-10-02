@@ -13,7 +13,10 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+import com.marshals.integration.mapper.ClientTradeMapper;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.ClientPreferences;
 import com.marshals.models.Holding;
@@ -21,7 +24,12 @@ import com.marshals.models.Order;
 import com.marshals.models.Trade;
 import com.marshals.models.TradeHistory;
 
+@Repository("clientTradeDao")
 public class ClientTradeDaoImpl implements ClientTradeDao {
+	
+	@Autowired
+	 private ClientTradeMapper clientTradeMapper;
+	
 	
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private DataSource dataSource;
@@ -30,130 +38,42 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 		dataSource = ds;
 	}
 
-	@Override
+
 	public ClientPortfolio getClientPortfolio(String clientId) {
-		final String queryToGetClientPortfolio = """
-				SELECT 
-				    c.client_id,
-				    c.curr_balance,
-				    h.instrument_id,
-				    h.quantity,
-				    h.avg_price
-				FROM
-				    client c
-				LEFT OUTER JOIN
-				    holdings h ON c.client_id = h.client_id
-				WHERE
-				    c.client_id = ?
-			""";
-		ClientPortfolio clientPortfolio = null;
-		try {
-			Connection connection = dataSource.getConnection();
-			try (PreparedStatement stmt = 
-				connection.prepareStatement(queryToGetClientPortfolio)) {
-				stmt.setString(1, clientId);
-				ResultSet rs = stmt.executeQuery();
-				String id = "";
-				BigDecimal currBalance = new BigDecimal(0);
-				List<Holding> holdings = new ArrayList<>();
-				while (rs.next()) {
-					id = rs.getString("client_id");
-					currBalance = rs.getBigDecimal("curr_balance");
-					if(rs.getString("instrument_id") == null) { //InstrumentId was null - Client has no holdings
-						clientPortfolio = new ClientPortfolio(id,currBalance,holdings);
-						break;
-					}
-					else {
-						String instrumentId = rs.getString("instrument_id");
-						int quantity = rs.getInt("quantity");
-						BigDecimal avgPrice = rs.getBigDecimal("avg_price");
-						holdings.add( new Holding( instrumentId, quantity, avgPrice ));
-					}	
-				}
-				if(holdings.size()>0)
-					clientPortfolio = new ClientPortfolio(id,  currBalance, holdings);
-				if(clientPortfolio == null) {
-					throw new SQLException("Invalid Client ID");
-				}
-			}
-		}
-		catch(SQLException e) {
-			logger.error("Cannot complete get operation", e);
-			throw new DatabaseException("Client ID does not exist", e);
-		}
-		return clientPortfolio;
+		 ClientPortfolio clientPortfolio = clientTradeMapper.getClientPortfolio(clientId);
+	        if (clientPortfolio == null) {
+	            throw new DatabaseException("Client ID does not exist");
+	        }
+	        return clientPortfolio;
 	}
 
-	@Override
 	public void updateClientBalance(String clientId, BigDecimal currBalance) {
-		final String queryToAddClientHolding = """
-				UPDATE client 
-				SET curr_balance = ? 
-				WHERE client_id = ? 
-				""";
-		try {
-			Connection connection = dataSource.getConnection();
-			try(PreparedStatement stmt = connection.prepareStatement(queryToAddClientHolding)){
-				stmt.setBigDecimal(1, currBalance);
-				stmt.setString(2, clientId);
-				int rowsUpdated = stmt.executeUpdate();
-				if(rowsUpdated<=0) throw new SQLException("Client doesnt exist");
-			}
-		} catch(SQLException e) {
-			logger.error("Cannot complete get operation", e);
-			throw new DatabaseException("Client doesnt exist to update balance", e);
-		}
-
-		
+		 try {
+	            clientTradeMapper.updateClientBalance(clientId, currBalance);
+	        } catch (Exception e) {
+	            logger.error("Cannot complete update operation", e);
+	            throw new DatabaseException("Client does not exist to update balance", e);
+	        }
 	}
-	
-	@Override
 	
 	public void addClientHoldings(String clientId, Holding holding) {
-		final String queryToAddClientHolding = """
-				INSERT INTO holdings (client_id, instrument_id, quantity, avg_price) VALUES
-					(?, ?, ?, ?)
-				""";
 		try {
-			Connection connection = dataSource.getConnection();
-			try(PreparedStatement stmt = connection.prepareStatement(queryToAddClientHolding)){
-				stmt.setString(1, clientId);
-				stmt.setString(2, holding.getInstrumentId());
-				stmt.setInt(3,  holding.getQuantity());
-				stmt.setBigDecimal(4, holding.getAvgPrice());
-				stmt.executeUpdate();
-			}
-		} catch(SQLException e) {
-			logger.error("Cannot complete get operation", e);
-			throw new DatabaseException("Client does not exist", e);
-		}
-		
+            clientTradeMapper.updateClientHoldings(clientId, holding);
+        } catch (Exception e) {
+            logger.error("Cannot complete insert operation", e);
+            throw new DatabaseException("Client does not exist", e);
+        }
 	}
 	
-	@Override
 	public void updateClientHoldings(String clientId, Holding holding) {
-		final String queryToAddClientHolding = """
-				UPDATE holdings 
-				SET quantity = ?, avg_price = ? 
-				WHERE client_id = ? and instrument_id = ?
-				""";
-		try {
-			Connection connection = dataSource.getConnection();
-			try(PreparedStatement stmt = connection.prepareStatement(queryToAddClientHolding)){
-				stmt.setInt(1,  holding.getQuantity());
-				stmt.setBigDecimal(2, holding.getAvgPrice());
-				stmt.setString(3, clientId);
-				stmt.setString(4, holding.getInstrumentId());
-				int rowsUpdated = stmt.executeUpdate();
-				if(rowsUpdated<=0) throw new SQLException("Client Holdings dont exist to get updated");
-			}
-		} catch(SQLException e) {
-			logger.error("Cannot complete get operation", e);
-			throw new DatabaseException("Client Holdings dont exist to get updated", e);
-		}
-		
+		 try {
+	            clientTradeMapper.updateClientHoldings(clientId, holding);
+	        } catch (Exception e) {
+	            logger.error("Cannot complete update operation", e);
+	            throw new DatabaseException("Client holdings do not exist to get updated", e);
+	        }
 	}
-
+	
 	@Override
 	public TradeHistory getClientTradeHistory(String clientId) {
 		TradeHistory clientTradeHistory = null;
