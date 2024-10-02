@@ -29,8 +29,7 @@
 	</bean>
 
 	<!-- Define a transaction manager Use DataSourceTransactionManager for
-	transactions 
-		on a single database -->
+	transactions on a single database -->
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="datasource" />
@@ -46,7 +45,7 @@
 	<!-- Enable component scanning and autowire for the integration and services 
 		packages (beware that this does not enable mapper scanning!) -->
 	<context:component-scan
-		base-package="com.marshals.integration, com.marshals.configuration" />
+		base-package="com.marshals.integration, com.marshals.configuration, com.marshals.services, com.marshals.fmts" />
 
 	<!-- Enable transaction demarcation with annotations -->
 	<tx:annotation-driven />

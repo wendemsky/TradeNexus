@@ -61,5 +61,11 @@ public class ClientPortfolio {
 			return Objects.equals(clientId, other.clientId) && Objects.equals(currBalance, other.currBalance)
 					&& Objects.equals(holdings, other.holdings);
 		}
+
+		@Override
+		public String toString() {
+			return "ClientPortfolio [clientId=" + clientId + ", currBalance=" + currBalance + ", holdings=" + holdings
+					+ "]";
+		}
 	    
 }

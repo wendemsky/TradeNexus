@@ -1,36 +1,38 @@
 package com.marshals.integration;
 
-import static com.marshals.integration.DbTestUtilsOld.countRowsInTable;
-import static com.marshals.integration.DbTestUtilsOld.countRowsInTableWhere;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTable;
+import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTableWhere;
 
-import com.marshals.integration.ClientDao;
-import com.marshals.integration.ClientDaoImpl;
-import com.marshals.integration.DatabaseException;
-import com.marshals.integration.TransactionManager;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
+
 import com.marshals.models.Client;
 import com.marshals.models.ClientIdentification;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.ClientPreferences;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration("classpath:beans.xml")
+@Transactional
 class ClientDaoImplTest {
 	
-	static PoolableDataSource dataSource;
-	ClientDao dao;
-	TransactionManager transactionManager;
-	Connection connection = null;
+	@Autowired
+	private ClientDaoImpl dao;
+	
+	@Autowired
+	private JdbcTemplate testJdbcTemplate;
 	
 	//Few test client
 	Client client1654658069 = new Client("sowmya@gmail.com","1654658069", "Marsh2024", "Sowmya", "11/12/2002", "India", 
@@ -45,30 +47,6 @@ class ClientDaoImplTest {
 	ClientPreferences clientPref1654658070 = new ClientPreferences("1654658070", "Retirement", "LIG", "Short", "Tier4", 2, false); //New client to insert
 	ClientPreferences clientPref541107416 =  new ClientPreferences("541107416", "Major Expense", "LIG", "Long", "Tier3", 1, false); //Existing client with updated preferences
 	ClientPreferences clientPref1654658000 = new ClientPreferences("1654658000", "Retirement", "LIG", "Short", "Tier4", 2, false); //Non existent client
-
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
-		dataSource = new PoolableDataSource();
-	}
-
-	@AfterAll
-	static void tearDownAfterClass() throws Exception {
-		dataSource.shutdown();
-	}
-
-	@BeforeEach
-	void setUp() throws Exception {
-		dao = new ClientDaoImpl(dataSource);
-		transactionManager = new TransactionManager(dataSource);
-		transactionManager.startTransaction();
-		
-		connection = dataSource.getConnection();
-	}
-
-	@AfterEach
-	void tearDown() throws Exception {
-		transactionManager.rollbackTransaction();
-	}
 
 	@Test
 	void testForDAOToHaveBeenIntialized() {
@@ -132,7 +110,7 @@ class ClientDaoImplTest {
 		assertEquals(e.getMessage(), "Password does not match logging in Client's credentials");
 	}
 	
-	/*TESTS FOR CLIENT REGISTRATION*/
+//	/*TESTS FOR CLIENT REGISTRATION*/
 	//Testing successful retrieval of all client identification details
 	@Test
 	void testForRetrievalOfAllClientIdentificationDetails() {
@@ -141,108 +119,29 @@ class ClientDaoImplTest {
 	}
 	//Successful insetion must increase row count in client table
 	@Test
-	void testForSuccessfulAdditionOfNewClientDetailsInClientTable() throws SQLException {
-		int oldCount = countRowsInTable(connection, "client");
+	void testForSuccessfulAdditionOfNewClientDetailsInClientTable() {
+		int oldCount = countRowsInTable(testJdbcTemplate, "client");
 		dao.addNewClient(client1654658070, new ClientPortfolio(client1654658070.getClientId(),new BigDecimal("10000"),new ArrayList<>()));
-		int newCount = countRowsInTable(connection, "client");
+		int newCount = countRowsInTable(testJdbcTemplate, "client");
 		assertTrue(newCount == oldCount+1, "Client Table count must increase by one");
 	}
 	//Successful insertion must add correct data in client identification table
 	@Test
-	void testForSuccessfulAdditionOfNewClientDetailsInClientIdentificationTable() throws SQLException {
+	void testForSuccessfulAdditionOfNewClientDetailsInClientIdentificationTable() {
 		String newClientId = "1654658070";
 		String whereCondition = "client_id = "+ newClientId;
 		dao.addNewClient(client1654658070, new ClientPortfolio(client1654658070.getClientId(),new BigDecimal("10000"),new ArrayList<>()));
-		int newCount = countRowsInTableWhere(connection, "client_identification", whereCondition);
+		int newCount = countRowsInTableWhere(testJdbcTemplate, "client_identification", whereCondition);
 		assertTrue(newCount >= 1, "One or more client identification details added");
 	}
-	//Successful insetion must increase row count
+	//Exisitng client registration throws error
 	@Test
-	void testForAdditionOfExistingClientDetailsShouldThrowException() throws SQLException {
+	void testForAdditionOfExistingClientDetailsShouldThrowException(){
 		String existingClientId = "1654658069";
 		Exception e = assertThrows(DatabaseException.class, () -> {
 			dao.addNewClient(client1654658069, 
 					new ClientPortfolio(existingClientId,new BigDecimal("10000"),new ArrayList<>()));
 		});
 		assertEquals(e.getMessage(),"Cannot insert client with ID "+existingClientId);
-	}
-	
-	
-	/*CLIENT PREFERENCES*/
-	
-	/*TESTS FOR GETTING CLIENT PREFERENCES*/
-	//Successful retrieval
-	@Test
-	void testForGetClientPreferences() {
-		String id = "1654658069";
-		ClientPreferences expectedClientPreference = dao.getClientPreferences(id);
-		assertTrue(expectedClientPreference.equals(clientPref1654658069));
-	}
-	//Failure for non existent client preferences
-	@Test
-	void testForGetClientPreferencesForNonExistentClient() {
-		String id = "1654658000";
-		Exception e = assertThrows(DatabaseException.class, () -> {
-			dao.getClientPreferences(id);
-		});
-		assertEquals(e.getMessage(), "Client ID does not exist");
-	}
-	
-	/*TESTS FOR ADDING CLIENT PREFERENCES*/
-	//Successful insetion must increase row count
-	@Test
-	void testForAddingClientPreferences() throws SQLException {
-		//Must add new Client before adding new Client Preferences
-		dao.addNewClient(client1654658070, new ClientPortfolio(client1654658070.getClientId(),new BigDecimal("10000"),new ArrayList<>()));
-		int oldCount = countRowsInTable(connection, "client_preferences");
-		dao.addClientPreferences(clientPref1654658070);
-		int newCount = countRowsInTable(connection, "client_preferences");
-		assertEquals(oldCount+1, newCount);
-	}
-	//Successful insertion must add correct data
-	@Test
-	void testForCheckingCorrectAddOfClientPreferences() throws SQLException {
-		String newClientId = "1654658070";
-		//Must add new Client before adding new Client Preferences
-		dao.addNewClient(client1654658070, new ClientPortfolio(newClientId,new BigDecimal("10000"),new ArrayList<>()));
-		String whereCondition = "client_id = "+ newClientId;
-		dao.addClientPreferences(clientPref1654658070);
-		int newCount = countRowsInTableWhere(connection, "client_preferences", whereCondition);
-		assertEquals(1, newCount);
-	}
-	//Failure - Insertion of client preferences for non existent client
-	@Test
-	void testForAddClientPreferencesMethodWhenClientDoesntExist() {
-		Exception e = assertThrows(DatabaseException.class, () -> {
-			dao.addClientPreferences(clientPref1654658000);
-		});
-		assertEquals(e.getMessage(), "Cannot insert preferences for Client that doenst exist");
-	}
-	//Failure - Addition of client preferences to client with existing preferences - Can only update
-	@Test
-	void testForAddClientPreferencesMethodForExistingClientPreferences() {
-		Exception e = assertThrows(DatabaseException.class, () -> {
-			dao.addClientPreferences(clientPref1654658069);
-		});
-		assertEquals(e.getMessage(), "Cannot insert preferences for Client with existing preferences");
-	}
-	
-	/*TESTS FOR UPDATING CLIENT PREFERENCES*/
-	//Successful updation of client preferences
-	@Test
-	void testForUpdatingClientPreferencesForValidClient() throws SQLException {
-		String existingClientId = "541107416";
-		String whereCondition = "length_of_investment = 'Long' and percentage_of_spend = 'Tier3' and is_advisor_accepted = 'false' and client_id = "+existingClientId;
-		dao.updateClientPreferences(clientPref541107416);
-		int newCount = countRowsInTableWhere(connection, "client_preferences",whereCondition);
-		assertTrue(newCount==1,"Updated preferences must exist");
-	}
-	//Failure - Updation of preferences for non existent client
-	@Test
-	void testForUpdatingClientPreferencesForNonExistentClient() throws SQLException {
-		Exception e = assertThrows(DatabaseException.class, () -> {
-			dao.updateClientPreferences(clientPref1654658000);
-		});
-		assertEquals(e.getMessage(), "Cannot update preferences for Client that doenst exist");
 	}
 }

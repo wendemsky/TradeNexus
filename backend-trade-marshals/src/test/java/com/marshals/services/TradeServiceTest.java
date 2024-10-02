@@ -42,7 +42,6 @@ import com.marshals.utils.PriceScorer;
 
 
 public class TradeServiceTest {
-	//@InjectMocks TradeService service;
 	
 	ClientTradeDao mockDao;
 	PortfolioService mockPortfolioService;

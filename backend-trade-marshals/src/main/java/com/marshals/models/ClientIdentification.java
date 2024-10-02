@@ -7,6 +7,8 @@ public class ClientIdentification {
 	private String type;
 	private String value;
 	
+	public ClientIdentification() {}
+	
 	public ClientIdentification(String type, String value) {
 		try {
 			if(type==null || value==null) throw new NullPointerException("Govt ID Details cannot be null");
@@ -30,6 +32,15 @@ public class ClientIdentification {
 
 	public String getValue() {
 		return value;
+	}
+	
+	//Setters
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 	@Override
