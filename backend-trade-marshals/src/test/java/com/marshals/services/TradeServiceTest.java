@@ -16,20 +16,21 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.marshals.fmts.FMTSService;
 import com.marshals.integration.ClientDao;
 import com.marshals.integration.ClientTradeDao;
 import com.marshals.integration.ClientTradeDaoImpl;
 import com.marshals.integration.DatabaseException;
-import com.marshals.integration.PoolableDataSource;
-import com.marshals.integration.TransactionManager;
 import com.marshals.models.Client;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.ClientPreferences;
@@ -43,6 +44,8 @@ import com.marshals.services.TradeService;
 import com.marshals.utils.PriceScorer;
 
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration("classpath:beans.xml")
 public class TradeServiceTest {
 	
 	ClientTradeDao mockDao;

@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.marshals.integration.ClientTradeDao;
 import com.marshals.integration.ClientTradeDaoImpl;
 import com.marshals.integration.DatabaseException;
-import com.marshals.integration.TransactionManager;
 import com.marshals.integration.mapper.ClientTradeMapper;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.Holding;

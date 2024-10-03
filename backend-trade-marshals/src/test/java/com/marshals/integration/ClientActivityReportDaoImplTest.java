@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.marshals.integration.ClientActivityReportDao;
 import com.marshals.integration.ClientActivityReportDaoImpl;
 import com.marshals.integration.DatabaseException;
-import com.marshals.integration.TransactionManager;
 import com.marshals.models.Holding;
 
 @ExtendWith(SpringExtension.class)
