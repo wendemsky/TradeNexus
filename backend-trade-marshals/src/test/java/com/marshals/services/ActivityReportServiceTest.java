@@ -11,8 +11,14 @@ import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.marshals.integration.ClientActivityReportDao;
 import com.marshals.integration.DatabaseException;
@@ -23,11 +29,15 @@ import com.marshals.models.TradeHistory;
 import com.marshals.services.ActivityReportService;
 import com.marshals.services.TradeHistoryService;
  
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration("classpath:beans.xml")
 class ActivityReportServiceTest {
 	
-	ClientActivityReportDao mockDao;
-	TradeHistoryService mockTradeHistoryService;
+	@Mock ClientActivityReportDao mockDao;
+	@Mock TradeHistoryService mockTradeHistoryService;
 	
+	@Autowired
+	@InjectMocks
 	ActivityReportService service;
 
 	Holding holding1 = new Holding("C100", 1000, new BigDecimal("95.67"));
@@ -53,9 +63,12 @@ class ActivityReportServiceTest {
  
 	@BeforeEach
 	void setUp() throws Exception {
-		 mockDao = mock(ClientActivityReportDao.class);
-	     mockTradeHistoryService = mock(TradeHistoryService.class);
-	     service = new ActivityReportService(mockDao,mockTradeHistoryService);
+//		 mockDao = mock(ClientActivityReportDao.class);
+//	     mockTradeHistoryService = mock(TradeHistoryService.class);
+//	     service = new ActivityReportService(mockDao,mockTradeHistoryService);
+		
+		
+		 MockitoAnnotations.openMocks(this);
 	     mockTradeList.add(trade1);
 	 	 mockTradeList.add(trade2);
 	 	 mockTradeList.add(trade3);

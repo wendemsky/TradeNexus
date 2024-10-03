@@ -10,6 +10,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.marshals.integration.ClientActivityReportDao;
 import com.marshals.integration.ClientActivityReportDaoImpl;
@@ -17,34 +25,34 @@ import com.marshals.integration.DatabaseException;
 import com.marshals.integration.TransactionManager;
 import com.marshals.models.Holding;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration("classpath:beans.xml")
+@Transactional
 class ClientActivityReportDaoImplTest {	
-	static PoolableDataSource dataSource;
-	ClientActivityReportDao dao;
-	TransactionManager transactionManager;
-	Connection connection = null;
+	@Autowired
+	private Logger logger;
+	@Autowired
+	@Qualifier("clientActivityReportDao")
+	private ClientActivityReportDao dao;
+	@Autowired
+	@Qualifier("testJdbcTemplate")
+	private JdbcTemplate jdbcTemplate;
 	
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
-		dataSource = new PoolableDataSource();
 	}
 
 	@AfterAll
 	static void tearDownAfterClass() throws Exception {
-		dataSource.shutdown();
 	}
 
 	@BeforeEach
 	void setUp() throws Exception {
-		dao = new ClientActivityReportDaoImpl(dataSource);
-		transactionManager = new TransactionManager(dataSource);
-		transactionManager.startTransaction();
-		
-		connection = dataSource.getConnection();
+
 	}
 
 	@AfterEach
 	void tearDown() throws Exception {
-		transactionManager.rollbackTransaction();
 	}
 
 	@Test
@@ -60,6 +68,7 @@ class ClientActivityReportDaoImplTest {
 		Exception e = assertThrows(DatabaseException.class, () -> {
 			dao.getClientHoldings(clientId);
 		});
+		assertEquals(e.getMessage(), "client has no holdings");
 	}
 	
 	@Test

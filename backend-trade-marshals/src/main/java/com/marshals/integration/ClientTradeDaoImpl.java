@@ -39,10 +39,10 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 	@Override
 	public ClientPortfolio getClientPortfolio(String clientId) {
 		 ClientPortfolio clientPortfolio = clientTradeMapper.getClientPortfolio(clientId);
-	        if (clientPortfolio == null) {
-	            throw new DatabaseException("Client ID does not exist");
-	        }
-	        return clientPortfolio;
+        if (clientPortfolio == null) {
+            throw new DatabaseException("Client ID does not exist");
+        }
+        return clientPortfolio;
 	}
  
 	@Override

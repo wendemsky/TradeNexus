@@ -5,19 +5,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.marshals.integration.ClientActivityReportDao;
 import com.marshals.integration.ClientTradeDao;
 import com.marshals.models.Holding;
 import com.marshals.models.Trade;
 import com.marshals.models.TradeHistory;
  
+@Service("activityReportService")
 public class ActivityReportService {
 	
 	private ClientActivityReportDao dao;
 	
 	private TradeHistoryService tradeHistoryService; 
 	
-	public ActivityReportService(ClientActivityReportDao activityDao, TradeHistoryService service) {
+	@Autowired
+	public ActivityReportService(@Qualifier("clientActivityReportDao") ClientActivityReportDao activityDao, @Qualifier("tradeHistoryService") TradeHistoryService service) {
 		//Initializing the reqd Daos and TradeHistory Service
 		this.dao = activityDao;
 		this.tradeHistoryService = service;

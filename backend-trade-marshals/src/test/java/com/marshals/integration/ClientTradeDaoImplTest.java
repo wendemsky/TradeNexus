@@ -147,13 +147,16 @@ class ClientTradeDaoImplTest {
 		 """));
 	}
 	@Test
-	void testAddTradeExistingOrderId() {
+	void testAddTradeThrowsExceptionForExistingOrderId() {
 		Order newOrder = new Order("T67890", 10000, new BigDecimal("1.03375"), "S", "541107416", "ORDER002", 4 );
 		Trade newTrade = new Trade(newOrder, new BigDecimal("1.03375"), "TRADE002", new BigDecimal("10337.5"));
 		assertThrows(DatabaseException.class, ()->{
 			dao.addTrade(newTrade);
 		});
 	}
+	
+
+	
 	//Adding holdings
 	@Test
 	void testSuccessfulAddClientHoldingOfClientWithHolding() throws SQLException {

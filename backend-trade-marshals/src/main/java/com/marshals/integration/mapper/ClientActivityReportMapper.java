@@ -1,5 +1,11 @@
 package com.marshals.integration.mapper;
 
-public interface ClientActivityReportMapper {
+import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
+import com.marshals.models.Holding;
+
+public interface ClientActivityReportMapper {
+	List<Holding> getClientHoldings(@Param("clientId") String clientId);
 }
