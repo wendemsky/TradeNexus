@@ -113,7 +113,7 @@ public class TradeService {
     
     public List<Price> recommendTopBuyInstruments(ClientPreferences preferences, BigDecimal currBalance){
     	try {
-    		if(preferences.getAcceptAdvisor()==false) throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
+    		if(preferences.getAcceptAdvisor()=="false") throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
     	    PriceScorer scorer = new PriceScorer(preferences);
             List<Price> recommendedPrice = new ArrayList<Price>();
             //System.out.println("Instruments before sorting -> " + priceList);
@@ -136,7 +136,7 @@ public class TradeService {
     
     public List<Price> recommendTopSellInstruments(ClientPreferences preferences, List<Holding> userHoldings){
     	try {
-    		if(preferences.getAcceptAdvisor()==false) throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
+    		if(preferences.getAcceptAdvisor()=="false") throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
     		List<Holding> topSellTradesInHoldings = new ArrayList<>();
         	if(userHoldings.size() <= 5) {
 //        		return everything

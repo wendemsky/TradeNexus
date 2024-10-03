@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.marshals.models.Instrument;
 import com.marshals.models.Order;
 import com.marshals.models.Price;
@@ -11,12 +13,13 @@ import com.marshals.models.Trade;
 
 //Has static methods - Mocking FMTS
 
+@Service("fmtsService")
 public class FMTSService {
 	
 	/*Client Verification - Login and Registration*/
 	
 	//For Registration - No ClientId
-	public static ValidatedClient verifyClient(String email) {
+	public ValidatedClient verifyClient(String email) {
 		try {
 			if(email==null) throw new NullPointerException("Client Email cannot be null");
 			//Logic to generate client ID
@@ -37,7 +40,7 @@ public class FMTSService {
 	}
 
 	//For Login - With ClientId
-	public static ValidatedClient verifyClient(String email, String clientId) { 
+	public ValidatedClient verifyClient(String email, String clientId) { 
 		try {
 			if(email==null || clientId == null) throw new NullPointerException("Client Details cannot be null");
 			//Logic to generate token

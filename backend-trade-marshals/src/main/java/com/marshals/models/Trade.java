@@ -12,6 +12,8 @@ public class Trade {
     private Order order;
     private String tradeId;
     private BigDecimal cashValue;
+    
+    public Trade() {}
 
     public Trade(Order order, BigDecimal executionPrice, String tradeId, BigDecimal cashValue) {
         if (executionPrice == null || executionPrice.compareTo(BigDecimal.ZERO) <= 0) {

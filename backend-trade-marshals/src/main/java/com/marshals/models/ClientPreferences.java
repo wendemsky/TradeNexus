@@ -12,6 +12,8 @@ public class ClientPreferences {
 	private int riskTolerance;
 	private boolean acceptAdvisor;
 	
+	public ClientPreferences() {}
+	
 	public ClientPreferences(String clientId, String investmentPurpose, String incomeCategory,
 			String lengthOfInvestment, String percentageOfSpend, int riskTolerance, boolean acceptAdvisor) {
 		
@@ -68,12 +70,12 @@ public class ClientPreferences {
 		this.riskTolerance = riskTolerance;
 	}
 
-	public boolean getAcceptAdvisor() {
-		return acceptAdvisor;
+	public String getAcceptAdvisor() {
+		return this.acceptAdvisor ? "true": "false";
 	}
 
-	public void setAcceptAdvisor(boolean acceptAdvisor) {
-		this.acceptAdvisor = acceptAdvisor;
+	public void setAcceptAdvisor(String acceptAdvisor) {
+		this.acceptAdvisor = acceptAdvisor.equals("true");
 	}
 
 	public void setClientId(String clientId) {
@@ -107,7 +109,7 @@ public class ClientPreferences {
 		if (getClass() != obj.getClass())
 			return false;
 		ClientPreferences other = (ClientPreferences) obj;
-		return acceptAdvisor == other.acceptAdvisor && Objects.equals(clientId, other.clientId)
+		return Objects.equals(acceptAdvisor, other.acceptAdvisor) && Objects.equals(clientId, other.clientId)
 				&& Objects.equals(incomeCategory, other.incomeCategory)
 				&& Objects.equals(investmentPurpose, other.investmentPurpose)
 				&& Objects.equals(lengthOfInvestment, other.lengthOfInvestment)

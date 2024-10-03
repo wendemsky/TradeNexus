@@ -2,6 +2,11 @@ package com.marshals.services;
 
 import java.util.Iterator;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -15,13 +20,18 @@ import com.marshals.models.ClientPreferences;
 import com.marshals.models.Holding;
 import com.marshals.utils.EmailValidator;
 
+@Service("clientService")
 public class ClientService {
 	
 	//Client Dao Object which interacts with DB
 	private ClientDao clientDao;
 	
-	public ClientService(ClientDao dao) {
+	private FMTSService fmtsService;
+	
+	@Autowired
+	public ClientService(@Qualifier("clientDao") ClientDao dao, @Qualifier("fmtsService") FMTSService fmtsService) {
 		this.clientDao = dao; //Intializing the Dao Object
+		this.fmtsService = fmtsService;
 	}
 	
 	/*Methods related to Client - Email Validation, Login and Register*/
@@ -78,7 +88,7 @@ public class ClientService {
 			}
 			
 			//Validating Client with FMTS
-			ValidatedClient validatedClient = FMTSService.verifyClient(email); 
+			ValidatedClient validatedClient = fmtsService.verifyClient(email); 
 			if(validatedClient == null)
 				throw new NullPointerException("New Client Details couldnt be verified");
 			
@@ -116,9 +126,9 @@ public class ClientService {
 			existingClient = clientDao.getClientAtLogin(email, password);
 			
 			//Validating Existing Client with FMTS
-			ValidatedClient validatedClient = FMTSService.verifyClient(email,existingClient.getClientId()); 
+			ValidatedClient validatedClient = fmtsService.verifyClient(email,existingClient.getClientId()); 
 			if(validatedClient == null)
-				throw new NullPointerException("New Client Details couldnt be verified");
+				throw new NullPointerException("Logging in Client Details couldnt be verified");
  
 			//ON SUCCESSFUL LOGIN - Returning the client details
 			return existingClient;
@@ -142,7 +152,7 @@ public class ClientService {
 		}	
 	}
 	
-	public ClientPreferences getClientPreference(String clientId) {
+	public ClientPreferences getClientPreferences(String clientId) {
 		try {
 			if(clientId == null) {
 				throw new NullPointerException("Id should not be null");

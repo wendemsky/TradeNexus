@@ -1,5 +1,9 @@
 package com.marshals.models;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,6 +19,8 @@ public class Client {
 	private List<ClientIdentification> identification;
 	
 	private boolean isAdmin;
+	
+	public Client() {}
 
 	public Client(String email, String clientId, String password, String name, String dateOfBirth, String country,
 			List<ClientIdentification> identification, boolean isAdmin) {
@@ -40,8 +46,7 @@ public class Client {
 		}
 		
 	}
-	
-	
+		
 	//Getters
 	public String getEmail() {
 		return email;
@@ -59,8 +64,18 @@ public class Client {
 		return name;
 	}
 	
-	public String getDateOfBirth() {
-		return dateOfBirth;
+	public Date getDateOfBirth() {
+		if(this.dateOfBirth!=null) {
+			java.util.Date parsedDate;
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy"); //doB Format stored in client model
+			try {
+				parsedDate = dateFormat.parse(this.dateOfBirth);
+			} catch (ParseException e) { //If there is an error, assign it will date 18 years back (Min age)
+				parsedDate = java.sql.Date.valueOf(LocalDate.now().minusYears(18)); 
+			}
+            return new Date(parsedDate.getTime());
+		}
+		return null;
 	}
 
 	public String getCountry() {
@@ -71,8 +86,46 @@ public class Client {
 		return identification;
 	}
 
-	public boolean getIsAdmin() {
-		return isAdmin;
+	public String getIsAdmin() {
+		return this.isAdmin?"Y":"N";
+	}
+	
+	//Setters
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDateOfBirth(Date dateOfBirth) {
+	    if (dateOfBirth != null) {
+    		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy"); //doB Format stored in client model
+            this.dateOfBirth = dateFormat.format(dateOfBirth); 
+	    } else {
+            this.dateOfBirth = null; // Or handle null appropriately
+	    }
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public void setIdentification(List<ClientIdentification> identification) {
+		this.identification = identification;
+	}
+
+	public void setAdmin(String isAdmin) {
+		this.isAdmin = isAdmin.equals("Y");
 	}
 
 	@Override
