@@ -60,7 +60,7 @@ public class FMTSService {
 	/*Functions for Trade Execution*/
 	
 	//Static function that returns list of live prices 
-	public static List<Price> getLivePrices() {
+	public List<Price> getLivePrices() {
 		List<Price> priceList = new ArrayList<>();
 		priceList.add(new Price(new BigDecimal("104.75"), new BigDecimal("104.25"), "21-AUG-19 10.00.01.042000000 AM GMT", 
 		    new Instrument("N123456", "CUSIP", "46625H100", "STOCK", "JPMorgan Chase & Co. Capital Stock", 1000, 1)));
@@ -104,7 +104,7 @@ public class FMTSService {
 	}
 	
 	//Static function that takes in order and returns trade
-    public static Trade createTrade(Order order) {
+    public Trade createTrade(Order order) {
     	try {
     		if(order == null) {
         		throw new NullPointerException("Order cannot be null");

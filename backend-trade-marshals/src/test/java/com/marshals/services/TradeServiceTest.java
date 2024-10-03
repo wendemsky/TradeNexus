@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.marshals.fmts.FMTSService;
 import com.marshals.integration.ClientDao;
@@ -45,7 +46,9 @@ public class TradeServiceTest {
 	
 	ClientTradeDao mockDao;
 	PortfolioService mockPortfolioService;
+	FMTSService mockFMTSService;
 	
+	@Autowired
 	TradeService service;
 	
 //	//Mock of fmtsService
@@ -71,7 +74,9 @@ public class TradeServiceTest {
       //Initializing the Trade Service with Mock Dao and Mock PortfolioService
       mockDao = mock(ClientTradeDao.class);
       mockPortfolioService = mock(PortfolioService.class);
-      service = new TradeService(mockDao,mockPortfolioService);
+      mockFMTSService = mock(FMTSService.class);
+
+      service = new TradeService(mockDao, mockPortfolioService, mockFMTSService);
       prices = service.getPriceList();
       System.out.println("Price: "+prices);
     }

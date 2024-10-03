@@ -65,7 +65,7 @@ class FMTSServiceTest {
 	 @Test
     public void testCreateTradeValidOrder() {
         Order order = new Order("N123456", 10, new BigDecimal("104.75"), "B", "client1", "order1", 123);
-        Trade trade = FMTSService.createTrade(order);
+        Trade trade = fmtsService.createTrade(order);
 
         assertNotNull(trade);
         assertEquals(order.getInstrumentId(), trade.getInstrumentId());
@@ -74,7 +74,7 @@ class FMTSServiceTest {
 
     @Test
     public void testShouldNotCreateTradeForNullOrder() {
-        assertThrows(NullPointerException.class, () -> FMTSService.createTrade(null), "order cannot be null");
+        assertThrows(NullPointerException.class, () -> fmtsService.createTrade(null), "order cannot be null");
     }
 
 }
