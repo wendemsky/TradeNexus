@@ -55,14 +55,7 @@ class ClientTradeDaoImplTest {
 	void verifyDaoNotNull() {
 		assertNotNull(dao);
 	}
-	/*TRADES*/
-	@Test
-	void testGetClientTradeHistory() {
-		String clientId = "541107416";
-		TradeHistory tradeHistory = dao.getClientTradeHistory(clientId);
-		assertNotNull(tradeHistory);
-		assertTrue(tradeHistory.getTrades().size()>1);
-	}
+
 	/*GET CLIENT PORTFOLIO*/
 	@Test
 	void testGetClientPortfolioNotNull() {
@@ -101,6 +94,20 @@ class ClientTradeDaoImplTest {
 		int newSize = countRowsInTableWhere(jdbcTemplate, "client", whereCondition);
 		assertTrue(newSize == 1);
 	}
+	
+//	Get Client Trade History Tests
+	@Test
+	void testGetClientTradeHistoryNotNull() {
+		String clientId = "541107416";
+		TradeHistory tradeHistory = dao.getClientTradeHistory(clientId);
+		assertNotNull(tradeHistory);
+	}
+	@Test
+	void testGetClientTradeHistory() {
+		String clientId = "541107416";
+		TradeHistory tradeHistory = dao.getClientTradeHistory(clientId);
+		assertTrue(tradeHistory.getTrades().size()>1);
+	}
 	@Test
 	void testGetClientTradeHistoryFirstTrade() {
 		String clientId = "541107416";
@@ -110,6 +117,14 @@ class ClientTradeDaoImplTest {
 			System.out.println("Trades -> " + t);
 		}
 		assertEquals(tradeHistory.getTrades().get(0).getInstrumentId(), "T67890");
+	}
+	@Test
+	void testGetClientTradeHistoryThrowsExceptionForInvalidClientId() {
+		String clientId = "nonExistingClientId";
+		Exception e = assertThrows(DatabaseException.class, () -> {
+			dao.getClientTradeHistory(clientId);
+		});
+		assertEquals("Client ID does not exist", e.getMessage());
 	}
 //	Add Trade tests
 	@Test

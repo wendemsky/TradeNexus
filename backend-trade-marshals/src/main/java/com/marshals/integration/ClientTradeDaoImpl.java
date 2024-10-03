@@ -63,12 +63,16 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 		try {
 			logger.debug("enter");
 			trades = clientTradeMapper.getClientTradeHistory(clientId);
+			System.out.println("Trades when invalid clientId is passed -> " + trades + ", clientId -> " + clientId);
+			if(trades.isEmpty()) {
+				throw new DatabaseException("Client ID does not exist");
+			}
 			TradeHistory tradeHistory = new TradeHistory(clientId, trades);
 			return tradeHistory;
-		}catch(DataAccessException e) {
+		}catch(DatabaseException e) {
 			logger.error("Error while executing get client trade history by client id ", e);
 			logger.error(e.getMessage());
-			throw new DatabaseException();
+			throw e;
 		}
 	}
 	public void addClientHoldings(String clientId, Holding holding) {
