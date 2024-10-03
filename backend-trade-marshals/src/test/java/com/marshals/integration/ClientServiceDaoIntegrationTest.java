@@ -1,4 +1,4 @@
-package com.marshals.services;
+package com.marshals.integration;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTable;
@@ -27,6 +27,7 @@ import com.marshals.models.Client;
 import com.marshals.models.ClientIdentification;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.ClientPreferences;
+import com.marshals.services.ClientService;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("classpath:beans.xml")
@@ -53,6 +54,11 @@ class ClientServiceDaoIntegrationTest {
 	ClientPreferences clientPref1654658070 = new ClientPreferences("1654658070", "Retirement", "LIG", "Short", "Tier4", 2, false); //New client to insert
 	ClientPreferences clientPref541107416 =  new ClientPreferences("541107416", "Major Expense", "LIG", "Long", "Tier3", 1, false); //Existing client with updated preferences
 	ClientPreferences clientPref1654658000 = new ClientPreferences("1654658000", "Retirement", "LIG", "Short", "Tier4", 2, false); //Non existent client
+	
+	@AfterEach
+	void tearDown() throws Exception {
+		service = null;
+	}
 	
 	/*CLIENT*/
 	 
