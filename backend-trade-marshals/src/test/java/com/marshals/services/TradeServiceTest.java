@@ -34,6 +34,7 @@ import com.marshals.models.Client;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.ClientPreferences;
 import com.marshals.models.Holding;
+import com.marshals.models.Instrument;
 import com.marshals.models.Order;
 import com.marshals.models.Price;
 import com.marshals.models.Trade;
@@ -68,14 +69,56 @@ public class TradeServiceTest {
 
     private List<Price> prices;
 
-
+    List<Price> priceList;
     @BeforeEach
     public void setUp() throws Exception {
       //Initializing the Trade Service with Mock Dao and Mock PortfolioService
+    	priceList = new ArrayList<>();
+		priceList.add(new Price(new BigDecimal("104.75"), new BigDecimal("104.25"), "21-AUG-19 10.00.01.042000000 AM GMT", 
+		    new Instrument("N123456", "CUSIP", "46625H100", "STOCK", "JPMorgan Chase & Co. Capital Stock", 1000, 1)));
+
+		priceList.add(new Price(new BigDecimal("312500"), new BigDecimal("312000"), "21-AUG-19 05.00.00.040000000 AM -05:00", 
+		    new Instrument("N123789", "ISIN", "US0846707026", "STOCK", "Berkshire Hathaway Inc. Class A", 10, 1)));
+
+		priceList.add(new Price(new BigDecimal("95.92"), new BigDecimal("95.42"), "21-AUG-19 10.00.02.042000000 AM GMT", 
+		    new Instrument("C100", "CUSIP", "48123Y5A0", "CD", "JPMorgan Chase Bank, National Association 01/19", 1000, 100)));
+
+		priceList.add(new Price(new BigDecimal("1.03375"), new BigDecimal("1.03390625"), "21-AUG-19 10.00.02.000000000 AM GMT", 
+		    new Instrument("T67890", "CUSIP", "9128285M8", "GOVT", "USA, Note 3.125 15nov2028 10Y", 10000, 100)));
+
+		priceList.add(new Price(new BigDecimal("0.998125"), new BigDecimal("0.99828125"), "21-AUG-19 10.00.02.002000000 AM GMT", 
+		    new Instrument("T67894", "CUSIP", "9128285Z9", "GOVT", "USA, Note 2.5 31jan2024 5Y", 10000, 100)));
+
+		priceList.add(new Price(new BigDecimal("1"), new BigDecimal("1.00015625"), "21-AUG-19 10.00.02.002000000 AM GMT", 
+		    new Instrument("T67895", "CUSIP", "9128286A3", "GOVT", "USA, Note 2.625 31jan2026 7Y", 10000, 100)));
+
+		priceList.add(new Price(new BigDecimal("0.999375"), new BigDecimal("0.999375"), "21-AUG-19 10.00.02.002000000 AM GMT", 
+		    new Instrument("T67897", "CUSIP", "9128285X4", "GOVT", "USA, Note 2.5 31jan2021 2Y", 10000, 100)));
+
+		priceList.add(new Price(new BigDecimal("0.999375"), new BigDecimal("0.999375"), "21-AUG-19 10.00.02.002000000 AM GMT", 
+		    new Instrument("T67899", "CUSIP", "9128285V8", "GOVT", "USA, Notes 2.5% 15jan2022 3Y", 10000, 100)));
+
+		priceList.add(new Price(new BigDecimal("1.00375"), new BigDecimal("1.00375"), "21-AUG-19 10.00.02.002000000 AM GMT", 
+		    new Instrument("T67880", "CUSIP", "9128285U0", "GOVT", "USA, Note 1.5 31dec2023 5Y", 10000, 100)));
+
+		priceList.add(new Price(new BigDecimal("1.0596875"), new BigDecimal("1.0596875"), "21-AUG-19 10.00.02.002000000 AM GMT", 
+		    new Instrument("T67883", "CUSIP", "912810SE9", "GOVT", "USA, Bond 3.375 15nov2048 30Y", 10000, 100)));
+
+		priceList.add(new Price(new BigDecimal("0.9853125"), new BigDecimal("0.98546875"), "21-AUG-19 10.00.02.002000000 AM GMT", 
+		    new Instrument("T67878", "CUSIP", "912810SD1", "GOVT", "USA, Bond 3 15aug2048 30Y", 10000, 100)));
+
+		priceList.add(new Price(new BigDecimal("1162.42"), new BigDecimal("1161.42"), "21-AUG-19 06.52.20.350000000 PM AMERICA/NEW_YORK", 
+		    new Instrument("Q123", "CUSIP", "02079K107", "STOCK", "Alphabet Inc. Class C Capital Stock", 1000, 1)));
+
+		priceList.add(new Price(new BigDecimal("323.39"), new BigDecimal("322.89"), "21-AUG-19 06.52.20.356000000 PM AMERICA/NEW_YORK", 
+		    new Instrument("Q456", "CUSIP", "88160R101", "STOCK", "Tesla, Inc. Common Stock", 1000, 1)));
+		
+	
       mockDao = mock(ClientTradeDao.class);
       mockPortfolioService = mock(PortfolioService.class);
       mockFMTSService = mock(FMTSService.class);
-
+      Mockito.when(mockFMTSService.getLivePrices()).thenReturn(priceList);
+      
       service = new TradeService(mockDao, mockPortfolioService, mockFMTSService);
       prices = service.getPriceList();
       System.out.println("Price: "+prices);
@@ -190,14 +233,12 @@ public class TradeServiceTest {
 	    	UUID uuid=UUID.randomUUID();
 	    	String orderId = uuid.toString();
 	    	Order order = new Order("N123456", 10, new BigDecimal("10.75"), "B", existingClientId, orderId, 123);
-	    	
-//	    	Trade trade = new Trade(order, new BigDecimal("10.75"), "T"+orderId, new BigDecimal("107.5"));
-//	    	//Mocking fmts service and mock it to return trade
-//	    	mockFMTSService = mockStatic(FMTSService.class);
-//	    	mockFMTSService.when(()-> FMTSService.createTrade(order)).thenReturn(trade);
+	    	Trade trade1 = new Trade(order,new BigDecimal("11.00"),orderId+"TR", new BigDecimal("110.00"));
 	    	
 	    	//Mocking portfolio service fns
 	    	Mockito.when(mockPortfolioService.getClientPortfolio(existingClientId)).thenReturn(clientPortfolios.get(0));
+	    	Mockito.when(mockFMTSService.createTrade(order)).thenReturn(trade1);
+	    	
 	    	//Executing trade
 	    	Trade trade = service.executeTrade(order);
 	    	//Verifying if mock portfolio service to update portfolio is called
@@ -212,10 +253,11 @@ public class TradeServiceTest {
 			UUID uuid=UUID.randomUUID();
 			String orderId = uuid.toString();
 			Order order = new Order("C100", 10, new BigDecimal("104.75"), "S", existingClientId, orderId, 123);
-			
+			Trade trade1 = new Trade(order,new BigDecimal("11.00"),orderId+"TR", new BigDecimal("110.00"));
+	    	
 			//Mocking portfolio service fns
 	    	Mockito.when(mockPortfolioService.getClientPortfolio(existingClientId)).thenReturn(clientPortfolios.get(0));
-	    	
+	    	Mockito.when(mockFMTSService.createTrade(order)).thenReturn(trade1);
 	    	//Executing trade
 			Trade trade = service.executeTrade(order);
 			//Verifying if mock portfolio service to update portfolio is called
@@ -230,10 +272,10 @@ public class TradeServiceTest {
 	    	UUID uuid=UUID.randomUUID();
 	    	String orderId = uuid.toString();
 	    	Order order = new Order("N123456", 10, new BigDecimal("10.75"), "B", existingClientId, orderId, 123);
-	    	
+	    	Trade trade = new Trade(order,new BigDecimal("11.00"),orderId+"TR", new BigDecimal("110.00"));
 	    	//Mocking portfolio service fns
 	    	Mockito.when(mockPortfolioService.getClientPortfolio(existingClientId)).thenReturn(clientPortfolios.get(1));
-	    	
+	    	Mockito.when(mockFMTSService.createTrade(order)).thenReturn(trade);
 	    	Exception e = assertThrows(IllegalArgumentException.class, () -> {
 		  		service.executeTrade(order);
 		  	});
