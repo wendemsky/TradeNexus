@@ -60,4 +60,10 @@ public class ClientIdentification {
 		return Objects.equals(type, other.type) && Objects.equals(value, other.value);
 	}
 
+	@Override
+	public String toString() {
+		return "ClientIdentification [type=" + type + ", value=" + value + "]";
+	}
+	
+
 }

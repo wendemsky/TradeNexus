@@ -9,6 +9,7 @@ public class Holding {
      private BigDecimal avgPrice;
 
      // Constructors, getters, and setters
+     public Holding() {}
 
      public Holding( String instrumentId, int quantity, BigDecimal avgPrice) {
          this.instrumentId = instrumentId;

@@ -11,6 +11,8 @@ public class ClientPortfolio {
 	 private List<Holding> holdings;
 
 	    // Constructors, getters, and setters
+	 	public ClientPortfolio() {}
+	 
 
 	    public ClientPortfolio(String clientId, BigDecimal currBalance, List<Holding> holdings) {
 	    	try {

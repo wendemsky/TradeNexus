@@ -336,7 +336,7 @@ class ClientServiceTest {
 		String clientPreferenceId = clientPreferencesList.get(2).getClientId();
 		Mockito.doThrow(new DatabaseException()).when(mockDao).getClientPreferences(clientPreferenceId);
 		assertThrows(DatabaseException.class, () -> {
-			service.getClientPreference(clientPreferenceId);
+			service.getClientPreferences(clientPreferenceId);
 		});
 	}
 	
@@ -354,7 +354,7 @@ class ClientServiceTest {
 		ClientPreferences expected = clientPreferencesList.get(0);
 		Mockito.when(mockDao.getClientPreferences(existingClientid))
 			.thenReturn(expected);
-		ClientPreferences clientPreference =  service.getClientPreference(existingClientid);
+		ClientPreferences clientPreference =  service.getClientPreferences(existingClientid);
 		//Verifying that the corresponding mockDao methods were called
 		Mockito.verify(mockDao).getClientPreferences(existingClientid); 
 		assertEquals(clientPreference.equals(expected), true);
@@ -363,7 +363,7 @@ class ClientServiceTest {
 	@Test
 	void shouldHandleNullObjectForGetClientPreference() {
 		assertThrows(NullPointerException.class, () -> {
-			service.getClientPreference(null);
+			service.getClientPreferences(null);
 		});
 	}
 	

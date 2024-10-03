@@ -111,7 +111,11 @@ public class ClientDaoImpl implements ClientDao{
 
 	@Override
 	public ClientPreferences getClientPreferences(String clientId) {
-		return clientMapper.getClientPreferences(clientId);
+		ClientPreferences preferences = clientMapper.getClientPreferences(clientId);
+		if(preferences == null) {
+			throw new DatabaseException("Client id does not exist in Database");
+		}
+		return preferences;
 	}
 
 	@Override
@@ -119,12 +123,16 @@ public class ClientDaoImpl implements ClientDao{
 		try {
 			int rowsAffected = clientMapper.addClientPreferences(clientPreferences);
 			if(rowsAffected == 0) {
-				throw new DatabaseException("Invalid client preferences");
+				throw new DatabaseException("Client doesn't exist");
 			}
 		}
 		catch(DataIntegrityViolationException e) {
 			logger.error("Error inserting client preferences - Should satisfy integrity constraints",e);
 			throw new DatabaseException("Error inserting client preferences - Should satisfy integrity constraints");
+		}
+		catch(DatabaseException e) {
+			logger.error("Error in adding client preferences details: "+e);
+			throw e;
 		}
 	}
 
@@ -133,12 +141,16 @@ public class ClientDaoImpl implements ClientDao{
 		try {
 			int rowsAffected = clientMapper.updateClientPreferences(clientPreferences);
 			if(rowsAffected == 0) {
-				throw new DatabaseException("Invalid client preferences");
+				throw new DatabaseException("Client doesn't exist");
 			}
 		}
 		catch(DataIntegrityViolationException e) {
 			logger.error("Error updating client preferences - Should satisfy integrity constraints", e);
 			throw new DatabaseException("Error updating client preferences - Should satisfy integrity constraints");
+		}
+		catch(DatabaseException e) {
+			logger.error("Error in updating client preferences details: "+e);
+			throw e;
 		}
 	}
 

@@ -37,13 +37,13 @@ class ClientPreferencesTest {
 	@Test
 	void testForEqualsClientPreferencesObject() {
 		clientPreferences = new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, true);
-		assertEquals(clientPreferences.equals(new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, true)), true);
+		assertTrue(clientPreferences.equals(new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, true)));
 	}
 	
 	@Test
 	void testForNotEqualsClientPreferencesObject() {
 		clientPreferences = new ClientPreferences("1425922638", "Education", "MIG", "Short", "Tier1", 5, true);
-		assertNotEquals(clientPreferences.equals(new ClientPreferences("1425922638", "Education", "LIG", "Short", "Tier3", 2, true)), true);
+		assertFalse(clientPreferences.equals(new ClientPreferences("1425922638", "Education", "LIG", "Short", "Tier3", 2, true)));
 	}
 	
 	@Test

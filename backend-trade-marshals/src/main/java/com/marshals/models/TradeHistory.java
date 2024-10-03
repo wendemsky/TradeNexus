@@ -6,6 +6,9 @@ import java.util.Objects;
 public class TradeHistory {
 	 private String clientId;
 	 private List<Trade> trades;
+	 
+	 public TradeHistory() {}
+	 
 	public TradeHistory(String clientId, List<Trade> trades) {
 		try {
     		if(clientId==null || trades==null) 

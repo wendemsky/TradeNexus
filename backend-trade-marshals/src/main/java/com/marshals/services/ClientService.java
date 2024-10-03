@@ -26,13 +26,12 @@ public class ClientService {
 	//Client Dao Object which interacts with DB
 	private ClientDao clientDao;
 	
-	@Autowired
 	private FMTSService fmtsService;
 	
 	@Autowired
-	public ClientService(@Qualifier("clientDao") ClientDao dao) {
+	public ClientService(@Qualifier("clientDao") ClientDao dao, @Qualifier("fmtsService") FMTSService fmtsService) {
 		this.clientDao = dao; //Intializing the Dao Object
-		//this.fmtsService = fmtsService;
+		this.fmtsService = fmtsService;
 	}
 	
 	/*Methods related to Client - Email Validation, Login and Register*/
@@ -153,7 +152,7 @@ public class ClientService {
 		}	
 	}
 	
-	public ClientPreferences getClientPreference(String clientId) {
+	public ClientPreferences getClientPreferences(String clientId) {
 		try {
 			if(clientId == null) {
 				throw new NullPointerException("Id should not be null");

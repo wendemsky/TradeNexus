@@ -11,6 +11,8 @@ public class Order {
     private String clientId;
     private String orderId;
     private Integer token;
+    
+    public Order() {}
 
     public Order(String instrumentId, Integer quantity, BigDecimal targetPrice, String direction, String clientId,
                  String orderId, Integer token) {
