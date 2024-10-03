@@ -1,6 +1,5 @@
 package com.marshals.integration;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
@@ -96,19 +95,21 @@ class PortfolioServiceDaoIntegrationTest {
 		});
 	}
 
-//    @Test
-//    void testUpdatePortfolioForBuyTradeOfExistingHoldings() {
-//    	 // Order ('C100', 1000, 95.92, 'B', '541107416', 'ORDER001', 3)
-//    	 // Trade ('TRADE001', 'ORDER001', 95.92, 95920.00, to_date('2024-09-22 21:31:04', 'yyyy-mm-dd hh24-mi-ss'))
-//    	 Order order = new Order("C100", 1000, new BigDecimal("95.92"), "B", "541107416", "ORDER001", 3);
-//    	 Trade trade = new Trade();
-//         String existingClientId = "541107416"; 
-//         ClientPortfolio oldClientPortfolio =  service.getClientPortfolio(existingClientId);
-//         
-//         Holding updatedHolding = new Holding("C100", 10002, new BigDecimal("95.67"));
-//         service.updateClientPortfolio(trade); 
-//    	
-//    }
+	@Test
+	void testUpdatePortfolioForBuyTradeOfExistingHoldings() {
+		// Order ('C100', 1000, 95.92, 'B', '541107416', 'ORDER001', 3)
+		// Trade ('TRADE001', 'ORDER001', 95.92, 95920.00, to_date('2024-09-22
+		// 21:31:04', 'yyyy-mm-dd hh24-mi-ss'))
+		String existingClientId = "541107416";
+		Order order = new Order("C100", 100, new BigDecimal("95.92"), "B", existingClientId, "ORDER001", 3);
+		Trade trade = new Trade(order, new BigDecimal("95.92"), "TRADE001", new BigDecimal("95920.00"));
+		
+		ClientPortfolio clientPortfolio = service.getClientPortfolio(existingClientId);
+		System.out.println(clientPortfolio.getHoldings().get(0).getQuantity());
+		assertEquals(clientPortfolio.getHoldings().get(0).getQuantity(), 1000);
+		service.updateClientPortfolio(trade);
+		assertEquals(clientPortfolio.getHoldings().get(0).getQuantity(), 1100);
+	}
 
 	@Test
 	void testUpdatePortfolioForBuyTradeOfNewInstrument() {
@@ -117,50 +118,28 @@ class PortfolioServiceDaoIntegrationTest {
 		Integer quantity = 1;
 
 		String existingClientId = "541107416";
-
-		// Create Order object if needed
-
 		Order order = new Order(instrumentId, quantity, new BigDecimal("105"), "B", existingClientId, "order1",
 				1425922638);
 		Trade trade = new Trade(order, execPrice, "trade1", execPrice.multiply(new BigDecimal(quantity)));
-
 		ClientPortfolio oldClientPortfolio = service.getClientPortfolio(existingClientId);
 		int oldHoldingsSize = oldClientPortfolio.getHoldings().size();
-		
 		service.updateClientPortfolio(trade);
-		
-		assertEquals(oldHoldingsSize+1, service.getClientPortfolio(existingClientId).getHoldings().size());
-		
+		assertEquals(oldHoldingsSize + 1, service.getClientPortfolio(existingClientId).getHoldings().size());
+
 	}
-//    
-//  @Test
-//  void testUpdatePortfolioForSellTradeOfExistingHoldings() {
-//  	 String instrumentId = "C100";
-//       BigDecimal execPrice = new BigDecimal("100");
-//       Integer quantity = 100;
-//       
-//       String existingClientId = "541107416"; 
-//
-//       // Create Order object ie passed
-//       Order order = new Order(instrumentId, quantity, new BigDecimal("99.2"), "S", existingClientId, "order1",1425922638);
-//       Trade trade = new Trade(
-//      		 order,
-//               execPrice,
-//               "trade1",
-//               execPrice.multiply(new BigDecimal(quantity))
-//       );
-//       
-//       //Get old clientportfolio
-//       Mockito.when(mockDao.getClientPortfolio(existingClientId)).thenReturn(clientPortfolios.get(1));
-//       ClientPortfolio oldClientPortfolio =  service.getClientPortfolio(existingClientId);
-//       BigDecimal oldCurrBalance = oldClientPortfolio.getCurrBalance();
-//       //New balance and holdings
-//       BigDecimal newCurrBalance = oldCurrBalance.add( execPrice.multiply(new BigDecimal(quantity)));
-//       Holding updatedHolding = new Holding(instrumentId, 9900, new BigDecimal("95.63"));
-//       service.updateClientPortfolio(trade); 
-//       Mockito.verify(mockDao).updateClientBalance(existingClientId, newCurrBalance);
-//       Mockito.verify(mockDao).updateClientHoldings(existingClientId,updatedHolding);
-//  	
-//  }
+
+	@Test
+	void testUpdatePortfolioForSellTradeOfExistingHoldings() {
+		String existingClientId = "541107416";
+		Order order = new Order("C100", 100, new BigDecimal("95.92"), "S", existingClientId, "ORDER001", 3);
+		Trade trade = new Trade(order, new BigDecimal("95.92"), "TRADE001", new BigDecimal("95920.00"));
+		ClientPortfolio clientPortfolio = service.getClientPortfolio(existingClientId);
+
+		System.out.println(clientPortfolio.getHoldings().get(0).getQuantity());
+		assertEquals(clientPortfolio.getHoldings().get(0).getQuantity(), 1000);
+		service.updateClientPortfolio(trade);
+		assertEquals(clientPortfolio.getHoldings().get(0).getQuantity(), 900);
+
+	}
 
 }
