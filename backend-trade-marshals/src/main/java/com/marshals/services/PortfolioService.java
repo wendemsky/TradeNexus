@@ -1,16 +1,13 @@
 package com.marshals.services;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.marshals.integration.ClientTradeDao;
-import com.marshals.integration.DatabaseException;
+import com.marshals.dao.ClientTradeDao;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.Holding;
 import com.marshals.models.Trade;

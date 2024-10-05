@@ -1,29 +1,18 @@
 package com.marshals.integration;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTableWhere;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.marshals.models.ClientPortfolio;
-import com.marshals.models.Order;
-import com.marshals.models.Trade;
 import com.marshals.models.TradeHistory;
-import com.marshals.services.PortfolioService;
 import com.marshals.services.TradeHistoryService;
 
 @ExtendWith(SpringExtension.class)

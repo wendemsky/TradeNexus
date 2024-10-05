@@ -5,18 +5,14 @@ import java.math.RoundingMode;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.marshals.dao.ClientTradeDao;
 import com.marshals.fmts.FMTSService;
-import com.marshals.integration.ClientTradeDao;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.ClientPreferences;
 import com.marshals.models.Holding;
-import com.marshals.models.Instrument;
 import com.marshals.models.Order;
 import com.marshals.models.Price;
 import com.marshals.models.Trade;

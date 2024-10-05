@@ -2,7 +2,6 @@ package com.marshals.integration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.sql.Connection;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
@@ -19,9 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.marshals.integration.ClientActivityReportDao;
-import com.marshals.integration.ClientActivityReportDaoImpl;
-import com.marshals.integration.DatabaseException;
+import com.marshals.dao.ClientActivityReportDao;
 import com.marshals.models.Holding;
 
 @ExtendWith(SpringExtension.class)

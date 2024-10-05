@@ -1,7 +1,6 @@
 package com.marshals.services;
  
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,14 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.marshals.integration.ClientActivityReportDao;
+import com.marshals.dao.ClientActivityReportDao;
 import com.marshals.integration.DatabaseException;
 import com.marshals.models.Holding;
 import com.marshals.models.Order;
 import com.marshals.models.Trade;
 import com.marshals.models.TradeHistory;
-import com.marshals.services.ActivityReportService;
-import com.marshals.services.TradeHistoryService;
  
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("classpath:beans.xml")

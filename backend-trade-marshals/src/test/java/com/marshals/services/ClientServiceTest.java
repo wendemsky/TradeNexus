@@ -1,7 +1,6 @@
 package com.marshals.services;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -18,17 +17,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.marshals.dao.ClientDao;
 import com.marshals.fmts.FMTSService;
 import com.marshals.fmts.ValidatedClient;
-import com.marshals.integration.ClientDao;
 import com.marshals.integration.DatabaseException;
 import com.marshals.models.Client;
 import com.marshals.models.ClientIdentification;
 import com.marshals.models.ClientPortfolio;
-import com.marshals.models.ClientPreferences;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("classpath:beans.xml")
@@ -41,7 +37,6 @@ class ClientServiceTest {
 	private ClientService service;
 	
 	private List<Client> clientList;
-	private List<ClientPreferences> clientPreferencesList;
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -55,14 +50,6 @@ class ClientServiceTest {
 				 new Client("sam@gmail.com","767836496", "Password1234", "Sam", "12/11/2000", "USA", 
 							new ArrayList<>(List.of(new ClientIdentification("SSN","1643846323"))), false) //New client to be inserted
 				));
-		//Test Client preferences details
-		clientPreferencesList = new ArrayList<ClientPreferences>(
-				List.of(
-						new ClientPreferences("1654658069",  "Education", "HIG", "Short", "Tier4", 2, false), //Existing client
-						new ClientPreferences("1654658000", "Major Expense", "MIG", "Medium", "Tier1", 5, true), //Non existent client
-						new ClientPreferences("767836496", "Retirement", "MIG", "Long", "Tier3", 3, true) //New client to be inserted
-				)
-			);
 		
 		//Initializing the Client Service with a Mock Dao and mock fmts service
 		MockitoAnnotations.openMocks(this);
@@ -72,7 +59,6 @@ class ClientServiceTest {
 	void tearDown() throws Exception {
 		service = null;
 		clientList = null;
-		clientPreferencesList = null;
 	}
 
 	@Test
@@ -310,85 +296,5 @@ class ClientServiceTest {
 		Mockito.verify(mockDao).verifyClientEmail(existingEmail); 
 		assertEquals(existingClient,clientList.get(0),"Should successfully login existing client");	
 	}
-	
-	/*Testing related to Adding and Updating of Client Preferences*/
-	
-	//Adding Client Preferences
-	@Test
-	void shouldAddClientPreference() {
-		ClientPreferences newClientPref = clientPreferencesList.get(2);
-		service.addClientPreferences(newClientPref);
-		//Verifying that the corresponding mockDao methods were called
-		Mockito.verify(mockDao).addClientPreferences(newClientPref); 
-	}
-	@Test
-	void shouldHandleDatabaseExceptionWhileAddingAlreadyExistingClient() {
-		ClientPreferences clientPreference = clientPreferencesList.get(0);
-		Mockito.doThrow(new DatabaseException()).when(mockDao).addClientPreferences(clientPreference);
-		assertThrows(DatabaseException.class, () -> {
-			service.addClientPreferences(clientPreference);
-			//Verifying that the corresponding mockDao methods were called
-			Mockito.verify(mockDao).addClientPreferences(clientPreference);
-		});
-	}
-	@Test
-	void shouldHandleDatabaseExceptionWhileGettingNonExistentClientPreference() {
-		String clientPreferenceId = clientPreferencesList.get(2).getClientId();
-		Mockito.doThrow(new DatabaseException()).when(mockDao).getClientPreferences(clientPreferenceId);
-		assertThrows(DatabaseException.class, () -> {
-			service.getClientPreferences(clientPreferenceId);
-		});
-	}
-	
-	@Test
-	void shouldHandleNullObjectForAddClientPreference() {
-		assertThrows(NullPointerException.class, () -> {
-			service.addClientPreferences(null);
-		});
-	}
-	
-	//Getting Client Preferences
-	@Test
-	void shouldGetClientPreference() {
-		String existingClientid = clientPreferencesList.get(0).getClientId();
-		ClientPreferences expected = clientPreferencesList.get(0);
-		Mockito.when(mockDao.getClientPreferences(existingClientid))
-			.thenReturn(expected);
-		ClientPreferences clientPreference =  service.getClientPreferences(existingClientid);
-		//Verifying that the corresponding mockDao methods were called
-		Mockito.verify(mockDao).getClientPreferences(existingClientid); 
-		assertEquals(clientPreference.equals(expected), true);
-	}
-	
-	@Test
-	void shouldHandleNullObjectForGetClientPreference() {
-		assertThrows(NullPointerException.class, () -> {
-			service.getClientPreferences(null);
-		});
-	}
-	
-	//Updating Client Preferences
-	@Test
-	void shouldUpdateClientPreference() {
-		ClientPreferences clientPreference = clientPreferencesList.get(0);
-		clientPreference.setIncomeCategory("HIG"); //Updating existing client preference object
-		service.updateClientPreferences(clientPreference);
-		Mockito.verify(mockDao).updateClientPreferences(clientPreference);
-		assertNotEquals(clientPreference.getIncomeCategory(), "MIG"); //Checking if the details have been updated
-	}
-	
-	@Test
-	void shouldNotUpdateForNullObject() {
-		assertThrows(NullPointerException.class, () -> {
-			service.updateClientPreferences(null);
-		});
-	}
-	
-	@Test
-	void testUpdationOfNonExistentClientPreferencesThrowsDatabaseException() {
-		Mockito.doThrow(new DatabaseException()).when(mockDao).updateClientPreferences(clientPreferencesList.get(1));
-		assertThrows(DatabaseException.class, () -> 
-			service.updateClientPreferences(clientPreferencesList.get(1))
-		);
-	}
+
 }

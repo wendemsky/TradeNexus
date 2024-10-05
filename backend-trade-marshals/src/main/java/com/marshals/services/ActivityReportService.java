@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.marshals.integration.ClientActivityReportDao;
-import com.marshals.integration.ClientTradeDao;
+import com.marshals.dao.ClientActivityReportDao;
 import com.marshals.models.Holding;
 import com.marshals.models.Trade;
 import com.marshals.models.TradeHistory;

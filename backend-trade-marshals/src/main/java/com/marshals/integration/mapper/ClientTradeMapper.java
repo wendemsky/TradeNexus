@@ -5,14 +5,11 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import java.math.BigDecimal;
  
-import org.apache.ibatis.annotations.Param;
- 
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.Holding;
 import com.marshals.models.Order;
 import com.marshals.models.Trade;
-import com.marshals.models.TradeHistory;
- 
+
 public interface ClientTradeMapper {
  
 	//Client Portoflio

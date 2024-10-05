@@ -2,8 +2,6 @@ package com.marshals.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -11,27 +9,18 @@ import java.util.List;
 import java.util.UUID;
 
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.marshals.dao.ClientTradeDao;
 import com.marshals.fmts.FMTSService;
-import com.marshals.integration.ClientDao;
-import com.marshals.integration.ClientTradeDao;
-import com.marshals.integration.ClientTradeDaoImpl;
 import com.marshals.integration.DatabaseException;
-import com.marshals.models.Client;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.ClientPreferences;
 import com.marshals.models.Holding;
@@ -39,9 +28,6 @@ import com.marshals.models.Instrument;
 import com.marshals.models.Order;
 import com.marshals.models.Price;
 import com.marshals.models.Trade;
-import com.marshals.services.PortfolioService;
-import com.marshals.services.TradeService;
-import com.marshals.utils.PriceScorer;
 
 
 @ExtendWith(SpringExtension.class)

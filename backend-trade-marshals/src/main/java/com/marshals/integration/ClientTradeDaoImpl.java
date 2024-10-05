@@ -1,29 +1,20 @@
 package com.marshals.integration;
  
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
  
-import javax.sql.DataSource;
- 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
- 
+
+import com.marshals.dao.ClientTradeDao;
 import com.marshals.integration.mapper.ClientTradeMapper;
 import com.marshals.models.ClientPortfolio;
-import com.marshals.models.ClientPreferences;
 import com.marshals.models.Holding;
-import com.marshals.models.Order;
 import com.marshals.models.Trade;
 import com.marshals.models.TradeHistory;
  

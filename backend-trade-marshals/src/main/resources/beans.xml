@@ -45,7 +45,7 @@
 	<!-- Enable component scanning and autowire for the integration and services 
 		packages (beware that this does not enable mapper scanning!) -->
 	<context:component-scan
-		base-package="com.marshals.integration, com.marshals.configuration, com.marshals.services, com.marshals.fmts" />
+		base-package="com.marshals.dao, com.marshals.integration, com.marshals.configuration, com.marshals.services, com.marshals.fmts" />
 
 	<!-- Enable transaction demarcation with annotations -->
 	<tx:annotation-driven />

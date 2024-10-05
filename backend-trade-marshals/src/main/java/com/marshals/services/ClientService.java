@@ -1,6 +1,5 @@
 package com.marshals.services;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +9,13 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import com.marshals.dao.ClientDao;
 import com.marshals.fmts.*;
-import com.marshals.integration.ClientDao;
 import com.marshals.integration.DatabaseException;
 import com.marshals.models.Client;
 import com.marshals.models.ClientIdentification;
 import com.marshals.models.ClientPortfolio;
-import com.marshals.models.ClientPreferences;
 import com.marshals.models.Holding;
-import com.marshals.utils.EmailValidator;
 
 @Service("clientService")
 public class ClientService {
@@ -59,7 +56,6 @@ public class ClientService {
 				throw new NullPointerException("Client Identification Details cannot be null");
 			 //Get the list of existing client identification details with dao
 			 List<ClientIdentification> clientIdentifications = clientDao.getAllClientIdentificationDetails();
-			Iterator<ClientIdentification> iter = clientIdentifications.iterator();
 			for(ClientIdentification identification:clientIdentifications) {
 				if(identification.equals(clientIdentification)) //If given clientIdentification exists
 					return true;
@@ -135,41 +131,6 @@ public class ClientService {
 		} catch(NullPointerException e) {
 			throw e;
 		} catch(IllegalArgumentException e) {
-			throw e;
-		}
-	}
-		
-	/*Methods Related to Adding and Updating of Client Preferences*/
-	
-	public void addClientPreferences(ClientPreferences preferences) {
-		try {
-			if(preferences == null) {
-				throw new NullPointerException("preferences cannot be null");
-			}
-			clientDao.addClientPreferences(preferences);
-		} catch(NullPointerException e) {
-			throw e;
-		}	
-	}
-	
-	public ClientPreferences getClientPreferences(String clientId) {
-		try {
-			if(clientId == null) {
-				throw new NullPointerException("Id should not be null");
-			}
-			return clientDao.getClientPreferences(clientId);
-		} catch(NullPointerException e) {
-			throw e;
-		}
-	}
-	
-	public void updateClientPreferences(ClientPreferences preferences) {
-		try {
-			if(preferences == null) {
-				throw new NullPointerException("Preferences should not be null");
-			}
-			clientDao.updateClientPreferences(preferences);
-		} catch(NullPointerException e) {
 			throw e;
 		}
 	}

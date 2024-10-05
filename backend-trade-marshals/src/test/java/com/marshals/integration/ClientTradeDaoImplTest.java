@@ -4,33 +4,21 @@ import static org.junit.jupiter.api.Assertions.*;
  
  
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.sql.SQLException;
  
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTable;
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTableWhere;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
- 
-import com.marshals.integration.ClientTradeDao;
-import com.marshals.integration.ClientTradeDaoImpl;
-import com.marshals.integration.DatabaseException;
-import com.marshals.integration.mapper.ClientTradeMapper;
+
+import com.marshals.dao.ClientTradeDao;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.Holding;
 import com.marshals.models.Order;

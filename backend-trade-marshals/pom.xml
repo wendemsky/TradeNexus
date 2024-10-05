@@ -9,13 +9,20 @@
 
 	<name>BackendTradeMarshals</name>
 	
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.6.7</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+	
 	<properties>
 		<java.version>17</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<spring-framework.version>5.3.19</spring-framework.version>
-		
+
 		<junit-jupiter.version>5.8.2</junit-jupiter.version>
 		<slf4j.version>1.7.36</slf4j.version>
 		<mybatis.version>3.5.9</mybatis.version>
@@ -27,7 +34,6 @@
 		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
 		<maven-javadoc-plugin.version>3.4.0</maven-javadoc-plugin.version>
 	</properties>
-
 
 
 	<dependencies>
@@ -59,9 +65,9 @@
 			<artifactId>log4j-slf4j-impl</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>org.json</groupId>
-		    <artifactId>json</artifactId>
-		    <version>20220320</version>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20220320</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -87,9 +93,9 @@
 
 		<!-- Oracle driver -->
 		<dependency>
-		    <groupId>com.oracle.database.jdbc</groupId>
-		    <artifactId>ojdbc11</artifactId>
-		    <version>${oracle.ojdbc.version}</version>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc11</artifactId>
+			<version>${oracle.ojdbc.version}</version>
 		</dependency>
 
 
@@ -119,7 +125,7 @@
 			<artifactId>commons-dbutils</artifactId>
 			<version>1.8.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-pool2</artifactId>
@@ -137,7 +143,13 @@
 			<version>2.11.0</version>
 		</dependency>
 
-		
+		<!-- Spring Dev Tool - Automatic restart of spring server -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 
 	</dependencies>
 
@@ -155,7 +167,7 @@
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.junit</groupId>
 				<artifactId>junit-bom</artifactId>
@@ -163,7 +175,7 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-framework-bom</artifactId>
@@ -191,7 +203,8 @@
 				<version>${maven-surefire-plugin.version}</version>
 			</plugin>
 
-			<!-- Generate Javadoc for this project with the following command (ignore the errors and warnings):
+			<!-- Generate Javadoc for this project with the following command
+			(ignore the errors and warnings):
 			        mvn javadoc:javadoc
 			     Then open target/site/apidocs/index.html -->
 			<plugin>
