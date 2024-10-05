@@ -5,20 +5,20 @@ import java.math.RoundingMode;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
-
+import com.marshals.dao.ClientTradeDao;
 import com.marshals.fmts.FMTSService;
-import com.marshals.integration.ClientTradeDao;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.ClientPreferences;
 import com.marshals.models.Holding;
-import com.marshals.models.Instrument;
 import com.marshals.models.Order;
 import com.marshals.models.Price;
 import com.marshals.models.Trade;
 import com.marshals.utils.PriceScorer;
 
+@Service("tradeService")
 public class TradeService {
 	
 	private PortfolioService portfolioService;
@@ -27,12 +27,15 @@ public class TradeService {
 	
 	private List<Price> priceList;
 	
-	public TradeService(ClientTradeDao dao, PortfolioService portfolioService) {
+	private FMTSService fmtsService;
+	
+	public TradeService(@Qualifier("clientTradeDao") ClientTradeDao dao, @Qualifier("portfolioService") PortfolioService portfolioService,  @Qualifier("fmtsService") FMTSService fmtsService) {
 		//Initializing Portfolio Service
 //		this.portfolioService = new PortfolioService(dao); // For getting and updating client portfolio
 		this.dao = dao;
 		this.portfolioService = portfolioService;
-		priceList = FMTSService.getLivePrices(); //Get Live Prices from FMTSService
+		this.fmtsService = fmtsService;
+		priceList = fmtsService.getLivePrices(); //Get Live Prices from FMTSService
 	}
    
 	public List<Price> getPriceList() {
@@ -62,7 +65,7 @@ public class TradeService {
         		for(Price price: priceList) {
             		if(price.getInstrument().getInstrumentId() == order.getInstrumentId()) {
             			//Call FMTS Service to create the trade
-        				Trade trade = FMTSService.createTrade(order);
+        				Trade trade = fmtsService.createTrade(order);
         				//Buy Condition Validation
         				//Getting the cost of trade and checking if its lesser than or equal to balance
         				BigDecimal totalCostOfTrade = trade.getCashValue();
@@ -83,7 +86,7 @@ public class TradeService {
         				//One more sell validation checking - To check if user has more quantity to sell
         				if(holding.getQuantity() >= order.getQuantity()) {
         					//Call FMTS Service to create the trade
-            				Trade trade = FMTSService.createTrade(order);
+            				Trade trade = fmtsService.createTrade(order);
             				//Updating portfolio and adding Trade 
             				portfolioService.updateClientPortfolio(trade);
             				this.addTrade(trade);	
@@ -113,7 +116,7 @@ public class TradeService {
     
     public List<Price> recommendTopBuyInstruments(ClientPreferences preferences, BigDecimal currBalance){
     	try {
-    		if(preferences.getAcceptAdvisor()==false) throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
+    		if(preferences.getAcceptAdvisor()=="false") throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
     	    PriceScorer scorer = new PriceScorer(preferences);
             List<Price> recommendedPrice = new ArrayList<Price>();
             //System.out.println("Instruments before sorting -> " + priceList);
@@ -136,7 +139,7 @@ public class TradeService {
     
     public List<Price> recommendTopSellInstruments(ClientPreferences preferences, List<Holding> userHoldings){
     	try {
-    		if(preferences.getAcceptAdvisor()==false) throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
+    		if(preferences.getAcceptAdvisor()=="false") throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
     		List<Holding> topSellTradesInHoldings = new ArrayList<>();
         	if(userHoldings.size() <= 5) {
 //        		return everything

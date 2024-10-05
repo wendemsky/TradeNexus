@@ -7,6 +7,8 @@ public class ClientIdentification {
 	private String type;
 	private String value;
 	
+	public ClientIdentification() {}
+	
 	public ClientIdentification(String type, String value) {
 		try {
 			if(type==null || value==null) throw new NullPointerException("Govt ID Details cannot be null");
@@ -31,6 +33,15 @@ public class ClientIdentification {
 	public String getValue() {
 		return value;
 	}
+	
+	//Setters
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
 
 	@Override
 	public int hashCode() {
@@ -48,5 +59,11 @@ public class ClientIdentification {
 		ClientIdentification other = (ClientIdentification) obj;
 		return Objects.equals(type, other.type) && Objects.equals(value, other.value);
 	}
+
+	@Override
+	public String toString() {
+		return "ClientIdentification [type=" + type + ", value=" + value + "]";
+	}
+	
 
 }

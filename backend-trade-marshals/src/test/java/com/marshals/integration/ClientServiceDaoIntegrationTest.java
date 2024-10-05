@@ -1,33 +1,33 @@
 package com.marshals.integration;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.transaction.Transactional;
-
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTable;
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTableWhere;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 import com.marshals.models.Client;
 import com.marshals.models.ClientIdentification;
-import com.marshals.models.ClientPortfolio;
+import com.marshals.services.ClientService;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("classpath:beans.xml")
+@DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
-class ClientDaoImplTest {
-	
+class ClientServiceDaoIntegrationTest {
+
 	@Autowired
-	private ClientDaoImpl dao;
+	private ClientService service;
 	
 	@Autowired
 	private JdbcTemplate testJdbcTemplate;
@@ -40,10 +40,9 @@ class ClientDaoImplTest {
 	Client client1654658070 = new Client("sam@gmail.com","1654658070", "Password1234", "Sam", "12/11/2000", "USA", 
 			new ArrayList<>(List.of(new ClientIdentification("SSN","1643846323"))), false); //New client to insert
 	
-	
-	@Test
-	void testForDAOToHaveBeenIntialized() {
-		assertNotNull(dao);
+	@AfterEach
+	void tearDown() throws Exception {
+		service = null;
 	}
 	
 	/*CLIENT*/
@@ -53,24 +52,22 @@ class ClientDaoImplTest {
 	@Test
 	void testForClientWithExistingEmailToBeFound() {
 		String existingEmail = "sowmya@gmail.com";
-		Boolean clientExists = dao.verifyClientEmail(existingEmail);
+		Boolean clientExists = service.verifyClientEmail(existingEmail);
 		assertTrue(clientExists, "Client must be found");
 	}
 	//Non existing email to not be found
 	@Test
 	void testForClientWithNonExistingEmailToNotBeFound() {
 		String nonExistingEmail = "client_nonexist@gmail.com";
-		Exception e = assertThrows(DatabaseException.class, () -> {
-			dao.verifyClientEmail(nonExistingEmail);
-		});
-		assertEquals(e.getMessage(),"Client with given email doesnt exist");
+		Boolean clientExists = service.verifyClientEmail(nonExistingEmail);
+		assertFalse(clientExists, "Client must not be found");
 	}
 	//Invalid email to throw exception
 	@Test
 	void testForClientWithInvalidEmailToThrowException() {
 		String invalidEmail = "client_invalid";
 		Exception e = assertThrows(IllegalArgumentException.class, () -> {
-			dao.verifyClientEmail(invalidEmail);
+			service.verifyClientEmail(invalidEmail);
 		});
 		assertEquals(e.getMessage(),"Client Email Format is invalid");
 	}
@@ -78,64 +75,73 @@ class ClientDaoImplTest {
 	/*TESTS FOR CLIENT LOGIN*/
 	//Successful login of client
 	@Test
-	void testForSuccessfulRetrievalOfClientDetailsWithValidCredentials() {
+	void testForSuccessfulRetrievalOfClientDetailsWithValidCredentialsFromService() {
 		String validClientEmail = "sowmya@gmail.com";
 		String validClientPassword = "Marsh2024";
-		Client client = dao.getClientAtLogin(validClientEmail, validClientPassword);
+		Client client = service.loginExistingClient(validClientEmail, validClientPassword);
 		assertEquals(client1654658069, client, "Successful login must return Client details");
 	}
 	//Login of client with non existent email
 	@Test
-	void testForLoginOfNonExistentClientThrowsException() {
-		Exception e = assertThrows(DatabaseException.class, () -> {
-			dao.getClientAtLogin(client1654658000.getEmail(), client1654658000.getPassword());
+	void testForLoginOfNonExistentClientThrowsExceptionFromService() {
+		Exception e = assertThrows(IllegalArgumentException.class, () -> {
+			service.loginExistingClient(client1654658000.getEmail(), client1654658000.getPassword());
 		}); 
-		assertEquals(e.getMessage(), "Logging in Client doesnt exist");
+		assertEquals(e.getMessage(), "Client with given email is not registered");
 	}
 	//Login of existing client with invalid credentials - password mismatch
 	@Test
-	void testForLoginOfExistingClientWithInvalidCredentailsThrowsException() {
+	void testForLoginOfExistingClientWithInvalidCredentailsThrowsExceptionFromService() {
 		String existingClientEmail = "sowmya@gmail.com";
 		String invalidClientPassword = "Password123";
 		Exception e = assertThrows(IllegalArgumentException.class, () -> {
-			dao.getClientAtLogin(existingClientEmail, invalidClientPassword);
+			service.loginExistingClient(existingClientEmail, invalidClientPassword);
 		}); 
 		assertEquals(e.getMessage(), "Password does not match logging in Client's credentials");
 	}
 	
 //	/*TESTS FOR CLIENT REGISTRATION*/
-	//Testing successful retrieval of all client identification details
-	@Test
-	void testForRetrievalOfAllClientIdentificationDetails() {
-		List<ClientIdentification> identificationDetails = dao.getAllClientIdentificationDetails();
-		assertTrue(identificationDetails.size()>=6,"Must retrieve atleast 6 client identification details");
-	}
+	
 	//Successful insetion must increase row count in client table
 	@Test
-	void testForSuccessfulAdditionOfNewClientDetailsInClientTable() {
+	void testForSuccessfulAdditionOfNewClientDetailsInClientTableFromService() {
 		int oldCount = countRowsInTable(testJdbcTemplate, "client");
-		dao.addNewClient(client1654658070, new ClientPortfolio(client1654658070.getClientId(),new BigDecimal("10000"),new ArrayList<>()));
+		List<ClientIdentification> identificationList = new ArrayList<>(List.of(new ClientIdentification("SSN","1643846323")));
+		Client client = service.registerNewClient("sam@gmail.com","Password1234", "Sam", "12/11/2000", "USA", identificationList);
+		System.out.println(client);
 		int newCount = countRowsInTable(testJdbcTemplate, "client");
 		assertTrue(newCount == oldCount+1, "Client Table count must increase by one");
 	}
 	//Successful insertion must add correct data in client identification table
 	@Test
-	void testForSuccessfulAdditionOfNewClientDetailsInClientIdentificationTable() {
-		String newClientId = "1654658070";
+	void testForSuccessfulAdditionOfNewClientDetailsInClientIdentificationTableFromService() {
+		
+		List<ClientIdentification> identificationList = new ArrayList<>(List.of(new ClientIdentification("SSN","1643846323")));
+		Client newClient = service.registerNewClient("sam@gmail.com","Password1234", "Sam", "12/11/2000", "USA", identificationList);
+		String newClientId = newClient.getClientId();
 		String whereCondition = "client_id = "+ newClientId;
-		dao.addNewClient(client1654658070, new ClientPortfolio(client1654658070.getClientId(),new BigDecimal("10000"),new ArrayList<>()));
 		int newCount = countRowsInTableWhere(testJdbcTemplate, "client_identification", whereCondition);
+		System.out.println(newCount);
 		assertTrue(newCount >= 1, "One or more client identification details added");
 	}
 	//Exisitng client registration throws error
 	@Test
-	void testForAdditionOfExistingClientDetailsShouldThrowException(){
-		String existingClientId = "1654658069";
-		Exception e = assertThrows(DatabaseException.class, () -> {
-			dao.addNewClient(client1654658069, 
-					new ClientPortfolio(existingClientId,new BigDecimal("10000"),new ArrayList<>()));
+	void testForAdditionOfExistingClientDetailsShouldThrowExceptionFromService(){
+		Exception e = assertThrows(IllegalArgumentException.class, () -> {
+			List<ClientIdentification> identificationList = new ArrayList<>(List.of(new ClientIdentification("Aadhar","123456789102")));
+			service.registerNewClient("sowmya@gmail.com", "Marsh2024", "Sowmya", "11/12/2002", "India", identificationList);
 		});
-		assertEquals(e.getMessage(),"Cannot insert client with ID "+existingClientId);
+		assertEquals(e.getMessage(),"Client with given email is already registered");
+	}
+	
+	@Test
+	void testShouldHandleRegisterationOfClientWithIDDetailsOfExistingClientFromService() {
+		List<ClientIdentification> identificationList = new ArrayList<>(List.of(new ClientIdentification("Aadhar","123456789102")));
+		Exception e = assertThrows(IllegalArgumentException.class, () -> {
+			service.registerNewClient("sam@gmail.com","Password1234", "Sam", "12/11/2000", "USA",
+					identificationList);
+		});
+		assertEquals("Client with given Identification Details is already registered with another email",e.getMessage());
 	}
 
 }

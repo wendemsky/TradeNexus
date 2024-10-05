@@ -4,22 +4,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import com.marshals.integration.ClientDao;
-import com.marshals.integration.ClientTradeDao;
-import com.marshals.integration.ClientTradeDaoImpl;
+import com.marshals.dao.ClientTradeDao;
 import com.marshals.integration.DatabaseException;
-import com.marshals.models.ClientPreferences;
 import com.marshals.models.Order;
 import com.marshals.models.Trade;
 import com.marshals.models.TradeHistory;
-import com.marshals.services.TradeHistoryService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

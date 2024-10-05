@@ -14,15 +14,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import com.marshals.integration.ClientDao;
-import com.marshals.integration.ClientTradeDao;
+import com.marshals.dao.ClientTradeDao;
 import com.marshals.integration.DatabaseException;
-import com.marshals.models.Client;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.Holding;
 import com.marshals.models.Order;
 import com.marshals.models.Trade;
-import com.marshals.services.PortfolioService;
 
 class PortfolioServiceTest {
 	@Mock ClientTradeDao mockDao;

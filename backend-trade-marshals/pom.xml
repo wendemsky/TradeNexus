@@ -2,96 +2,130 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.fidelity</groupId>
+	<groupId>com.marshals</groupId>
 	<artifactId>BackendTradeMarshals</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>BackendTradeMarshals</name>
-
+	
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.6.7</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+	
 	<properties>
 		<java.version>17</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<junit.jupiter.version>5.8.2</junit.jupiter.version>
+		<spring-framework.version>5.3.19</spring-framework.version>
+
+		<junit-jupiter.version>5.8.2</junit-jupiter.version>
+		<slf4j.version>1.7.36</slf4j.version>
+		<mybatis.version>3.5.9</mybatis.version>
+		<oracle.ojdbc.version>21.5.0.0</oracle.ojdbc.version>
+		<mybatis-spring.version>2.0.7</mybatis-spring.version>
+		<hsqldb.version>2.6.1</hsqldb.version>
+		<log4j-bom.version>2.17.2</log4j-bom.version>
 		<maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
 		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
 		<maven-javadoc-plugin.version>3.4.0</maven-javadoc-plugin.version>
-
 	</properties>
 
-	<!-- This section lets us add Bill Of Materials (bom) style poms. These 
-		define all version dependencies within a suite (in the case of JUnit, for 
-		example, keeping the Jupiter version in line with the Platform version. 
-		Note that in the dependencies section that follows (not the one 
-		in dependency management), there are no versions specified for JUnit components. -->
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.junit</groupId>
-				<artifactId>junit-bom</artifactId>
-				<version>${junit.jupiter.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<dependencies>
+		<!-- JUnit -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
 		<!-- This dependency is only required to make JUnit work in Eclipse -->
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-launcher</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
+		<!-- Log4j2 -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-params</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-		    <groupId>org.json</groupId>
-		    <artifactId>json</artifactId>
-		    <version>20220320</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
 		</dependency>
-		
-		<!-- Logback for logging -->
-		<!-- Includes slf4j-api -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20220320</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.4.11</version>
 		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>${mybatis.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-junit-jupiter</artifactId>
 			<version>5.7.0</version>
 			<scope>test</scope>
 		</dependency>
-		
+
+		<!-- Oracle driver -->
 		<dependency>
- 			<groupId>com.oracle.database.jdbc</groupId>
- 			<artifactId>ojdbc8</artifactId>
- 			<version>23.3.0.23.09</version>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc11</artifactId>
+			<version>${oracle.ojdbc.version}</version>
 		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/commons-dbutils/commons-dbutils -->
+
+
+		<!-- Spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>commons-dbutils</groupId>
 			<artifactId>commons-dbutils</artifactId>
 			<version>1.8.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-pool2</artifactId>
@@ -99,12 +133,58 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>${mybatis-spring.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
 			<version>2.11.0</version>
 		</dependency>
 
+		<!-- Spring Dev Tool - Automatic restart of spring server -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+
 	</dependencies>
+
+	<!-- This section lets us add Bill Of Materials (bom) style poms. These 
+		define all version dependencies within a suite (in the case of JUnit, for 
+		example), keeping the Jupiter version in line with the Platform version. 
+		Note that in the dependencies section above (not the one below in dependency 
+		management), there are no versions specified for JUnit components. -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-bom</artifactId>
+				<version>${log4j-bom.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit-jupiter.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${spring-framework.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<finalName>BackendTradeMarshals</finalName>
@@ -117,13 +197,14 @@
 					<release>${java.version}</release>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire-plugin.version}</version>
 			</plugin>
 
-			<!-- Generate Javadoc for this project with the following command (ignore the errors and warnings):
+			<!-- Generate Javadoc for this project with the following command
+			(ignore the errors and warnings):
 			        mvn javadoc:javadoc
 			     Then open target/site/apidocs/index.html -->
 			<plugin>
@@ -131,7 +212,6 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>${maven-javadoc-plugin.version}</version>
 			</plugin>
-			
 		</plugins>
 	</build>
 
