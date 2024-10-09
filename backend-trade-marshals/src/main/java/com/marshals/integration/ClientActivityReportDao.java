@@ -1,4 +1,4 @@
-package com.marshals.dao;
+package com.marshals.integration;
 
 import java.util.List;
 

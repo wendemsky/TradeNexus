@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.marshals.dao.ClientPreferencesDao;
+import com.marshals.integration.ClientPreferencesDao;
 import com.marshals.models.ClientPreferences;
 
 @Service("clientPreferencesService")

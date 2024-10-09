@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-import com.marshals.dao.ClientDao;
 import com.marshals.fmts.*;
+import com.marshals.integration.ClientDao;
 import com.marshals.integration.DatabaseException;
 import com.marshals.models.Client;
 import com.marshals.models.ClientIdentification;

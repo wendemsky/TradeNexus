@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
-import com.marshals.dao.ClientActivityReportDao;
+
 import com.marshals.integration.mapper.ClientActivityReportMapper;
 import com.marshals.models.Holding;
 

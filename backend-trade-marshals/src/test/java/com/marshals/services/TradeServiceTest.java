@@ -18,8 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.marshals.dao.ClientTradeDao;
 import com.marshals.fmts.FMTSService;
+import com.marshals.integration.ClientTradeDao;
 import com.marshals.integration.DatabaseException;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.ClientPreferences;

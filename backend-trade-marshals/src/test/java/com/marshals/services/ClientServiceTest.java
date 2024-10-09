@@ -18,9 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.marshals.dao.ClientDao;
 import com.marshals.fmts.FMTSService;
 import com.marshals.fmts.ValidatedClient;
+import com.marshals.integration.ClientDao;
 import com.marshals.integration.DatabaseException;
 import com.marshals.models.Client;
 import com.marshals.models.ClientIdentification;

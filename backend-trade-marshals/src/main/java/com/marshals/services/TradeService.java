@@ -8,8 +8,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.marshals.dao.ClientTradeDao;
 import com.marshals.fmts.FMTSService;
+import com.marshals.integration.ClientTradeDao;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.ClientPreferences;
 import com.marshals.models.Holding;

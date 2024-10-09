@@ -18,7 +18,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.marshals.dao.ClientActivityReportDao;
 import com.marshals.models.Holding;
 
 @ExtendWith(SpringExtension.class)

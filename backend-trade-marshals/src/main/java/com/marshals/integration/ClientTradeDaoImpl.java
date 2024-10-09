@@ -11,7 +11,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.marshals.dao.ClientTradeDao;
 import com.marshals.integration.mapper.ClientTradeMapper;
 import com.marshals.models.ClientPortfolio;
 import com.marshals.models.Holding;
