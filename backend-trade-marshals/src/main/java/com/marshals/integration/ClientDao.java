@@ -2,9 +2,9 @@ package com.marshals.integration;
 
 import java.util.List;
 
-import com.marshals.models.Client;
-import com.marshals.models.ClientIdentification;
-import com.marshals.models.ClientPortfolio;
+import com.marshals.business.Client;
+import com.marshals.business.ClientIdentification;
+import com.marshals.business.ClientPortfolio;
 
 //Has functions related to Client related data access
 public interface ClientDao {

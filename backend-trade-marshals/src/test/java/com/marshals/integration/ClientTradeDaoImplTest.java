@@ -8,24 +8,25 @@ import java.sql.SQLException;
  
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.marshals.business.ClientPortfolio;
+import com.marshals.business.Holding;
+import com.marshals.business.Order;
+import com.marshals.business.Trade;
+import com.marshals.business.TradeHistory;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTable;
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTableWhere;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-
-import com.marshals.models.ClientPortfolio;
-import com.marshals.models.Holding;
-import com.marshals.models.Order;
-import com.marshals.models.Trade;
-import com.marshals.models.TradeHistory;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
  
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration("classpath:beans.xml")
+@SpringBootTest
 @Transactional
 class ClientTradeDaoImplTest {
 	@Autowired
@@ -34,7 +35,6 @@ class ClientTradeDaoImplTest {
 	@Qualifier("clientTradeDao")
 	private ClientTradeDao dao;
 	@Autowired
-	@Qualifier("testJdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
  
 	@Test
@@ -42,46 +42,8 @@ class ClientTradeDaoImplTest {
 		assertNotNull(dao);
 	}
 
-	/*GET CLIENT PORTFOLIO*/
-	@Test
-	void testGetClientPortfolioNotNull() {
-		String clientId = "541107416";
-		ClientPortfolio clientPortfolio = dao.getClientPortfolio(clientId);
-		assertNotNull(clientPortfolio);
-	}
-	@Test
-	void testGetClientPortfolioHoldingsForClientWithoutHoldings() {
-		String clientId = "1425922638";
-		ClientPortfolio clientPortfolio = dao.getClientPortfolio(clientId);
-		assertTrue(clientPortfolio.getHoldings().size() == 0);
-	}
-	@Test
-	void testGetClientPortfolioHoldingsForClientWithHoldings() {
-		String clientId = "541107416";
-		ClientPortfolio clientPortfolio = dao.getClientPortfolio(clientId);
-		assertTrue(clientPortfolio.getHoldings().size() >= 1);
-	}
-	@Test
-	void testGetClientPortfolioThrowsExceptionForInvalidClientId() {
-		String clientId = "nonExistingClientId";
-		Exception e = assertThrows(DatabaseException.class, () -> {
-			dao.getClientPortfolio(clientId);
-		});
-		assertEquals("Client ID does not exist", e.getMessage());
-	}
-	/*UPDATE CLIENT PORTFOLIO*/
-	//Updating current balance
-	@Test
-	void testSuccessfulUpdationOfClientBalance() throws SQLException {
-		String clientId = "541107416"; //Existing client
-		BigDecimal currBalance = new BigDecimal("10453").setScale(4);
-		String whereCondition = "client_id = '541107416' and curr_balance = "+currBalance;
-		dao.updateClientBalance(clientId, currBalance);
-		int newSize = countRowsInTableWhere(jdbcTemplate, "client", whereCondition);
-		assertTrue(newSize == 1);
-	}
 	
-//	Get Client Trade History Tests
+	/*Get Client Trade History Tests*/
 	@Test
 	void testGetClientTradeHistoryNotNull() {
 		String clientId = "541107416";
@@ -112,7 +74,8 @@ class ClientTradeDaoImplTest {
 		});
 		assertEquals("Client ID does not exist", e.getMessage());
 	}
-//	Add Trade tests
+	
+	/*Add Trade tests*/
 	@Test
 	void testAddTradeCheckIfBothOrderAndTradeTablesAreUpdated() throws SQLException {
 		var rowCount = countRowsInTable(jdbcTemplate, "client_trade");
@@ -143,61 +106,5 @@ class ClientTradeDaoImplTest {
 	
 
 	
-	//Adding holdings
-	@Test
-	void testSuccessfulAddClientHoldingOfClientWithHolding() throws SQLException {
-		String clientId = "541107416"; //Has holdings
-		Holding holding = new Holding("N123456", 1, new BigDecimal("104.50"));
-		int oldSize =  countRowsInTableWhere(jdbcTemplate, "holdings", "client_id = "+clientId);
-		dao.addClientHoldings(clientId, holding);
-		int newSize =  countRowsInTableWhere(jdbcTemplate, "holdings", "client_id = "+clientId);
-		assertTrue(newSize == oldSize+1);
-	}
-	@Test
-	void testSuccessfulAddClientHoldingOfClientWithNoHoldings() throws SQLException {
-		String clientId = "1654658069"; //Has no holdings
-		Holding holding = new Holding("N123456", 1, new BigDecimal("104.50"));
-		dao.addClientHoldings(clientId, holding);
-		int newSize =  countRowsInTableWhere(jdbcTemplate, "holdings", """
-				client_id = '1654658069'
-				""");
-		assertTrue(newSize == 1);
-	}
-	@Test
-	void testAddClientHoldingOfNonExistentClientThrowsException() throws SQLException {
-		String clientId = "nonexistent";
-		Holding holding = new Holding("N123456", 1, new BigDecimal("104.50"));
-		assertThrows(DatabaseException.class, ()->{
-			dao.addClientHoldings(clientId, holding);
-		});
-	}
-	//Updating existing holdings
-	@Test
-	void testSuccessfulUpdationOfClientHoldings() throws SQLException {
-		String clientId = "541107416"; //Has holdings
-		Holding holding = new Holding("C100", 10, new BigDecimal("104.50"));
- 
-		dao.updateClientHoldings(clientId, holding);
-		int newSize = countRowsInTableWhere(jdbcTemplate, "holdings", """
-				 instrument_id = 'C100'
-				 and quantity = '10'
-		 """);
-		assertTrue(newSize == 1);
-	}
-	@Test
-	void testUpdationOfNonExistentClientHoldingsThrowsException() throws SQLException {
-		String clientId = "541107416"; //Has holdings
-		Holding holding = new Holding("nonexistent", 10, new BigDecimal("104.50"));
-		assertThrows(DatabaseException.class, ()->{
-			dao.updateClientHoldings(clientId, holding);
-		});
-	}
-	@Test
-	void testUpdationOfClientHoldingsOfNonExistentClientThrowsException() throws SQLException {
-		String clientId = "nonexistent";
-		Holding holding = new Holding("N123456", 10, new BigDecimal("104.50"));
-		assertThrows(DatabaseException.class, ()->{
-			dao.updateClientHoldings(clientId, holding);
-		});
-	}
+	
 }

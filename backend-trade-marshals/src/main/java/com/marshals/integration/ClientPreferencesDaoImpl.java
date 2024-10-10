@@ -4,9 +4,10 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.marshals.business.ClientPreferences;
 import com.marshals.integration.mapper.ClientPreferencesMapper;
-import com.marshals.models.ClientPreferences;
 
 @Repository("clientPreferencesDao")
 public class ClientPreferencesDaoImpl implements ClientPreferencesDao{

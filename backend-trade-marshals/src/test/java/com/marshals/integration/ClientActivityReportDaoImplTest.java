@@ -13,15 +13,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.marshals.models.Holding;
+import com.marshals.business.Holding;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration("classpath:beans.xml")
+@SpringBootTest
 @Transactional
 class ClientActivityReportDaoImplTest {	
 	@Autowired
@@ -30,7 +30,6 @@ class ClientActivityReportDaoImplTest {
 	@Qualifier("clientActivityReportDao")
 	private ClientActivityReportDao dao;
 	@Autowired
-	@Qualifier("testJdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
 	
 	@BeforeAll
