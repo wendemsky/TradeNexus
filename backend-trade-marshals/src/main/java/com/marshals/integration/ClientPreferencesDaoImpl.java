@@ -3,6 +3,7 @@ package com.marshals.integration;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import com.marshals.business.ClientPreferences;
@@ -27,38 +28,35 @@ public class ClientPreferencesDaoImpl implements ClientPreferencesDao{
 	}
 
 	@Override
-	public void addClientPreferences(ClientPreferences clientPreferences) {
+	public boolean addClientPreferences(ClientPreferences clientPreferences) {
+		int rowsAffected = 0;
 		try {
-			int rowsAffected = clientMapper.addClientPreferences(clientPreferences);
-			if(rowsAffected == 0) {
-				throw new DatabaseException("Client doesn't exist");
-			}
+			rowsAffected = clientMapper.addClientPreferences(clientPreferences);
+		}
+		catch(DuplicateKeyException e) {
+			logger.error("Client already exists with this Client ID", e);
+			throw new DatabaseException("Client already exists with this Client ID");
 		}
 		catch(DataIntegrityViolationException e) {
-			logger.error("Error inserting client preferences - Should satisfy integrity constraints",e);
-			throw new DatabaseException("Error inserting client preferences - Should satisfy integrity constraints");
+			logger.error("Error in adding client preferences details: ",e);
+			throw new DatabaseException("Client doesn't exist with this Client ID");
 		}
-		catch(DatabaseException e) {
-			logger.error("Error in adding client preferences details: "+e);
-			throw e;
-		}
+		return rowsAffected > 0;
 	}
 
 	@Override
-	public void updateClientPreferences(ClientPreferences clientPreferences) {
+	public boolean updateClientPreferences(ClientPreferences clientPreferences) {
+		int rowsAffected = 0;
 		try {
-			int rowsAffected = clientMapper.updateClientPreferences(clientPreferences);
+			rowsAffected = clientMapper.updateClientPreferences(clientPreferences);
 			if(rowsAffected == 0) {
-				throw new DatabaseException("Client doesn't exist");
+				throw new DatabaseException("Client doesn't exist with this Client ID");
 			}
 		}
-		catch(DataIntegrityViolationException e) {
-			logger.error("Error updating client preferences - Should satisfy integrity constraints", e);
-			throw new DatabaseException("Error updating client preferences - Should satisfy integrity constraints");
-		}
 		catch(DatabaseException e) {
-			logger.error("Error in updating client preferences details: "+e);
+			logger.error("Error in updating client preferences details: "+ e);
 			throw e;
 		}
+		return rowsAffected > 0;
 	}
 }

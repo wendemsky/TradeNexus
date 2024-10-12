@@ -130,7 +130,7 @@ class ClientPreferencesDaoImplTest {
 		Exception e = assertThrows(DatabaseException.class, () -> {
 			dao.addClientPreferences(clientPref1654658000);
 		});
-		assertEquals(e.getMessage(), "Error inserting client preferences - Should satisfy integrity constraints");
+		assertEquals(e.getMessage(), "Client doesn't exist with this Client ID");
 	}
 
 	// Failure - Addition of client preferences to client with existing preferences
@@ -140,7 +140,7 @@ class ClientPreferencesDaoImplTest {
 		Exception e = assertThrows(DatabaseException.class, () -> {
 			dao.addClientPreferences(clientPref1654658069);
 		});
-		assertEquals(e.getMessage(), "Error inserting client preferences - Should satisfy integrity constraints");
+		assertEquals(e.getMessage(), "Client already exists with this Client ID");
 	}
 
 	/* TESTS FOR UPDATING CLIENT PREFERENCES */
@@ -161,7 +161,7 @@ class ClientPreferencesDaoImplTest {
 		Exception e = assertThrows(DatabaseException.class, () -> {
 			dao.updateClientPreferences(clientPref1654658000);
 		});
-		assertEquals(e.getMessage(), "Client doesn't exist");
+		assertEquals(e.getMessage(), "Client doesn't exist with this Client ID");
 	}
 
 }

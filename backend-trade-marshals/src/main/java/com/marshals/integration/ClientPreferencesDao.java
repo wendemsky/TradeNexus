@@ -7,7 +7,7 @@ public interface ClientPreferencesDao {
 
 	ClientPreferences getClientPreferences(String clientId);
 
-	void addClientPreferences(ClientPreferences clientPreferences);
+	boolean addClientPreferences(ClientPreferences clientPreferences);
 
-	void updateClientPreferences(ClientPreferences clientPreferences);
+	boolean updateClientPreferences(ClientPreferences clientPreferences);
 }

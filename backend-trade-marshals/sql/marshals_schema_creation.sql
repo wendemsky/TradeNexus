@@ -52,6 +52,10 @@ INSERT INTO client (client_id, email, password, name, date_of_birth, country, is
 VALUES ('739982664', 'john.doe@gmail.com', 'Marsh2024', 'John Doe', to_date('1998-03-15', 'yyyy-mm-dd'), 'USA', 'N', 10000);
 INSERT INTO client_identification (client_id, type, value)
 VALUES ('739982664','SSN','1234573532');
+INSERT INTO client (client_id, email, password, name, date_of_birth, country, is_admin, curr_balance)
+VALUES ('739982665', 'jane.doe@gmail.com', 'Marsh2024', 'Jane Doe', to_date('2002-10-15 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'India', 'N', 10000);
+INSERT INTO client_identification (client_id, type, value)
+VALUES ('739982665','Aadhar','674902441359');
 // Create table for Client Preferences
 CREATE TABLE "MARSH"."CLIENT_PREFERENCES" (
     client_id VARCHAR2(50),
