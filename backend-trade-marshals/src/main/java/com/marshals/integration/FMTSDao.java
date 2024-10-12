@@ -9,10 +9,12 @@ import com.marshals.business.Trade;
 
 public interface FMTSDao {
 
-	FMTSValidatedClient verifyClient(String email); //For login
-	FMTSValidatedClient verifyClient(String email, String clientId); //For registration
+	//Related to client validation
+	FMTSValidatedClient verifyClient(String email);  //For registration
+	FMTSValidatedClient verifyClient(String email, String clientId); //For login
 	
+	//Related to trades
 	List<Price> getLivePrices(); //For getting live prices
-	 Trade createTrade(Order order); 
+	Trade createTrade(Order order); //For executing trade
 	
 }
