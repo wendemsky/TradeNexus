@@ -1,6 +1,7 @@
 package com.marshals.business;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Price {
 	private BigDecimal askPrice;
@@ -8,6 +9,9 @@ public class Price {
     private String priceTimestamp;
     private Instrument instrument;
     
+	public Price() {
+	}
+
 	public Price(BigDecimal askPrice, BigDecimal bidPrice, String priceTimestamp, Instrument instrument) {
 		if (askPrice == null) {
 	        throw new NullPointerException("askPrice cannot be null");
@@ -42,4 +46,29 @@ public class Price {
 	public Instrument getInstrument() {
 		return instrument;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(askPrice, bidPrice, instrument, priceTimestamp);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Price other = (Price) obj;
+		return Objects.equals(askPrice, other.askPrice) && Objects.equals(bidPrice, other.bidPrice)
+				&& Objects.equals(instrument, other.instrument) && Objects.equals(priceTimestamp, other.priceTimestamp);
+	}
+
+	@Override
+	public String toString() {
+		return "Price [askPrice=" + askPrice + ", bidPrice=" + bidPrice + ", priceTimestamp=" + priceTimestamp
+				+ ", instrument=" + instrument + "]";
+	}
+	
 }

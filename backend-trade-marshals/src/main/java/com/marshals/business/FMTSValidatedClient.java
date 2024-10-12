@@ -1,15 +1,14 @@
 package com.marshals.business;
-
+ 
 import java.math.BigDecimal;
 import java.util.Objects;
-
+ 
 public class FMTSValidatedClient {
-	
-	private String email;
 	private String clientId;
+	private String email;
 	private BigDecimal token;
-	
-	public FMTSValidatedClient(String email, String clientId, BigDecimal token) {
+	public FMTSValidatedClient() {}
+	public FMTSValidatedClient(String clientId, String email, BigDecimal token) {
 		try {
 			if(email==null || clientId==null || token == null) 
 				throw new NullPointerException("Validated Client Details cannot be null");
@@ -19,18 +18,33 @@ public class FMTSValidatedClient {
 		} catch(NullPointerException e) {
 			throw e;
 		}
-	
 	}
-	
 	public String getClientId() {
 		return clientId;
 	}
-
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+ 
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+ 
+	public BigDecimal getToken() {
+		return token;
+	}
+	public void setToken(BigDecimal token) {
+		this.token = token;
+	}
+ 
 	@Override
 	public int hashCode() {
 		return Objects.hash(clientId, email, token);
 	}
-
+ 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -43,5 +57,4 @@ public class FMTSValidatedClient {
 		return Objects.equals(clientId, other.clientId) && Objects.equals(email, other.email)
 				&& Objects.equals(token, other.token);
 	}
-	
 }

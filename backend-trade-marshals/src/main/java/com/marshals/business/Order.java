@@ -91,7 +91,13 @@ public class Order {
 				&& Objects.equals(quantity, other.quantity) && Objects.equals(targetPrice, other.targetPrice)
 				&& Objects.equals(token, other.token);
 	}
-    
+
+	@Override
+	public String toString() {
+		return "Order [instrumentId=" + instrumentId + ", quantity=" + quantity + ", targetPrice=" + targetPrice
+				+ ", direction=" + direction + ", clientId=" + clientId + ", orderId=" + orderId + ", token=" + token
+				+ "]";
+	}
 
 }
 

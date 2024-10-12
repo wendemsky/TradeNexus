@@ -44,21 +44,26 @@ public class ClientPreferencesController {
 				throw new IllegalArgumentException("Invalid format for client id");
 			}
 			ClientPreferences clientPreferences = clientPreferencesService.getClientPreferences(id);
-			response = ResponseEntity.ok(clientPreferences);
+			if(clientPreferences == null) {
+				response = ResponseEntity.noContent().build();
+			}else {
+				response = ResponseEntity.ok(clientPreferences);
+			}
+			return response;
 		}
 		catch(IllegalArgumentException e) {
 			logger.error("Error in request for getting client preferences", e);
-			response = ResponseEntity.badRequest().build();
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getLocalizedMessage());
 		}
 		catch(DatabaseException e) {
 			logger.error("Error in fetching data", e);
-			response = ResponseEntity.noContent().build();
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
 		}
 		catch(RuntimeException e) {
 			logger.error("Problem occured from server", e);
 			response = ResponseEntity.internalServerError().build();
+			return response;
 		}
-		return response;
 	}
 	
 	@PostMapping()
@@ -71,10 +76,11 @@ public class ClientPreferencesController {
 			if(clientPreferencesService.addClientPreferences(clientPreferences)) {
 				response = ResponseEntity.ok(clientPreferences);
 			}
+			return response;
 		}
 		catch(NullPointerException e) {
 			logger.error("Error in request for adding client preferences", e);
-			response = ResponseEntity.badRequest().build();
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getLocalizedMessage());
 		}
 		catch(DatabaseException e) {
 			logger.error("Error inserting data", e);
@@ -83,8 +89,8 @@ public class ClientPreferencesController {
 		catch(RuntimeException e) {
 			logger.error("Problem occured from server", e);
 			response = ResponseEntity.internalServerError().build();
+			return response;
 		}
-		return response;
 	}
 	
 	@PutMapping()
@@ -97,10 +103,11 @@ public class ClientPreferencesController {
 			if(clientPreferencesService.updateClientPreferences(clientPreferences)) {
 				response = ResponseEntity.ok(clientPreferences);
 			}
+			return response;
 		}
 		catch(NullPointerException e) {
-			logger.error("Error in request for updating client preferences", e);
-			response = ResponseEntity.badRequest().build();
+			logger.error("Error in request for adding client preferences", e);
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getLocalizedMessage());
 		}
 		catch(DatabaseException e) {
 			logger.error("Error updating data", e);
@@ -109,8 +116,8 @@ public class ClientPreferencesController {
 		catch(RuntimeException e) {
 			logger.error("Problem occured from server", e);
 			response = ResponseEntity.internalServerError().build();
+			return response;
 		}
-		return response;
 	}
 	
 }

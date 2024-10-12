@@ -67,6 +67,38 @@ public class Trade {
     public BigDecimal getCashValue() {
         return cashValue;
     }
+    
+	public void setInstrumentId(String instrumentId) {
+		this.instrumentId = instrumentId;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public void setExecutionPrice(BigDecimal executionPrice) {
+		this.executionPrice = executionPrice;
+	}
+
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+	public void setTradeId(String tradeId) {
+		this.tradeId = tradeId;
+	}
+
+	public void setCashValue(BigDecimal cashValue) {
+		this.cashValue = cashValue;
+	}
 
 	@Override
 	public int hashCode() {

@@ -95,7 +95,7 @@ class ClientPreferencesControllerWebLayerTest {
 		when(mockClientPreferencesService.getClientPreferences(id)).thenThrow(DatabaseException.class);
 		
 		mockMvc.perform(get("/client-preferences/" + id))
-			.andExpect(status().isNoContent())
+			.andExpect(status().isBadRequest())
 			.andExpect(content().string(is(emptyOrNullString())));;
 	}
 	
@@ -105,17 +105,17 @@ class ClientPreferencesControllerWebLayerTest {
 		when(mockClientPreferencesService.getClientPreferences(id)).thenThrow(IllegalArgumentException.class);
 		
 		mockMvc.perform(get("/client-preferences/" + id))
-			.andExpect(status().isBadRequest())
+			.andExpect(status().isNotAcceptable())
 			.andExpect(content().string(is(emptyOrNullString())));;
 	}
 	
 	@Test
-	void testForGetClientPreferencesRespond400ForInvalidClientId() throws Exception {
+	void testForGetClientPreferencesRespond406ForInvalidClientId() throws Exception {
 		String id = "-10000";
 		when(mockClientPreferencesService.getClientPreferences(id)).thenThrow(IllegalArgumentException.class);
 		
 		mockMvc.perform(get("/client-preferences/" + id))
-			.andExpect(status().isBadRequest())
+			.andExpect(status().isNotAcceptable())
 			.andExpect(content().string(is(emptyOrNullString())));;
 	}
 

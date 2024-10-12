@@ -187,7 +187,7 @@ class ClientServicePOJOUnitTest {
 		Mockito.when(mockDao.getAllClientIdentificationDetails()).thenReturn(clientList.get(0).getIdentification());
 		//Mocking fmtsService to also successfully validate the client
 		Mockito.when(mockFMTSService.verifyClient(newEmail)).thenReturn(
-				new FMTSValidatedClient(newEmail,clientList.get(2).getClientId(), new BigDecimal(clientList.get(2).getClientId())));
+				new FMTSValidatedClient(clientList.get(2).getClientId(),newEmail, new BigDecimal(clientList.get(2).getClientId())));
 		//New Client Details
 		Client newClient = service.registerNewClient(newEmail, clientList.get(2).getPassword(), clientList.get(2).getName(),
 				"12/11/2000", clientList.get(2).getCountry(), clientList.get(2).getIdentification());
@@ -280,7 +280,7 @@ class ClientServicePOJOUnitTest {
 		Mockito.when(mockDao.getClientAtLogin(existingEmail,validPassword)).thenReturn(clientList.get(0));
 		//Mocking fmtsService to also successfully validate the client
 		Mockito.when(mockFMTSService.verifyClient(existingEmail, clientList.get(0).getClientId())).
-				thenReturn(new FMTSValidatedClient(existingEmail, clientList.get(0).getClientId(), new BigDecimal(clientList.get(0).getClientId())));
+				thenReturn(new FMTSValidatedClient(clientList.get(0).getClientId(), existingEmail,  new BigDecimal(clientList.get(0).getClientId())));
 		
 		Client existingClient = service.loginExistingClient(existingEmail,validPassword);
 		//Verifying that the corresponding mockDao methods were called

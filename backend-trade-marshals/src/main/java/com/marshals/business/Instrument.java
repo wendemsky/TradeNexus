@@ -1,5 +1,7 @@
 package com.marshals.business;
 
+import java.util.Objects;
+
 public class Instrument {
 	private String instrumentId;
 	private String externalIdType;
@@ -8,6 +10,9 @@ public class Instrument {
     private String instrumentDescription;
     private Integer maxQuantity;
     private Integer minQuantity;
+    
+    public Instrument() {
+    }
     
 	public Instrument(String instrumentId, String externalIdType, String externalId, String categoryId,
 			String instrumentDescription, Integer maxQuantity, Integer minQuantity) {
@@ -89,7 +94,35 @@ public class Instrument {
 	public Integer getMinQuantity() {
 		return minQuantity;
 	}
-    
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(categoryId, externalId, externalIdType, instrumentDescription, instrumentId, maxQuantity,
+				minQuantity);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Instrument other = (Instrument) obj;
+		return Objects.equals(categoryId, other.categoryId) && Objects.equals(externalId, other.externalId)
+				&& Objects.equals(externalIdType, other.externalIdType)
+				&& Objects.equals(instrumentDescription, other.instrumentDescription)
+				&& Objects.equals(instrumentId, other.instrumentId) && Objects.equals(maxQuantity, other.maxQuantity)
+				&& Objects.equals(minQuantity, other.minQuantity);
+	}
+
+	@Override
+	public String toString() {
+		return "Instrument [instrumentId=" + instrumentId + ", externalIdType=" + externalIdType + ", externalId="
+				+ externalId + ", categoryId=" + categoryId + ", instrumentDescription=" + instrumentDescription
+				+ ", maxQuantity=" + maxQuantity + ", minQuantity=" + minQuantity + "]";
+	}    
     
 }
 

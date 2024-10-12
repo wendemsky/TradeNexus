@@ -63,7 +63,7 @@ public class TradeService {
         	
         	if(order.getDirection() == "B") {
         		for(Price price: priceList) {
-            		if(price.getInstrument().getInstrumentId() == order.getInstrumentId()) {
+            		if(price.getInstrument().getInstrumentId().equals(order.getInstrumentId())) {
             			//Call FMTS Service to create the trade
         				Trade trade = fmtsService.createTrade(order);
         				//Buy Condition Validation

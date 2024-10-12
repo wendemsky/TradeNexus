@@ -72,7 +72,7 @@ class ClientPreferencesControllerE2ETest {
 		ResponseEntity<ClientPreferences> response = 
 				restTemplate.getForEntity(requestUrl, ClientPreferences.class);
 		
-		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
 	}
 	
 	//Get client preferences for id that doesn't exist
@@ -84,7 +84,7 @@ class ClientPreferencesControllerE2ETest {
 		ResponseEntity<ClientPreferences> response = 
 				restTemplate.getForEntity(requestUrl, ClientPreferences.class);
 		
-		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 	}
 	
 //	TESTS FOR ADD CLIENT PREFERENCES
