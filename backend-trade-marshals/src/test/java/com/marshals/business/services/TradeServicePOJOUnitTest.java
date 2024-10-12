@@ -11,12 +11,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.marshals.business.ClientPortfolio;
 import com.marshals.business.ClientPreferences;
@@ -26,9 +22,6 @@ import com.marshals.business.Order;
 import com.marshals.business.Price;
 import com.marshals.business.Trade;
 import com.marshals.business.TradeHistory;
-import com.marshals.business.services.FMTSService;
-import com.marshals.business.services.PortfolioService;
-import com.marshals.business.services.TradeService;
 import com.marshals.integration.ClientTradeDao;
 import com.marshals.integration.DatabaseException;
 

@@ -6,5 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/client-preferences")
 public class ClientPreferencesController {
-
+	//Add new client preferences
+	//Update existing client preferences
 }

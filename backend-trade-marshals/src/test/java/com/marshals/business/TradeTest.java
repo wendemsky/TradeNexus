@@ -8,9 +8,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.marshals.business.Order;
-import com.marshals.business.Trade;
-
 class TradeTest {
 	
 	Trade trade;

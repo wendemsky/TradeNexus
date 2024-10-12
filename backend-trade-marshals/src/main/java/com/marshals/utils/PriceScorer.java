@@ -1,9 +1,7 @@
 package com.marshals.utils;
 
-import java.util.Comparator;
 
 import com.marshals.business.ClientPreferences;
-import com.marshals.business.Price;
 
 public class PriceScorer{
 	

@@ -8,20 +8,15 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.marshals.business.Client;
 import com.marshals.business.ClientIdentification;
 import com.marshals.business.ClientPreferences;
-import com.marshals.business.services.ClientPreferencesService;
 import com.marshals.integration.ClientPreferencesDao;
 import com.marshals.integration.DatabaseException;
 

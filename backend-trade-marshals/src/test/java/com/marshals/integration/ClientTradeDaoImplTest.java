@@ -5,24 +5,18 @@ import static org.junit.jupiter.api.Assertions.*;
  
 import java.math.BigDecimal;
 import java.sql.SQLException;
- 
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.marshals.business.ClientPortfolio;
-import com.marshals.business.Holding;
 import com.marshals.business.Order;
 import com.marshals.business.Trade;
 import com.marshals.business.TradeHistory;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTable;
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTableWhere;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
  

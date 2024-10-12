@@ -12,7 +12,7 @@ import com.marshals.business.Order;
 import com.marshals.business.Price;
 import com.marshals.business.Trade;
 
-//Has static methods - Mocking FMTS
+//Will call fmts dao methods
 
 @Service("fmtsService")
 public class FMTSService {

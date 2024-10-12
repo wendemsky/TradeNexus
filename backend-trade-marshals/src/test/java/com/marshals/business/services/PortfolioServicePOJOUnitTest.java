@@ -18,7 +18,6 @@ import com.marshals.business.ClientPortfolio;
 import com.marshals.business.Holding;
 import com.marshals.business.Order;
 import com.marshals.business.Trade;
-import com.marshals.business.services.PortfolioService;
 import com.marshals.integration.ClientPortfolioDao;
 import com.marshals.integration.DatabaseException;
 

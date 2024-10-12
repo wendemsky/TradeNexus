@@ -7,4 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/activity-report")
 public class ActivityReportController {
 
+	//Generate holdings report
+	//Generate trade report
+	//Generate P&L report
 }

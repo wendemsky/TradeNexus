@@ -1,15 +1,21 @@
 package com.marshals.restcontroller;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
+@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
+@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"},
+     executionPhase = ExecutionPhase.AFTER_TEST_METHOD) 
 class ActivityReportControllerE2ETest {
+	@Autowired
+	private TestRestTemplate restTemplate; // for executing rest endpoints
 
-	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;  // for executing SQL queries	
 
 }

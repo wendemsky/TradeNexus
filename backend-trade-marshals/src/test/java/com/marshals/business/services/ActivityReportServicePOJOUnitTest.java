@@ -20,8 +20,6 @@ import com.marshals.business.Holding;
 import com.marshals.business.Order;
 import com.marshals.business.Trade;
 import com.marshals.business.TradeHistory;
-import com.marshals.business.services.ActivityReportService;
-import com.marshals.business.services.TradeService;
 import com.marshals.integration.ClientActivityReportDao;
 import com.marshals.integration.DatabaseException;
  

@@ -6,5 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/client")
 public class ClientController {
-
+	//Verify client email
+	//Register new client
+	//Login existing client
 }

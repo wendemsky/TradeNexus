@@ -9,9 +9,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.marshals.business.Client;
-import com.marshals.business.ClientIdentification;
-
 class ClientTest {
 	
 	private Client client;
