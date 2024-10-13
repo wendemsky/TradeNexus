@@ -13,4 +13,7 @@ public class DatabaseRequestResult {
 		return rowCount;
 	}
 	
+	public void setRowCount(int rowCount) {
+		this.rowCount = rowCount;
+	}
 }

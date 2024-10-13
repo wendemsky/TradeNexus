@@ -17,4 +17,5 @@ public interface ClientPortfolioMapper {
 	int updateClientBalance(@Param("clientId") String clientId,@Param("currBalance") BigDecimal currBalance);
 	int addClientHoldings(@Param("clientId") String clientId, @Param("holding")Holding holding);
 	int updateClientHoldings(@Param("clientId") String clientId, @Param("holding") Holding holding); 
+	int deleteClientHoldings(@Param("clientId") String clientId, @Param("holding")Holding holding);
 }

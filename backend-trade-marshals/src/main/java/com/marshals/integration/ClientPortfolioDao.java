@@ -11,6 +11,7 @@ public interface ClientPortfolioDao {
 	ClientPortfolio getClientPortfolio(String clientId); 
 	//Updation of Client Portfolio has 3 parts - UpdateClientBalanc, addHoldings and updateHoldings
 	void updateClientBalance(String clientId, BigDecimal currBalance);
-	void addClientHoldings(String clientId, Holding holdoing);
-	void updateClientHoldings(String clientId, Holding holding); 
+	int addClientHoldings(String clientId, Holding holdoing);
+	int updateClientHoldings(String clientId, Holding holding); 
+	int deleteClientHoldings(String clientId, Holding holding);
 }

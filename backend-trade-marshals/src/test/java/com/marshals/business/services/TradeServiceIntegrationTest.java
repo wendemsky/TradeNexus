@@ -150,7 +150,7 @@ class TradeServiceIntegrationTest {
 		String existingClientId = "541107416";
 		UUID uuid = UUID.randomUUID();
 		String orderId = uuid.toString();
-		Order order = new Order("C100", 10, new BigDecimal("104.75"), "S", existingClientId, orderId, 123);
+		Order order = new Order("C100", 1, new BigDecimal("104.75"), "S", existingClientId, orderId, 123);
 		Trade trade = service.executeTrade(order);
 		assertEquals(1, countRowsInTableWhere(testJdbcTemplate, "CLIENT_TRADE",
 				"TRADE_ID = '" + trade.getTradeId() + "' and ORDER_ID = '" + orderId + "'"));
