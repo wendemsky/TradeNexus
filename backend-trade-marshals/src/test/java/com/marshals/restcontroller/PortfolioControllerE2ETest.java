@@ -28,9 +28,10 @@ import org.springframework.test.context.jdbc.Sql;
 import com.marshals.business.ClientPortfolio;
 import com.marshals.business.Holding;
 
+
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
-@Sql(scripts = {"classpath:schema.sql", "classpath:data.sql"},
-     executionPhase = ExecutionPhase.AFTER_TEST_METHOD) 
+@Sql(scripts={"classpath:schema.sql", "classpath:data.sql"}, // SQL files are in src/main/resources
+     executionPhase=Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class PortfolioControllerE2ETest {
 	@Autowired
 	private TestRestTemplate restTemplate;
