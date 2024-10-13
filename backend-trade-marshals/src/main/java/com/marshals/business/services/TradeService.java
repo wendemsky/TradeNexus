@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.marshals.business.ClientPortfolio;
 import com.marshals.business.ClientPreferences;
+import com.marshals.business.FMTSValidatedClient;
 import com.marshals.business.Holding;
 import com.marshals.business.Order;
 import com.marshals.business.Price;
@@ -65,7 +66,9 @@ public class TradeService {
         		for(Price price: priceList) {
             		if(price.getInstrument().getInstrumentId().equals(order.getInstrumentId())) {
             			//Call FMTS Service to create the trade
+            			
         				Trade trade = fmtsService.createTrade(order);
+        				trade.getOrder().setOrderId(order.getOrderId());
         				//Buy Condition Validation
         				//Getting the cost of trade and checking if its lesser than or equal to balance
         				BigDecimal totalCostOfTrade = trade.getCashValue();
@@ -87,6 +90,7 @@ public class TradeService {
         				if(holding.getQuantity() >= order.getQuantity()) {
         					//Call FMTS Service to create the trade
             				Trade trade = fmtsService.createTrade(order);
+            				trade.getOrder().setOrderId(order.getOrderId());
             				//Updating portfolio and adding Trade 
             				portfolioService.updateClientPortfolio(trade);
             				this.addTrade(trade);	
@@ -124,8 +128,9 @@ public class TradeService {
     
 //    --------------------------------ROBO ADVISOR-------------------------------------------
     
-    public List<Price> recommendTopBuyInstruments(ClientPreferences preferences, BigDecimal currBalance){
+    public List<Price> recommendTopBuyInstruments(ClientPreferences preferences){
     	try {
+    		BigDecimal currBalance = portfolioService.getClientPortfolio(preferences.getClientId()).getCurrBalance();
     		if(preferences.getAcceptAdvisor()=="false") throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
     	    PriceScorer scorer = new PriceScorer(preferences);
             List<Price> recommendedPrice = new ArrayList<Price>();
@@ -147,8 +152,9 @@ public class TradeService {
     	}
     }
     
-    public List<Price> recommendTopSellInstruments(ClientPreferences preferences, List<Holding> userHoldings){
+    public List<Price> recommendTopSellInstruments(ClientPreferences preferences){
     	try {
+    		List<Holding> userHoldings = portfolioService.getClientPortfolio(preferences.getClientId()).getHoldings();
     		if(preferences.getAcceptAdvisor()=="false") throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
     		List<Holding> topSellTradesInHoldings = new ArrayList<>();
         	if(userHoldings.size() <= 5) {

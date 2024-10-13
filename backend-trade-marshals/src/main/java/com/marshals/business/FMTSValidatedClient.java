@@ -6,9 +6,9 @@ import java.util.Objects;
 public class FMTSValidatedClient {
 	private String clientId;
 	private String email;
-	private BigDecimal token;
+	private Integer token;
 	public FMTSValidatedClient() {}
-	public FMTSValidatedClient(String clientId, String email, BigDecimal token) {
+	public FMTSValidatedClient(String clientId, String email, Integer token) {
 		try {
 			if(email==null || clientId==null || token == null) 
 				throw new NullPointerException("Validated Client Details cannot be null");
@@ -32,19 +32,16 @@ public class FMTSValidatedClient {
 	public void setEmail(String email) {
 		this.email = email;
 	}
- 
-	public BigDecimal getToken() {
+	public Integer getToken() {
 		return token;
 	}
-	public void setToken(BigDecimal token) {
+	public void setToken(Integer token) {
 		this.token = token;
 	}
- 
 	@Override
 	public int hashCode() {
 		return Objects.hash(clientId, email, token);
 	}
- 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -57,4 +54,9 @@ public class FMTSValidatedClient {
 		return Objects.equals(clientId, other.clientId) && Objects.equals(email, other.email)
 				&& Objects.equals(token, other.token);
 	}
+	@Override
+	public String toString() {
+		return "FMTSValidatedClient [clientId=" + clientId + ", email=" + email + ", token=" + token + "]";
+	}
+ 
 }

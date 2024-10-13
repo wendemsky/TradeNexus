@@ -19,7 +19,7 @@ class LoggedInClientTest {
 	void setUp() throws Exception {
 		client = new Client("john.doe@gmail.com","739982664", "Password123", "John Doe", "08/11/2002", "India", 
 				new ArrayList<>(List.of(new ClientIdentification("Aadhar","123456789102"))), false);
-		loggedInClient = new LoggedInClient(client, new BigDecimal("739982664").setScale(0));
+		loggedInClient = new LoggedInClient(client, 739982664);
 	}
 
 	@AfterEach
@@ -30,19 +30,19 @@ class LoggedInClientTest {
 
 	@Test
 	void testForEqualsLoggedInClientObject() {
-		assertEquals(loggedInClient, new LoggedInClient(client, new BigDecimal("739982664").setScale(0)) , 
+		assertEquals(loggedInClient, new LoggedInClient(client, 739982664) , 
 				"Logged In Client details should be equal");
 	}
 	
 	@Test
 	void testForNotEqualsLoggedInClientObject() {
-		assertNotEquals(loggedInClient, new LoggedInClient(client, new BigDecimal("134").setScale(0)) , 
+		assertNotEquals(loggedInClient, new LoggedInClient(client, 134) , 
 				"Logged In Client details should have equal hashcodes");
 	}
 	
 	@Test
 	void testForHashCodeLoggedInClientObject() {
-		assertEquals(loggedInClient.hashCode(), new LoggedInClient(client, new BigDecimal("739982664").setScale(0)).hashCode() , 
+		assertEquals(loggedInClient.hashCode(), new LoggedInClient(client,739982664).hashCode() , 
 				"Logged In Client details should not have equal hashcodes");
 	}
 	
@@ -50,7 +50,7 @@ class LoggedInClientTest {
 	@Test
 	void testNullClientInitializationOfLoggedInClient() {
 		Exception e = assertThrows(NullPointerException.class, () -> {
-			loggedInClient = new LoggedInClient(null, new BigDecimal("739982664").setScale(0));
+			loggedInClient = new LoggedInClient(null, 739982664);
 		});
 		assertEquals("Logging in Client details cannot be null",e.getMessage());
 	}

@@ -7,9 +7,10 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.List;
- 
+
 import org.springframework.stereotype.Repository;
- 
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
  
@@ -118,11 +119,10 @@ public class FMTSDaoImpl implements FMTSDao {
 			HttpClient client = HttpClient.newBuilder().build();
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			prices = objectMapper.readValue(response.body(), Price[].class);
+			return Arrays.asList(prices);	
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new FMTSException("Error in fetching live prices");
 		}
-		return Arrays.asList(prices);	
 	}
 
 	// Execute trade
@@ -131,9 +131,7 @@ public class FMTSDaoImpl implements FMTSDao {
 		String api = "/trades/trade";
 		HttpResponse<String> response = null;
 		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			String jsonBody = objectMapper.writeValueAsString(order);
-			
+			String jsonBody = prepareJsonBody(order);
 			HttpRequest request = 
 					HttpRequest.newBuilder()
 						.uri(new URI(url+api))
@@ -143,16 +141,37 @@ public class FMTSDaoImpl implements FMTSDao {
 			
 			HttpClient client = HttpClient.newBuilder().build();
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			System.out.println(response.body());
+			if(response.statusCode()==406) { //Error in validation
+				throw new FMTSException("Token expired or is invalid");
+			}
+			else if(response.statusCode() == 409) {
+				throw new FMTSException("Target price is not in the expected range of execution price");
+			}
+			else if(response.statusCode()!=200) { //Any other status code
+				throw new FMTSException("There was an unexpected error from FMTS while validating new client");
+			}
 			Trade processedTrade = objectMapper.readValue(response.body(), Trade.class);
-			System.out.println(processedTrade);
 			return processedTrade;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new FMTSException("");
+		}
+		catch(FMTSException e){
+			throw e;
+		}
+		catch (Exception e) {
+			throw new FMTSException("There was an unexpected error from FMTS while executing trade");
 		}
 		
+	}
+
+	private String prepareJsonBody(Order order) throws JsonProcessingException {
+		ObjectNode jsonNode = objectMapper.createObjectNode();
+		jsonNode.put("orderId", order.getOrderId());
+		jsonNode.put("quantity", order.getQuantity());
+		jsonNode.put("targetPrice", order.getTargetPrice());
+		jsonNode.put("direction", order.getDirection());
+		jsonNode.put("clientId", order.getClientId());
+		jsonNode.put("instrumentId", order.getInstrumentId());
+		jsonNode.put("token", order.getToken());
+		return objectMapper.writeValueAsString(order);
 	}
  
 }

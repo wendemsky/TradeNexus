@@ -23,15 +23,15 @@ class FMTSValidatedClientTest {
 
 	@Test
 	void testForEqualsValidatedClientObject() {
-		validatedClient = new FMTSValidatedClient("john.doe@gmail.com","1234567890", new BigDecimal("207156590").setScale(0) );
-		assertEquals(validatedClient, new FMTSValidatedClient("john.doe@gmail.com","1234567890", new BigDecimal("207156590").setScale(0) ) , 
+		validatedClient = new FMTSValidatedClient("john.doe@gmail.com","1234567890",207156590);
+		assertEquals(validatedClient, new FMTSValidatedClient("john.doe@gmail.com","1234567890",207156590) , 
 				"Validated Client details should be equal");
 	}
 	
 	@Test
 	void testForNotEqualsOfValidatedClientObjectWithDiffTokens() {
-		validatedClient = new FMTSValidatedClient("john.doe@gmail.com","1234567890", new BigDecimal("207156590").setScale(0) );
-		assertNotEquals(validatedClient, new FMTSValidatedClient("john.doe@gmail.com","1234567890", new BigDecimal("123456789").setScale(0) ) , 
+		validatedClient = new FMTSValidatedClient("john.doe@gmail.com","1234567890",207156590);
+		assertNotEquals(validatedClient, new FMTSValidatedClient("john.doe@gmail.com","1234567890",123456789) , 
 				"Validated Client details should not be equal");
 	}
 	
@@ -39,7 +39,7 @@ class FMTSValidatedClientTest {
 	@Test
 	void testNullClientIDInitialization() {
 		Exception e = assertThrows(NullPointerException.class, () -> {
-			validatedClient = new FMTSValidatedClient("john.doe@gmail.com",null, new BigDecimal("207156590").setScale(0) );
+			validatedClient = new FMTSValidatedClient("john.doe@gmail.com",null,207156590);
 		});
 		assertEquals("Validated Client Details cannot be null",e.getMessage());
 	}

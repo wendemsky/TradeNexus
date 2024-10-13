@@ -5,9 +5,9 @@ import java.util.Objects;
 
 public class LoggedInClient {
 	private Client client;
-	private BigDecimal token;
+	private Integer token;
 	
-	public LoggedInClient(Client client, BigDecimal token) {
+	public LoggedInClient(Client client, Integer token) {
 		try {
 			if(client == null || token == null) throw new NullPointerException("Logging in Client details cannot be null");
 			this.client = client;
@@ -21,7 +21,7 @@ public class LoggedInClient {
 		return client;
 	}
 	
-	public BigDecimal getToken() {
+	public Integer getToken() {
 		return token;
 	}
 

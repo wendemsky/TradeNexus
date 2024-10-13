@@ -41,8 +41,8 @@ class FMTSServicePOJOUnitTest {
 	void setUp() throws Exception {
 		//Mock validated clients
 		validatedClients = new ArrayList<>(List.of(
-				new FMTSValidatedClient("739982664","john.doe@gmail.com",new BigDecimal("739859208").setScale(0)), //Register
-				new FMTSValidatedClient("1654658069","sowmya@gmail.com",new BigDecimal("1654658069").setScale(0)) //Login
+				new FMTSValidatedClient("739982664","john.doe@gmail.com",739859208), //Register
+				new FMTSValidatedClient("1654658069","sowmya@gmail.com",1654658069) //Login
 		));
 		
 		//Mock price list
@@ -189,13 +189,15 @@ class FMTSServicePOJOUnitTest {
 	}
 
 	/*FMTS Retrieval of Live Prices*/
+	@Test
 	void testForSuccessfulRetrievalOfLivePrices() {
 		//Mocking dao to return live price list
 		Mockito.when(mockDao.getLivePrices()).thenReturn(priceList);
 		List<Price> prices = service.getLivePrices();
-		Mockito.verify(mockDao.getLivePrices());
 		assertEquals(prices,priceList,"Live Prices must be retrieved");
 	}
+	
+	@Test
 	void testForRetrievalOfEmptyLivePricesThrowsException() {
 		//Mocking dao to return live price list
 		Mockito.when(mockDao.getLivePrices()).thenReturn(new ArrayList<>());
@@ -205,6 +207,8 @@ class FMTSServicePOJOUnitTest {
 		});		
 		assertEquals(e.getMessage(),"No instrument live prices fetched from FMTS Service");
 	}
+	
+	@Test
 	void testForRetrievalOfLivePricesThrowsExceptionWhenFMTSThrowsException() {
 		//Mocking dao to throw Exception
 		Mockito.doThrow(new FMTSException()).when(mockDao).getLivePrices();
@@ -215,19 +219,23 @@ class FMTSServicePOJOUnitTest {
 	}
 	
 	/*FMTS Execution of Trade given Order*/
+	@Test
 	void testForExecutionOfNullOrderThrowsException() {
 		Exception e = assertThrows(NullPointerException.class, () -> {
 			service.createTrade(null);
 		});
 		assertEquals("Order cannot be null",e.getMessage());
 	}
+	
+	@Test
 	void testForSuccessfulExecutionOfTradeGivenValidOrder() {
 		//Mocking dao to return live price list
 		Mockito.when(mockDao.createTrade(order)).thenReturn(trade);
 		Trade executedTrade = service.createTrade(order);
-		Mockito.verify(mockDao.createTrade(order));
 		assertEquals(executedTrade,trade,"Trade must have been executed");
 	}
+	
+	@Test
 	void testForExecutionOfNullTradeFromFMTSThrowsException() {
 		//Mocking dao to return null trade
 		Mockito.when(mockDao.createTrade(order)).thenReturn(null);
@@ -237,6 +245,8 @@ class FMTSServicePOJOUnitTest {
 		});	
 		assertEquals(e.getMessage(),"Order is invalid, Cannot execute trade");
 	}
+	
+	@Test
 	void testForExecutionOfTradeGivenExpiredOrderThrowsException() {
 		//Mocking dao to throw Exception
 		String errorMessage = "User session has expired, Cannot execute Trade";
@@ -248,6 +258,8 @@ class FMTSServicePOJOUnitTest {
 		
 		assertEquals(e.getMessage(),errorMessage);
 	}
+	
+	@Test
 	void testForExecutionOfTradeWithNonExistingInstrumentThrowsException() {
 		Order invalidOrder =  new Order("non-existing-instrument", 10, new BigDecimal("100.00"), "B", "1654658069", "ORDER001", 123);
 		//Mocking dao to throw Exception
