@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.marshals.business.Client;
 import com.marshals.business.ClientIdentification;
 import com.marshals.business.ClientPreferences;
+import com.marshals.business.LoggedInClient;
 import com.marshals.integration.DatabaseException;
  
 @SpringBootTest
@@ -84,9 +85,11 @@ class ClientPreferencesServiceIntegrationTest {
 		// Must add new Client before adding new Client Preferences
 		List<ClientIdentification> identificationList = new ArrayList<>(
 				List.of(new ClientIdentification("SSN", "1643846323")));
-		Client newClient = clientService.registerNewClient("sam@gmail.com", "Password1234", "Sam", "12/11/2000", "USA",
+		//Registering new client before adding new preferences
+		LoggedInClient newClient = clientService.registerNewClient("sam@gmail.com", "Password1234", "Sam", "12/11/2000", "USA",
 				identificationList);
-		ClientPreferences newClientPref = new ClientPreferences(newClient.getClientId(), "Retirement", "LIG", "Short",
+		//Defining new client preferences
+		ClientPreferences newClientPref = new ClientPreferences(newClient.getClient().getClientId(), "Retirement", "LIG", "Short",
 				"Tier4", 2, false);
 		int oldCount = countRowsInTable(testJdbcTemplate, "client_preferences");
 		service.addClientPreferences(newClientPref);

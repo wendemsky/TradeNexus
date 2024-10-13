@@ -21,7 +21,7 @@ import com.marshals.business.ClientPreferences;
 import com.marshals.business.services.ClientPreferencesService;
 import com.marshals.integration.DatabaseException;
 
-@RestController
+@RestController("clientPreferencesController")
 @RequestMapping("/client-preferences")
 public class ClientPreferencesController {
 	

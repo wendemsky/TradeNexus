@@ -50,6 +50,8 @@ public class FMTSService {
 	public List<Price> getLivePrices() {
 		try {
 			List<Price> priceList = fmtsDao.getLivePrices();
+			if(priceList == null || priceList.isEmpty())
+				throw new FMTSException("No instrument live prices fetched from FMTS Service");
 			return priceList;
 		} catch(FMTSException e) { //Any Exception thrown from fmtsDao
 			throw e;
@@ -62,6 +64,7 @@ public class FMTSService {
         		throw new NullPointerException("Order cannot be null");
         	}
         	Trade trade = fmtsDao.createTrade(order);
+        	if(trade==null) throw new FMTSException("Order is invalid, Cannot execute trade");
         	return trade;
     	} catch(NullPointerException e) {
     		throw e;

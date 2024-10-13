@@ -14,8 +14,10 @@ import com.marshals.business.ClientIdentification;
 import com.marshals.business.ClientPortfolio;
 import com.marshals.business.FMTSValidatedClient;
 import com.marshals.business.Holding;
+import com.marshals.business.LoggedInClient;
 import com.marshals.integration.ClientDao;
 import com.marshals.integration.DatabaseException;
+import com.marshals.integration.FMTSException;
 
 @Service("clientService")
 public class ClientService {
@@ -63,13 +65,16 @@ public class ClientService {
 			return false;
 		} catch(NullPointerException e) {
 			throw e;
+		} catch(DatabaseException e) {
+			throw e;
 		}
 	}
 
 	//Registering a new client
-	public Client registerNewClient(String email, String password, String name,
+	public LoggedInClient registerNewClient(String email, String password, String name,
 										String dateOfBirth, String country, List<ClientIdentification> identification) {
 		try {
+			LoggedInClient loggedInClient = null;
 			Client client = null;
 			//Verifying the email passed to check if client already exists or not
 			if(verifyClientEmail(email))  //If email already registered
@@ -86,15 +91,21 @@ public class ClientService {
 			//Validating Client with FMTS
 			FMTSValidatedClient validatedClient = fmtsService.verifyClient(email); 
 			if(validatedClient == null)
-				throw new NullPointerException("New Client Details couldnt be verified");
+				throw new NullPointerException("New Client Details couldnt be validated");
 			
 			//ON SUCCESSFUL VERIFICATION OF REGISTRATION - Saving the clients details
 			client = new Client(email,validatedClient.getClientId(), password, name, dateOfBirth, country, identification, false);
 			saveNewClientDetails(client);
-			return client;
+			//Return logging in client info - which has token
+			loggedInClient = new LoggedInClient(client,validatedClient.getToken());
+			return loggedInClient;
 		} catch(NullPointerException e) {
 			throw e;
 		} catch(IllegalArgumentException e) {
+			throw e;
+		} catch(FMTSException e) {
+			throw e;
+		} catch(DatabaseException e) {
 			throw e;
 		}
 	}
@@ -108,8 +119,9 @@ public class ClientService {
 	}
 	
 	//Logging in an existing client
-	public Client loginExistingClient(String email, String password) {
+	public LoggedInClient loginExistingClient(String email, String password) {
 		try {
+			LoggedInClient loggedInClient = null;
 			Client existingClient = null;
 			
 			//Verifying the email passed to check if client already exists or not
@@ -124,13 +136,18 @@ public class ClientService {
 			//Validating Existing Client with FMTS
 			FMTSValidatedClient validatedClient = fmtsService.verifyClient(email,existingClient.getClientId()); 
 			if(validatedClient == null)
-				throw new NullPointerException("Logging in Client Details couldnt be verified");
+				throw new NullPointerException("Logging in Client Details couldnt be validated");
  
-			//ON SUCCESSFUL LOGIN - Returning the client details
-			return existingClient;
+			//ON SUCCESSFUL LOGIN - Returning logging in client info - which has token
+			loggedInClient = new LoggedInClient(existingClient,validatedClient.getToken());
+			return loggedInClient;
 		} catch(NullPointerException e) {
 			throw e;
 		} catch(IllegalArgumentException e) {
+			throw e;
+		} catch(FMTSException e) {
+			throw e;
+		} catch(DatabaseException e) {
 			throw e;
 		}
 	}

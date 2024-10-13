@@ -35,7 +35,7 @@ import com.marshals.business.ClientPreferences;
 import com.marshals.business.services.ClientPreferencesService;
 import com.marshals.integration.DatabaseException;
 
-@WebMvcTest
+@WebMvcTest(controllers = {ClientPreferencesController.class})
 class ClientPreferencesControllerWebLayerTest {
 	
 	@Autowired
