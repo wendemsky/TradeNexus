@@ -30,6 +30,9 @@ class TradeServiceIntegrationTest {
 
 	@Autowired
 	private TradeService service;
+	
+	@Autowired
+	private FMTSService fmtsService;
 
 	@Autowired
 	private JdbcTemplate testJdbcTemplate;
@@ -136,10 +139,11 @@ class TradeServiceIntegrationTest {
 	/* EXECUTE TRADE */
 	@Test
 	public void testExecuteSuccessfulBuyTradeUpdatesTradeTable() {
-		String existingClientId = "1425922638";
+		String existingClientId = "541107416";
 		UUID uuid = UUID.randomUUID();
-		String orderId = uuid.toString();
-		Order order = new Order("N123456", 10, new BigDecimal("10.75"), "B", existingClientId, orderId, 123);
+		Integer token = fmtsService.verifyClient("himanshu@gmail.com", existingClientId).getToken();
+		String orderId = "ORDER003";
+		Order order = new Order("N123456", 2, new BigDecimal("104.75"), "B", existingClientId, "ORDER003", token);
 		Trade trade = service.executeTrade(order);
 		assertEquals(1, countRowsInTableWhere(testJdbcTemplate, "CLIENT_TRADE",
 				"TRADE_ID = '" + trade.getTradeId() + "' and ORDER_ID = '" + orderId + "'"));
@@ -149,8 +153,9 @@ class TradeServiceIntegrationTest {
 	public void testExecuteSuccessfulSellTradeUpdatesTradeTable() {
 		String existingClientId = "541107416";
 		UUID uuid = UUID.randomUUID();
-		String orderId = uuid.toString();
-		Order order = new Order("C100", 1, new BigDecimal("104.75"), "S", existingClientId, orderId, 123);
+		Integer token = fmtsService.verifyClient("himanshu@gmail.com", existingClientId).getToken();
+		String orderId = "ORDER004";
+		Order order = new Order("C100", 10, new BigDecimal("95.92"), "S", existingClientId, "ORDER004", token);
 		Trade trade = service.executeTrade(order);
 		assertEquals(1, countRowsInTableWhere(testJdbcTemplate, "CLIENT_TRADE",
 				"TRADE_ID = '" + trade.getTradeId() + "' and ORDER_ID = '" + orderId + "'"));

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.marshals.business.Client;
 import com.marshals.business.ClientIdentification;
+import com.marshals.business.LoggedInClient;
 
 @SpringBootTest
 @Transactional
@@ -73,8 +74,8 @@ class ClientServiceIntegrationTest {
 	void testForSuccessfulRetrievalOfClientDetailsWithValidCredentialsFromService() {
 		String validClientEmail = "sowmya@gmail.com";
 		String validClientPassword = "Marsh2024";
-		Client client = service.loginExistingClient(validClientEmail, validClientPassword);
-		assertEquals(client1654658069, client, "Successful login must return Client details");
+		LoggedInClient client = service.loginExistingClient(validClientEmail, validClientPassword);
+		assertEquals(client1654658069, client.getClient(), "Successful login must return Client details");
 	}
 	//Login of client with non existent email
 	@Test
@@ -102,8 +103,7 @@ class ClientServiceIntegrationTest {
 	void testForSuccessfulAdditionOfNewClientDetailsInClientTableFromService() {
 		int oldCount = countRowsInTable(testJdbcTemplate, "client");
 		List<ClientIdentification> identificationList = new ArrayList<>(List.of(new ClientIdentification("SSN","1643846323")));
-		Client client = service.registerNewClient("sam@gmail.com","Password1234", "Sam", "12/11/2000", "USA", identificationList);
-		System.out.println(client);
+		LoggedInClient client = service.registerNewClient("sam@gmail.com","Password1234", "Sam", "12/11/2000", "USA", identificationList);
 		int newCount = countRowsInTable(testJdbcTemplate, "client");
 		assertTrue(newCount == oldCount+1, "Client Table count must increase by one");
 	}
@@ -112,8 +112,8 @@ class ClientServiceIntegrationTest {
 	void testForSuccessfulAdditionOfNewClientDetailsInClientIdentificationTableFromService() {
 		
 		List<ClientIdentification> identificationList = new ArrayList<>(List.of(new ClientIdentification("SSN","1643846323")));
-		Client newClient = service.registerNewClient("sam@gmail.com","Password1234", "Sam", "12/11/2000", "USA", identificationList);
-		String newClientId = newClient.getClientId();
+		LoggedInClient newClient = service.registerNewClient("sam@gmail.com","Password1234", "Sam", "12/11/2000", "USA", identificationList);
+		String newClientId = newClient.getClient().getClientId();
 		String whereCondition = "client_id = "+ newClientId;
 		int newCount = countRowsInTableWhere(testJdbcTemplate, "client_identification", whereCondition);
 		System.out.println(newCount);

@@ -119,6 +119,12 @@ public class Trade {
 				&& Objects.equals(instrumentId, other.instrumentId) && Objects.equals(order, other.order)
 				&& Objects.equals(quantity, other.quantity) && Objects.equals(tradeId, other.tradeId);
 	}
-    
+
+	@Override
+	public String toString() {
+		return "Trade [instrumentId=" + instrumentId + ", quantity=" + quantity + ", executionPrice=" + executionPrice
+				+ ", direction=" + direction + ", clientId=" + clientId + ", order=" + order + ", tradeId=" + tradeId
+				+ ", cashValue=" + cashValue + "]";
+	}
     
 }

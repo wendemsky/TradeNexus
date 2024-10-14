@@ -1,19 +1,14 @@
 package com.marshals.business.services;
- 
 import java.util.List;
- 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
- 
 import com.marshals.business.FMTSValidatedClient;
 import com.marshals.business.Order;
 import com.marshals.business.Price;
 import com.marshals.business.Trade;
 import com.marshals.integration.FMTSDao;
 import com.marshals.integration.FMTSException;
- 
 //Will call fmts dao methods
- 
 @Service("fmtsService")
 public class FMTSService { 
 	@Autowired
@@ -31,7 +26,6 @@ public class FMTSService {
 			throw e;
 		}
 	}
- 
 	//For Login - With ClientId
 	public FMTSValidatedClient verifyClient(String email, String clientId) { 
 		try {
@@ -44,12 +38,14 @@ public class FMTSService {
 			throw e;
 		}
 	}
-
+ 
 	/*Functions for Trade Execution*/
 	//To return list of live prices 
 	public List<Price> getLivePrices() {
 		try {
 			List<Price> priceList = fmtsDao.getLivePrices();
+			if(priceList == null || priceList.isEmpty())
+				throw new FMTSException("No instrument live prices fetched from FMTS Service");
 			return priceList;
 		} catch(FMTSException e) { //Any Exception thrown from fmtsDao
 			throw e;
@@ -62,6 +58,7 @@ public class FMTSService {
         		throw new NullPointerException("Order cannot be null");
         	}
         	Trade trade = fmtsDao.createTrade(order);
+        	if(trade==null) throw new FMTSException("Order is invalid, Cannot execute trade");
         	return trade;
     	} catch(NullPointerException e) {
     		throw e;

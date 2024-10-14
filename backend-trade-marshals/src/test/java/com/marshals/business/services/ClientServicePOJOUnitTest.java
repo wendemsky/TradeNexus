@@ -19,8 +19,10 @@ import com.marshals.business.Client;
 import com.marshals.business.ClientIdentification;
 import com.marshals.business.ClientPortfolio;
 import com.marshals.business.FMTSValidatedClient;
+import com.marshals.business.LoggedInClient;
 import com.marshals.integration.ClientDao;
 import com.marshals.integration.DatabaseException;
+import com.marshals.integration.FMTSException;
 
 class ClientServicePOJOUnitTest {
 	@Mock ClientDao mockDao;
@@ -109,7 +111,7 @@ class ClientServicePOJOUnitTest {
 	@Test
 	void shouldHandleRegisterationOfClientWithNullEmail() {
 		Exception e = assertThrows(NullPointerException.class, () -> {
-			Client client = service.registerNewClient(null,"Password12", "John Doe", "08/11/2003", 
+			service.registerNewClient(null,"Password12", "John Doe", "08/11/2003", 
 								"India", new ArrayList<>(List.of(new ClientIdentification("Aadhar","123467541244"))));
 		});
 		assertEquals("Client Email cannot be null",e.getMessage());
@@ -120,7 +122,7 @@ class ClientServicePOJOUnitTest {
 		String existingEmail = clientList.get(0).getEmail();
 		Mockito.when(mockDao.verifyClientEmail(existingEmail)).thenReturn(true); // Mock behavior
 		Exception e = assertThrows(IllegalArgumentException.class, () -> {
-			Client client = service.registerNewClient(existingEmail, clientList.get(0).getPassword(), clientList.get(0).getName(),
+			service.registerNewClient(existingEmail, clientList.get(0).getPassword(), clientList.get(0).getName(),
 					"12/11/2000", clientList.get(0).getCountry(), clientList.get(0).getIdentification());
 			Mockito.verify(mockDao).verifyClientEmail(existingEmail); //Verifying that the corresponding mockDao method was called
 		});
@@ -133,7 +135,7 @@ class ClientServicePOJOUnitTest {
 		//Mock the behavior of Dao method to throw exception - For email validation to return false
 		Mockito.doThrow(new DatabaseException()).when(mockDao).verifyClientEmail(nonExistentEmail);
 		Exception e = assertThrows(NullPointerException.class, () -> {
-			Client client = service.registerNewClient(nonExistentEmail,"Password12", null, "08/11/2003", 
+			service.registerNewClient(nonExistentEmail,"Password12", null, "08/11/2003", 
 								"India", new ArrayList<>(List.of(new ClientIdentification("Aadhar","123467541244"))));
 		});
 		assertEquals("Client Details cannot be null",e.getMessage());
@@ -146,7 +148,7 @@ class ClientServicePOJOUnitTest {
 		// Mock behavior of Dao method that retrieves all client ID Details
 		Mockito.when(mockDao.getAllClientIdentificationDetails()).thenReturn(clientList.get(0).getIdentification());
 		Exception e = assertThrows(IllegalArgumentException.class, () -> {
-			Client client = service.registerNewClient(clientList.get(2).getEmail(), clientList.get(2).getPassword(), clientList.get(2).getName(),
+			service.registerNewClient(clientList.get(2).getEmail(), clientList.get(2).getPassword(), clientList.get(2).getName(),
 					"12/11/2000", clientList.get(2).getCountry(), clientList.get(0).getIdentification());
 			//Verifying that the corresponding mockDao method was called
 			Mockito.verify(mockDao).verifyClientEmail(clientList.get(2).getEmail()); 
@@ -162,10 +164,10 @@ class ClientServicePOJOUnitTest {
 		Mockito.doThrow(new DatabaseException()).when(mockDao).verifyClientEmail(newEmail);
 		// Mock behavior of Dao method that retrieves all client ID Details
 		Mockito.when(mockDao.getAllClientIdentificationDetails()).thenReturn(clientList.get(0).getIdentification());
-		//Mocking fmtsService to return null - Invalidate client
-		Mockito.when(mockFMTSService.verifyClient(newEmail)).thenReturn(null);
+		//Mocking fmtsService to throw FMTSException - Invalidate client
+		Mockito.doThrow(new FMTSException()).when(mockFMTSService).verifyClient(newEmail);
 		
-		Exception e = assertThrows(NullPointerException.class, () -> {
+		assertThrows(FMTSException.class, () -> {
 			service.registerNewClient(newEmail, clientList.get(2).getPassword(), clientList.get(2).getName(),
 					"12/11/2000", clientList.get(2).getCountry(), clientList.get(2).getIdentification());
 			//Verifying that the corresponding mockDao method was called
@@ -174,7 +176,6 @@ class ClientServicePOJOUnitTest {
 			//Verifying that mock fmts serivce was called
 			Mockito.verify(mockFMTSService).verifyClient(newEmail);
 		});
-		assertEquals("New Client Details couldnt be verified",e.getMessage());
 		
 	}
 	
@@ -187,24 +188,24 @@ class ClientServicePOJOUnitTest {
 		Mockito.when(mockDao.getAllClientIdentificationDetails()).thenReturn(clientList.get(0).getIdentification());
 		//Mocking fmtsService to also successfully validate the client
 		Mockito.when(mockFMTSService.verifyClient(newEmail)).thenReturn(
-				new FMTSValidatedClient(clientList.get(2).getClientId(),newEmail, new BigDecimal(clientList.get(2).getClientId())));
+				new FMTSValidatedClient(clientList.get(2).getClientId(),newEmail,767836496));
 		//New Client Details
-		Client newClient = service.registerNewClient(newEmail, clientList.get(2).getPassword(), clientList.get(2).getName(),
+		LoggedInClient newClient = service.registerNewClient(newEmail, clientList.get(2).getPassword(), clientList.get(2).getName(),
 				"12/11/2000", clientList.get(2).getCountry(), clientList.get(2).getIdentification());
 		//Verifying that the corresponding mockDao method was called
 		Mockito.verify(mockDao).verifyClientEmail(newEmail); 
 		Mockito.verify(mockDao).getAllClientIdentificationDetails(); 
 		//Verifying that mock fmts serivce was called
 		Mockito.verify(mockFMTSService).verifyClient(newEmail);
-		Mockito.verify(mockDao).addNewClient(newClient, new ClientPortfolio(newClient.getClientId(),new BigDecimal("10000").setScale(4),new ArrayList<>())); 
-		assertEquals(newClient,clientList.get(2),"Should successfully register new client");
+		Mockito.verify(mockDao).addNewClient(newClient.getClient(), new ClientPortfolio(newClient.getClient().getClientId(),new BigDecimal("10000").setScale(4),new ArrayList<>())); 
+		assertEquals(newClient.getClient(),clientList.get(2),"Should successfully register new client");
 	}
 	
 	//Logging in an existing client
 	@Test
 	void shouldHandleLoginOfClientWithNullEmail() {
 		Exception e = assertThrows(NullPointerException.class, () -> {
-			Client client = service.loginExistingClient(null,"Password12");
+			service.loginExistingClient(null,"Password12");
 		});
 		assertEquals("Client Email cannot be null",e.getMessage());
 	}
@@ -215,7 +216,7 @@ class ClientServicePOJOUnitTest {
 		//Mock the behavior of Dao method to throw exception
 		Mockito.doThrow(new DatabaseException()).when(mockDao).verifyClientEmail(nonExistentEmail);
 		Exception e = assertThrows(IllegalArgumentException.class, () -> {
-			Client client = service.loginExistingClient(nonExistentEmail,clientList.get(1).getPassword());
+			service.loginExistingClient(nonExistentEmail,clientList.get(1).getPassword());
 			Mockito.verify(mockDao).verifyClientEmail(nonExistentEmail); //Verifying that the corresponding mockDao method was called
 		});
 		assertEquals("Client with given email is not registered",e.getMessage());
@@ -227,7 +228,7 @@ class ClientServicePOJOUnitTest {
 		//Mock the behavior of Dao method to return true - Successful email validation
 		Mockito.when(mockDao.verifyClientEmail(existingEmail)).thenReturn(true); 
 		Exception e = assertThrows(NullPointerException.class, () -> {
-			Client client = service.loginExistingClient(existingEmail,null);
+			service.loginExistingClient(existingEmail,null);
 		});
 		assertEquals("Client Password cannot be null",e.getMessage());
 	}
@@ -242,7 +243,7 @@ class ClientServicePOJOUnitTest {
 		//Mock the behavior of Dao method to throw exception
 		Mockito.doThrow(new IllegalArgumentException(errorMsg)).when(mockDao).getClientAtLogin(existingEmail,invalidPassword);
 		Exception e = assertThrows(IllegalArgumentException.class, () -> {
-			Client client = service.loginExistingClient(existingEmail,invalidPassword);
+			service.loginExistingClient(existingEmail,invalidPassword);
 			//Verifying that the corresponding mockDao methods were called
 			Mockito.verify(mockDao).verifyClientEmail(existingEmail); 
 			Mockito.verify(mockDao).getClientAtLogin(existingEmail,invalidPassword); 
@@ -257,10 +258,10 @@ class ClientServicePOJOUnitTest {
 		//Mock the behavior of Dao method to return true - Successful email validation
 		Mockito.when(mockDao.verifyClientEmail(existingEmail)).thenReturn(true);
 		Mockito.when(mockDao.getClientAtLogin(existingEmail,validPassword)).thenReturn(clientList.get(0));
-		//Mocking fmtsService to not validate the client
-		Mockito.when(mockFMTSService.verifyClient(existingEmail, clientList.get(0).getClientId())).thenReturn(null);
+		//Mocking fmtsService to throw FMTSException - Invalidate client
+		Mockito.doThrow(new FMTSException()).when(mockFMTSService).verifyClient(existingEmail, clientList.get(0).getClientId());
 		
-		Exception e = assertThrows(NullPointerException.class, () -> {
+		assertThrows(FMTSException.class, () -> {
 			service.loginExistingClient(existingEmail,validPassword);
 			//Verifying that the corresponding mockDao methods were called
 			Mockito.verify(mockDao).verifyClientEmail(existingEmail); 
@@ -268,7 +269,6 @@ class ClientServicePOJOUnitTest {
 			//Verifying that the corresponding mockDao method was called
 			Mockito.verify(mockDao).verifyClientEmail(existingEmail); 
 		});
-		assertEquals("Logging in Client Details couldnt be verified",e.getMessage());	
 	}
 	
 	@Test
@@ -280,15 +280,15 @@ class ClientServicePOJOUnitTest {
 		Mockito.when(mockDao.getClientAtLogin(existingEmail,validPassword)).thenReturn(clientList.get(0));
 		//Mocking fmtsService to also successfully validate the client
 		Mockito.when(mockFMTSService.verifyClient(existingEmail, clientList.get(0).getClientId())).
-				thenReturn(new FMTSValidatedClient(clientList.get(0).getClientId(), existingEmail,  new BigDecimal(clientList.get(0).getClientId())));
+				thenReturn(new FMTSValidatedClient(clientList.get(0).getClientId(), existingEmail, 1654658069));
 		
-		Client existingClient = service.loginExistingClient(existingEmail,validPassword);
+		LoggedInClient existingClient = service.loginExistingClient(existingEmail,validPassword);
 		//Verifying that the corresponding mockDao methods were called
 		Mockito.verify(mockDao).verifyClientEmail(existingEmail); 
 		Mockito.verify(mockDao).getClientAtLogin(existingEmail,validPassword); 
 		//Verifying that the corresponding mockDao method was called
 		Mockito.verify(mockDao).verifyClientEmail(existingEmail); 
-		assertEquals(existingClient,clientList.get(0),"Should successfully login existing client");	
+		assertEquals(existingClient.getClient(),clientList.get(0),"Should successfully login existing client");	
 	}
 
 }

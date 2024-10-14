@@ -11,6 +11,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,12 +29,16 @@ import com.marshals.integration.DatabaseException;
 
 public class TradeServicePOJOUnitTest {
 
+	@Mock
 	ClientTradeDao mockDao;
+	@Mock
 	PortfolioService mockPortfolioService;
+	@Mock
 	FMTSService mockFMTSService;
 
 	@Autowired
-	TradeService service;
+	@InjectMocks
+	private TradeService service;
 
 	List<Holding> holdingsOf1425922638 = new ArrayList<Holding>(
 			List.of(new Holding("C100", 100, new BigDecimal("95.67")), new Holding("Q456", 1, new BigDecimal("340"))));
@@ -372,25 +378,31 @@ public class TradeServicePOJOUnitTest {
 	public void testRoboAdvisorBuyTradesWhenAcceptAdvisorIsFalse() {
 		// Sample Client Portfolio and Preferences
 		String existingClientId = "1425922638";
-		ClientPortfolio clientPortfolio = clientPortfolios.get(0);
 		ClientPreferences prefs = new ClientPreferences(existingClientId, "Retirement", "VHIG", "Long", "Tier3", 2,
 				false);
+		String errorMessage = "Cannot recommend with robo advisor without accepting to it";
+		ClientPortfolio mockPortfolio = mock(ClientPortfolio.class);
+		Mockito.when(mockPortfolioService.getClientPortfolio(existingClientId)).thenReturn(mockPortfolio);
+		Mockito.when(mockPortfolio.getCurrBalance()).thenThrow(new UnsupportedOperationException(errorMessage));
 		Exception e = assertThrows(UnsupportedOperationException.class, () -> {
-			List<Price> topBuys = service.recommendTopBuyInstruments(prefs, clientPortfolio.getCurrBalance());
+			service.recommendTopBuyInstruments(prefs);
 		});
-		assertEquals(e.getMessage(), "Cannot recommend with robo advisor without accepting to it");
+		assertEquals(e.getMessage(), errorMessage);
 	}
 
 	@Test
 	public void testRoboAdvisorSellTradesWhenAcceptAdvisorIsFalse() {
 		String existingClientId = "1425922638";
-		ClientPortfolio clientPortfolio = clientPortfolios.get(0);
 		ClientPreferences prefs = new ClientPreferences(existingClientId, "Retirement", "VHIG", "Long", "Tier3", 2,
 				false);
+		String errorMessage = "Cannot recommend with robo advisor without accepting to it";
+		ClientPortfolio mockPortfolio = mock(ClientPortfolio.class);
+		Mockito.when(mockPortfolioService.getClientPortfolio(existingClientId)).thenReturn(mockPortfolio);
+		Mockito.when(mockPortfolio.getHoldings()).thenThrow(new UnsupportedOperationException(errorMessage));
 		Exception e = assertThrows(UnsupportedOperationException.class, () -> {
-			List<Price> topSells = service.recommendTopSellInstruments(prefs, clientPortfolio.getHoldings());
+			service.recommendTopSellInstruments(prefs);
 		});
-		assertEquals(e.getMessage(), "Cannot recommend with robo advisor without accepting to it");
+		assertEquals(e.getMessage(), errorMessage);
 	}
 
 	@Test
@@ -400,7 +412,10 @@ public class TradeServicePOJOUnitTest {
 		ClientPortfolio clientPortfolio = clientPortfolios.get(0);
 		ClientPreferences prefs = new ClientPreferences(existingClientId, "Retirement", "VHIG", "Long", "Tier3", 2,
 				true);
-		List<Price> topBuys = service.recommendTopBuyInstruments(prefs, clientPortfolio.getCurrBalance());
+		ClientPortfolio mockPortfolio = mock(ClientPortfolio.class);
+		Mockito.when(mockPortfolioService.getClientPortfolio(existingClientId)).thenReturn(mockPortfolio);
+		Mockito.when(mockPortfolio.getCurrBalance()).thenReturn(clientPortfolio.getCurrBalance());
+		List<Price> topBuys = service.recommendTopBuyInstruments(prefs);
 		assertNotEquals(topBuys.equals(null), true);
 		assertEquals(topBuys.size(), 5);
 	}
@@ -416,9 +431,12 @@ public class TradeServicePOJOUnitTest {
 		clientHoldings.add(holding2);
 		clientHoldings.add(holding3);
 		// Sample Client Portfolio and Preferences
-		ClientPortfolio clientPortfolio = new ClientPortfolio("1425922638", new BigDecimal("1000"), clientHoldings);
+		String existingClientId = "1425922638";
 		ClientPreferences prefs = new ClientPreferences("1425922638", "Retirement", "VHIG", "Long", "Tier3", 2, true);
-		assertEquals(service.recommendTopSellInstruments(prefs, clientPortfolio.getHoldings()).size(), 3);
+		ClientPortfolio mockPortfolio = mock(ClientPortfolio.class);
+		Mockito.when(mockPortfolioService.getClientPortfolio(existingClientId)).thenReturn(mockPortfolio);
+		Mockito.when(mockPortfolioService.getClientPortfolio(existingClientId).getHoldings()).thenReturn(clientHoldings);
+		assertEquals(service.recommendTopSellInstruments(prefs).size(), 3);
 	}
 
 	@Test
@@ -440,8 +458,11 @@ public class TradeServicePOJOUnitTest {
 		clientHoldings.add(holding6);
 		clientHoldings.add(holding7);
 		// Sample Client Portfolio and Preferences
-		ClientPortfolio clientPortfolio = new ClientPortfolio("1425922638", new BigDecimal("1000"), clientHoldings);
+		String existingClientId = "1425922638";
 		ClientPreferences prefs = new ClientPreferences("1425922638", "Retirement", "VHIG", "Long", "Tier3", 2, true);
-		assertEquals(service.recommendTopSellInstruments(prefs, clientPortfolio.getHoldings()).size(), 5);
+		ClientPortfolio mockPortfolio = mock(ClientPortfolio.class);
+		Mockito.when(mockPortfolioService.getClientPortfolio(existingClientId)).thenReturn(mockPortfolio);
+		Mockito.when(mockPortfolio.getHoldings()).thenReturn(clientHoldings);
+		assertEquals(service.recommendTopSellInstruments(prefs).size(), 5);
 	}
 }

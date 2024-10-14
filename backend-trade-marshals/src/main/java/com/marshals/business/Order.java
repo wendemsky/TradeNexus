@@ -72,6 +72,11 @@ public class Order {
 		return token;
 	}
 
+	
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(clientId, direction, instrumentId, orderId, quantity, targetPrice, token);
