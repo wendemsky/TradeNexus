@@ -104,8 +104,10 @@ public class ClientService {
 		} catch(IllegalArgumentException e) {
 			throw e;
 		} catch(FMTSException e) {
+			System.out.println("Error: "+e.getMessage()+"/n"+e);
 			throw e;
 		} catch(DatabaseException e) {
+			System.out.println("Error: "+e.getMessage()+"/n"+e);
 			throw e;
 		}
 	}

@@ -41,14 +41,8 @@ class TradeServiceIntegrationTest {
 			List.of(new Holding("C100", 100, new BigDecimal("95.67")), new Holding("Q456", 1, new BigDecimal("340"))));
 	// Test client portfolios
 	List<ClientPortfolio> clientPortfolios = new ArrayList<ClientPortfolio>(
-			List.of(new ClientPortfolio("1425922638", new BigDecimal("10000"), holdingsOf1425922638), // Client
-																										// portfolio
-																										// with
-																										// sufficient
-																										// balance
-					new ClientPortfolio("1425922638", new BigDecimal("20"), holdingsOf1425922638) // Client portfolio
-																									// with insufficient
-																									// balance
+			List.of(new ClientPortfolio("1425922638", new BigDecimal("10000"), holdingsOf1425922638), //Sufficient balance
+					new ClientPortfolio("1425922638", new BigDecimal("20"), holdingsOf1425922638) // Insufficient balance
 			));
 
 	private List<Price> prices;
@@ -142,8 +136,8 @@ class TradeServiceIntegrationTest {
 		String existingClientId = "541107416";
 		UUID uuid = UUID.randomUUID();
 		Integer token = fmtsService.verifyClient("himanshu@gmail.com", existingClientId).getToken();
-		String orderId = "ORDER003";
-		Order order = new Order("N123456", 2, new BigDecimal("104.75"), "B", existingClientId, "ORDER003", token);
+		String orderId = "ORDER0020";
+		Order order = new Order("N123456", 2, new BigDecimal("104.75"), "B", existingClientId, "ORDER0020", token);
 		Trade trade = service.executeTrade(order);
 		assertEquals(1, countRowsInTableWhere(testJdbcTemplate, "CLIENT_TRADE",
 				"TRADE_ID = '" + trade.getTradeId() + "' and ORDER_ID = '" + orderId + "'"));
@@ -154,8 +148,8 @@ class TradeServiceIntegrationTest {
 		String existingClientId = "541107416";
 		UUID uuid = UUID.randomUUID();
 		Integer token = fmtsService.verifyClient("himanshu@gmail.com", existingClientId).getToken();
-		String orderId = "ORDER004";
-		Order order = new Order("C100", 10, new BigDecimal("95.92"), "S", existingClientId, "ORDER004", token);
+		String orderId = "ORDER0021";
+		Order order = new Order("C100", 10, new BigDecimal("95.92"), "S", existingClientId, "ORDER0021", token);
 		Trade trade = service.executeTrade(order);
 		assertEquals(1, countRowsInTableWhere(testJdbcTemplate, "CLIENT_TRADE",
 				"TRADE_ID = '" + trade.getTradeId() + "' and ORDER_ID = '" + orderId + "'"));

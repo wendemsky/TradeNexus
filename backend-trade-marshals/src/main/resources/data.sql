@@ -48,6 +48,10 @@ INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direc
 ('C100', 1000, 95.92, 'B', '541107416', 'ORDER001', 3);
 INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
 ('T67890', 10000, 1.03375, 'S', '541107416', 'ORDER002', 4);
+INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
+('T67894', 50, 95.92, 'B', '541107416', 'ORDER003', 3);
+INSERT INTO "MARSH"."CLIENT_ORDER" (instrument_id, quantity, target_price, direction, client_id, order_id, token) VALUES
+('N123456', 20, 1.03375, 'B', '541107416', 'ORDER004', 4);
 
 --Insert values into Trade table for client 541107416
 INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value, executed_at) VALUES
@@ -60,5 +64,9 @@ INSERT INTO holdings (client_id, instrument_id, quantity, avg_price) VALUES
 ('541107416', 'C100', 1000, 95.67);  -- JPMorgan Chase Bank
 INSERT INTO holdings (client_id, instrument_id, quantity, avg_price) VALUES
 ('541107416', 'T67890', 10, 1.033828125);  -- USA Note 3.125
+INSERT INTO holdings (client_id, instrument_id, quantity, avg_price) VALUES
+('541107416', 'T67894', 1000, 95.67);  -- JPMorgan Chase Bank
+INSERT INTO holdings (client_id, instrument_id, quantity, avg_price) VALUES
+('541107416', 'N123456', 10, 1.033828125);
 
 COMMIT;

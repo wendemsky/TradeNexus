@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 public class Client {
 	
 	private String email;
@@ -14,10 +16,11 @@ public class Client {
 	private String password;
 	
 	private String name;
+	//@JsonDeserialize(using = CustomDateDeserializer.class)
 	private String dateOfBirth;
 	private String country;
 	private List<ClientIdentification> identification;
-	
+	@JsonDeserialize(using = CustomBooleanDeserializer.class)
 	private boolean isAdmin;
 	
 	public Client() {}

@@ -7,6 +7,8 @@ public class LoggedInClient {
 	private Client client;
 	private Integer token;
 	
+	public LoggedInClient() {}
+	
 	public LoggedInClient(Client client, Integer token) {
 		try {
 			if(client == null || token == null) throw new NullPointerException("Logging in Client details cannot be null");

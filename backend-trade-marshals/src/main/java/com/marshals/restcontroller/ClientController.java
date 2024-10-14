@@ -39,28 +39,20 @@ public class ClientController {
 	
 	//Verify client email
 	@GetMapping("/verify-email/{email}")
-	public ResponseEntity<String> verifyClientEmail(@PathVariable String email){
-		ResponseEntity<String> response = null;
+	public ResponseEntity<VerificationRequestResult> verifyClientEmail(@PathVariable String email){
+		ResponseEntity<VerificationRequestResult> response = null;
 		try {
-			if(email == null) {
-				throw new NullPointerException("Client Email is null");
-			}
-			if(clientService.verifyClientEmail(email)) { //Successfully validated client
-				response = ResponseEntity.ok(email); //200
-			}
+			boolean isEmailVerified = clientService.verifyClientEmail(email);  
+			response = ResponseEntity.ok(new VerificationRequestResult(isEmailVerified)); //200 - Successfully validated client
 			return response;
 		}
-		catch(NullPointerException e) { //406
-			logger.error("Error in request for validating client email", e);
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getLocalizedMessage());
-		}
+//		catch(NullPointerException e) { //406
+//			logger.error("Error in request for validating client email", e);
+//			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getLocalizedMessage());
+//		}
 		catch(IllegalArgumentException e) { //406
 			logger.error("Error in request for validating client email", e);
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getLocalizedMessage());
-		}
-		catch(DatabaseException e) { //404
-			logger.error("Error in request for validating client email", e);
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
 		}
 		catch(RuntimeException e) { //Unexpected error - 500
 			logger.error("Problem occured from server", e);
@@ -74,10 +66,12 @@ public class ClientController {
 	public ResponseEntity<LoggedInClient> registerNewClient(@RequestBody Client client){ //Get a client object with null clientId
 		ResponseEntity<LoggedInClient> response = null;
 		try {
-			if(client == null) {
-				throw new NullPointerException("Client Request Body is null");
-			}
+//			if(client == null) {
+//				throw new NullPointerException("Client Request Body is null");
+//			}
 			SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy"); //doB Format stored in client model
+			if(client.getDateOfBirth()==null)
+				throw new NullPointerException("Client details cannot be null");
 			String dateOfBirth = dateFormat.format(client.getDateOfBirth());
 			LoggedInClient newClient = clientService.registerNewClient(client.getEmail(), client.getPassword(), client.getName(), 
 					dateOfBirth, client.getCountry(), client.getIdentification());
@@ -111,17 +105,14 @@ public class ClientController {
 	@GetMapping()
 	public ResponseEntity<LoggedInClient> loginExistingClient(@RequestParam String email, @RequestParam String password){ 
 		ResponseEntity<LoggedInClient> response = null;
+		System.out.println("Email: "+email+"Password: "+password);
 		try {
-			if(email == null || password == null) {
-				throw new NullPointerException("Client login credentials are null");
-			}
+//			if(email == null || password == null) {
+//				throw new NullPointerException("Client login credentials are null");
+//			}
 			LoggedInClient newClient = clientService.loginExistingClient(email, password);
 			response = ResponseEntity.ok(newClient); //200
 			return response;
-		}
-		catch(NullPointerException e) { //406
-			logger.error("Error in request for registering new client", e);
-			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getLocalizedMessage());
 		}
 		catch(IllegalArgumentException e) { //406
 			logger.error("Error in request for registering new client", e);
