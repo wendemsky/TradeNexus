@@ -16,6 +16,7 @@ public class TradeMarshalsServiceApplication {
 		SpringApplication.run(TradeMarshalsServiceApplication.class, args);
 	}
 
+	
 	/**
 	 * This method creates a Logger that can be autowired in other classes:{@code
 	 *    @Autowired 

@@ -40,7 +40,7 @@ import com.marshals.business.Trade;
 import com.marshals.business.services.PortfolioService;
 
 
-@WebMvcTest
+@WebMvcTest(controllers = {PortfolioController.class})
 public class PortfolioControllerWebLayerTest {
 
 	@Autowired
@@ -103,4 +103,5 @@ public class PortfolioControllerWebLayerTest {
 	               .andExpect(status().isNotFound());
            
         }
+       
 }

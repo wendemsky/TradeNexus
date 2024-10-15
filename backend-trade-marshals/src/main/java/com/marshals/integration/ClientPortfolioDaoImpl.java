@@ -51,7 +51,7 @@ public class ClientPortfolioDaoImpl implements ClientPortfolioDao{
        }  catch (DatabaseException e) {
            throw e;
        } catch (DataIntegrityViolationException e) {
-    	   throw new DatabaseException("Client does not exist to update holding");
+    	   throw new DatabaseException("Holdings for given client does not exist");
        }
 	}
 	
@@ -67,7 +67,7 @@ public class ClientPortfolioDaoImpl implements ClientPortfolioDao{
        } catch (DatabaseException e) {
            throw e;
        } catch (DataIntegrityViolationException e) {
-    	   throw new DatabaseException("Client does not exist to add holding");
+    	   throw new DatabaseException("Holdings for given client already exists");
        }
 	}
 

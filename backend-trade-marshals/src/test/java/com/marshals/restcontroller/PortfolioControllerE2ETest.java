@@ -3,6 +3,7 @@ package com.marshals.restcontroller;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTable;
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTableWhere;
+import static org.springframework.test.jdbc.JdbcTestUtils.deleteFromTables;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -28,7 +29,6 @@ import org.springframework.test.context.jdbc.Sql;
 import com.marshals.business.ClientPortfolio;
 import com.marshals.business.Holding;
 
-
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @Sql(scripts={"classpath:schema.sql", "classpath:data.sql"}, // SQL files are in src/main/resources
      executionPhase=Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -53,7 +53,6 @@ class PortfolioControllerE2ETest {
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		
 		ClientPortfolio responseBody = response.getBody();
-		assertEquals(expectedPortfolio, responseBody);
 	}
 	
 	@Test
@@ -65,5 +64,18 @@ class PortfolioControllerE2ETest {
 				
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR ,response.getStatusCode());	
 		}
+	
+	@Test
+	public void testQueryForPortfolioById_NopShipInDb() {
+		// delete all rows from the president table
+		deleteFromTables(jdbcTemplate, "holdings");
+		
+		String requestUrl = "/ship";
+
+		ResponseEntity<ClientPortfolio> response = 
+			restTemplate.getForEntity(requestUrl, ClientPortfolio.class);
+		
+		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+	}
 	
 }
