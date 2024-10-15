@@ -131,7 +131,8 @@ public class TradeService {
     public List<Price> recommendTopBuyInstruments(ClientPreferences preferences){
     	try {
     		BigDecimal currBalance = portfolioService.getClientPortfolio(preferences.getClientId()).getCurrBalance();
-    		if(preferences.getAcceptAdvisor()=="false") throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
+    		if(preferences.getAcceptAdvisor()=="false") 
+    			throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
     	    PriceScorer scorer = new PriceScorer(preferences);
             List<Price> recommendedPrice = new ArrayList<Price>();
             //System.out.println("Instruments before sorting -> " + priceList);
@@ -155,7 +156,8 @@ public class TradeService {
     public List<Price> recommendTopSellInstruments(ClientPreferences preferences){
     	try {
     		List<Holding> userHoldings = portfolioService.getClientPortfolio(preferences.getClientId()).getHoldings();
-    		if(preferences.getAcceptAdvisor()=="false") throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
+    		if(preferences.getAcceptAdvisor()=="false") 
+    			throw new UnsupportedOperationException("Cannot recommend with robo advisor without accepting to it");
     		List<Holding> topSellTradesInHoldings = new ArrayList<>();
         	if(userHoldings.size() <= 5) {
 //        		return everything
@@ -172,17 +174,12 @@ public class TradeService {
         	List<Price> topSellTrades = new ArrayList<>();
         	for(Holding holding:topSellTradesInHoldings) {
         		for(Price trade:priceList) {
-        			if(holding.getInstrumentId() == trade.getInstrument().getInstrumentId()) {
+        			if(holding.getInstrumentId().equals(trade.getInstrument().getInstrumentId())) {
         				topSellTrades.add(trade);
         				break;
         			}
-        				
         		}
         	}
-
-//        	for(Price trade: topSellTrades) {
-//        		System.out.println("Top instruments to sell -> " + trade.getInstrument().getInstrumentId() );
-//        	}
         	return topSellTrades;
     	} catch(UnsupportedOperationException e) {
     		throw e;
@@ -214,9 +211,3 @@ public class TradeService {
 
     
 }
-
-
-
-
-
-

@@ -59,5 +59,9 @@ public class Holding {
 				&& quantity == other.quantity;
 	}
 
+	@Override
+	public String toString() {
+		return "Holding [instrumentId=" + instrumentId + ", quantity=" + quantity + ", avgPrice=" + avgPrice + "]";
+	}
 	
 }

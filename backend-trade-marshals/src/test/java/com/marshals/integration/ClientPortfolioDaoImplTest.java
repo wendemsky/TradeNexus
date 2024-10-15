@@ -80,7 +80,7 @@ public class ClientPortfolioDaoImplTest {
 	@Test
 	void testSuccessfulAddClientHoldingOfClientWithHolding() throws SQLException {
 		String clientId = "541107416"; // Has holdings
-		Holding holding = new Holding("N123456", 1, new BigDecimal("104.50"));
+		Holding holding = new Holding("N123789", 1, new BigDecimal("31100"));
 		int oldSize = countRowsInTableWhere(jdbcTemplate, "holdings", "client_id = " + clientId);
 		dao.addClientHoldings(clientId, holding);
 		int newSize = countRowsInTableWhere(jdbcTemplate, "holdings", "client_id = " + clientId);

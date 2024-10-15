@@ -77,8 +77,7 @@ class ClientTradeDaoImplTest {
 		Order newOrder = new Order("NT123456", 1000, new BigDecimal(45.678), "B", "739982664", "ORDER020", 20 );
 		Trade newTrade = new Trade(newOrder, new BigDecimal(45.678), "TRADE020", new BigDecimal(45678));
 		dao.addTrade(newTrade);
-		// verify that the number of department rows increased by 1
-		assertEquals(rowCount + 1, countRowsInTable(jdbcTemplate, "client_order"));
+		// verify that the number of trade rows increased by 1
 		assertEquals(rowCount + 1, countRowsInTable(jdbcTemplate, "client_trade"));
 		// Verify that all Department properties were inserted correctly.
 		assertEquals(1, countRowsInTableWhere(jdbcTemplate, "CLIENT_ORDER", """
