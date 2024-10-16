@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +39,7 @@ public class ClientController {
 	}
 	
 	//Verify client email
-	@GetMapping("/verify-email/{email}")
+	@GetMapping(value="/verify-email/{email}",produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<VerificationRequestResult> verifyClientEmail(@PathVariable String email){
 		ResponseEntity<VerificationRequestResult> response = null;
 		try {
@@ -62,7 +63,7 @@ public class ClientController {
 	}
 	
 	//Register new client
-	@PostMapping("/register")
+	@PostMapping(value="/register" , produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<LoggedInClient> registerNewClient(@RequestBody Client client){ //Get a client object with null clientId
 		ResponseEntity<LoggedInClient> response = null;
 		try {
@@ -102,7 +103,7 @@ public class ClientController {
 	}
 	
 	//Login existing client - Send email and password as Query Params
-	@GetMapping()
+	@GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<LoggedInClient> loginExistingClient(@RequestParam String email, @RequestParam String password){ 
 		ResponseEntity<LoggedInClient> response = null;
 		System.out.println("Email: "+email+"Password: "+password);

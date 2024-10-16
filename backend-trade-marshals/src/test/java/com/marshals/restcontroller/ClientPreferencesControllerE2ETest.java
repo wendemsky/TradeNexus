@@ -23,7 +23,10 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.marshals.business.Client;
+import com.marshals.business.ClientIdentification;
 import com.marshals.business.ClientPreferences;
+import com.marshals.business.LoggedInClient;
 import com.marshals.integration.DatabaseException;
 
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
@@ -41,7 +44,7 @@ class ClientPreferencesControllerE2ETest {
 			List.of(
 					new ClientPreferences("1654658069",  "Education", "HIG", "Short", "Tier4", 2, false), //Existing client
 					new ClientPreferences("1654658000", "Major Expense", "MIG", "Medium", "Tier1", 5, true), //Non existent client
-					new ClientPreferences("739982665", "Retirement", "MIG", "Long", "Tier3", 3, true) //New client to be inserted
+					new ClientPreferences("767836496", "Retirement", "MIG", "Long", "Tier3", 3, true) //New client to be inserted
 			)
 		);
 	
@@ -92,8 +95,17 @@ class ClientPreferencesControllerE2ETest {
 	//Add client preferences for valid details
 	@Test
 	void testForAddClientPreferencesForValidClientPreferences() {
+		
+		Client mockNewClient = new Client("sam@gmail.com", "" , "Password1234", "Sam", "12/11/2000", "USA",
+				new ArrayList<>(List.of(new ClientIdentification("SSN", "1643846323"))), false);
+		
+		String requestUrlForClient = "/client/register";
+		ResponseEntity<LoggedInClient> responseClient = 
+				restTemplate.postForEntity(requestUrlForClient, mockNewClient, LoggedInClient.class);
+		
 		String requestUrl = "/client-preferences";
 		ClientPreferences newClientPreferences = clientPreferencesList.get(2);
+		
 		
 		ResponseEntity<ClientPreferences> response = 
 				restTemplate.postForEntity(requestUrl, newClientPreferences , ClientPreferences.class);

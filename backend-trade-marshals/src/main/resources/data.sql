@@ -24,10 +24,6 @@ INSERT INTO client (client_id, email, password, name, date_of_birth, country, is
 VALUES ('739982664', 'john.doe@gmail.com', 'Marsh2024', 'John Doe', to_date('1998-03-15', 'yyyy-mm-dd'), 'USA', 'N', 10000);
 INSERT INTO client_identification (client_id, type, value)
 VALUES ('739982664','SSN','1234573532');
-INSERT INTO client (client_id, email, password, name, date_of_birth, country, is_admin, curr_balance)
-VALUES ('739982665', 'jane.doe@gmail.com', 'Marsh2024', 'Jane Doe', to_date('2002-10-15', 'YYYY-MM-DD'), 'India', 'N', 10000);
-INSERT INTO client_identification (client_id, type, value)
-VALUES ('739982665','Aadhar','674902441359');
 
 --Inserting 6 records into Client Preferences table
 INSERT INTO CLIENT_PREFERENCES (client_id ,investment_purpose, income_category, length_of_investment, percentage_of_spend, risk_tolerance, is_advisor_accepted) 

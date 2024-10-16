@@ -4,6 +4,10 @@ import { PriceService } from 'src/app/services/price.service';
 import { ColDef, SideBarDef } from 'ag-grid-community';
 import { SellComponent } from '../sell/sell.component';
 import { BuyComponent } from '../buy/buy.component';
+import { RoboAdvisorService } from 'src/app/services/robo-advisor.service';
+import { ClientPreferencesService } from 'src/app/services/Client/client-preferences.service';
+import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
+import { ClientPreferences } from 'src/app/models/Client/ClientPreferences';
 
 @Component({
   selector: 'app-robo-advisor',
@@ -14,7 +18,8 @@ export class RoboAdvisorComponent {
 
   isBuy: boolean = false;
 
-  prices: Price[] = [];
+  buyPrices: Price[] = [];
+  sellPrices: Price[] = [];
 
   buyStocks: any[] = [
     {
@@ -201,7 +206,9 @@ export class RoboAdvisorComponent {
   }
 
   constructor(
-    private priceService: PriceService,
+    private roboAdvisorService: RoboAdvisorService,
+    private preferencesService: ClientPreferencesService, 
+    private profileService: ClientProfileService
   ) { }
 
   ngOnInit(): void {
@@ -209,13 +216,34 @@ export class RoboAdvisorComponent {
   }
 
   loadAllPrices() {
-    this.priceService.getPrices()
-      .subscribe(
-        (data) => {
-          this.prices = data;
-          this.prices = this.prices.sort( () => 0.5 - Math.random())
-          this.prices = this.prices.slice(0, 5);
-        }
-      );
+    this.profileService.getClientProfile().subscribe((profile) => {
+      let clientId = profile.client.clientId
+      this.preferencesService.getClientPreferences(clientId).subscribe((preferences) => {
+        this.retrieveAllTopBuys(preferences)
+        this.retrieveAllTopSells(preferences)
+      });
+    })
+  }
+
+  retrieveAllTopBuys(preferences: ClientPreferences){
+    this.roboAdvisorService.getTopBuyTrades(preferences)
+    .subscribe(
+      (data) => {
+        this.buyPrices = data;
+        this.buyPrices = this.buyPrices.sort( () => 0.5 - Math.random())
+        this.buyPrices = this.buyPrices.slice(0, 5);
+      }
+    );
+  }
+
+  retrieveAllTopSells(preferences: ClientPreferences){
+    this.roboAdvisorService.getTopSellTrades(preferences)
+    .subscribe(
+      (data) => {
+        this.sellPrices = data;
+        this.sellPrices = this.sellPrices.sort( () => 0.5 - Math.random())
+        this.sellPrices = this.sellPrices.slice(0, 5);
+      }
+    )
   }
 }

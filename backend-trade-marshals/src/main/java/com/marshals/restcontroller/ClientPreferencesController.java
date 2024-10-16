@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.http.ResponseEntity.HeadersBuilder;
@@ -36,7 +37,7 @@ public class ClientPreferencesController {
 		return "Client Preferences web service is alive at " + LocalDateTime.now();
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping(value="/{id}",produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<ClientPreferences> getClientPreferencesById(@PathVariable String id){
 		ResponseEntity<ClientPreferences> response = null;
 		try {
@@ -66,7 +67,7 @@ public class ClientPreferencesController {
 		}
 	}
 	
-	@PostMapping()
+	@PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<ClientPreferences> addClientPreferences(@RequestBody ClientPreferences clientPreferences){
 		ResponseEntity<ClientPreferences> response = null;
 		try {
@@ -93,7 +94,7 @@ public class ClientPreferencesController {
 		}
 	}
 	
-	@PutMapping()
+	@PutMapping(produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<ClientPreferences> updateClientPreferences(@RequestBody ClientPreferences clientPreferences){
 		ResponseEntity<ClientPreferences> response = null;
 		try {
