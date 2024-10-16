@@ -39,7 +39,7 @@ public class ClientPortfolioDaoImpl implements ClientPortfolioDao{
 	}
 	
 	@Override
-	public void updateClientHoldings(String clientId, Holding holding) {
+	public int updateClientHoldings(String clientId, Holding holding) {
 		int rowcount =0;
 		try {
 	            rowcount = clientPortfolioMapper.updateClientHoldings(clientId, holding);
@@ -47,25 +47,43 @@ public class ClientPortfolioDaoImpl implements ClientPortfolioDao{
 		 	if(rowcount ==0) {
            	 throw new DatabaseException("Client does not exist to update holdings");
            }
+		 	return rowcount;
        }  catch (DatabaseException e) {
            throw e;
        } catch (DataIntegrityViolationException e) {
-    	   throw new DatabaseException("Client does not exist to update holding");
+    	   throw new DatabaseException("Holdings for given client does not exist");
        }
 	}
 	
 	@Override
-	public void addClientHoldings(String clientId, Holding holding) {
+	public int addClientHoldings(String clientId, Holding holding) {
 		int rowcount = 0;
 		try {
             rowcount = clientPortfolioMapper.addClientHoldings(clientId, holding);
             if(rowcount == 0) {
            	 throw new DatabaseException("Client does not exist to add holding");
            }
+            return rowcount;
        } catch (DatabaseException e) {
            throw e;
        } catch (DataIntegrityViolationException e) {
-    	   throw new DatabaseException("Client does not exist to add holding");
+    	   throw new DatabaseException("Holdings for given client already exists");
+       }
+	}
+
+	@Override
+	public int deleteClientHoldings(String clientId, Holding holding) {
+		int rowcount = 0;
+		try {
+            rowcount = clientPortfolioMapper.deleteClientHoldings(clientId, holding);
+            if(rowcount == 0) {
+           	 throw new DatabaseException("Client does not exist to delete holding");
+           }
+            return rowcount;
+       } catch (DatabaseException e) {
+           throw e;
+       } catch (DataIntegrityViolationException e) {
+    	   throw new DatabaseException("Client does not exist to delete holding");
        }
 	}
 

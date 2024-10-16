@@ -34,6 +34,7 @@ public class PortfolioService {
     }
 
     public void updateClientPortfolio(Trade executedTrade) {
+
     	try {
 			if(executedTrade == null) {
 				throw new NullPointerException("Trade should not be null");
@@ -68,6 +69,11 @@ public class PortfolioService {
                     clientPortfolioDao.updateClientHoldings(clientPortfolio.getClientId(), existingHolding);
 	                
 	            } else if ("S".equals(executedTrade.getDirection())) {  // Sell	
+	            	
+	            	if(existingHolding.getQuantity() == 0) {
+	            		clientPortfolioDao.deleteClientHoldings(clientPortfolio.getClientId(), existingHolding);
+	            		return;
+	            	}
 	                          
                     BigDecimal totalValueOfTrade = executedTrade.getCashValue();
                     
@@ -83,7 +89,7 @@ public class PortfolioService {
                     existingHolding.setAvgPrice(newAvgPrice);
                     existingHolding.setQuantity(existingHolding.getQuantity()-(executedTrade.getQuantity()));
 
-                    clientPortfolioDao.updateClientHoldings(clientPortfolio.getClientId(), existingHolding);             
+                     clientPortfolioDao.updateClientHoldings(clientPortfolio.getClientId(), existingHolding);             
 	            }
 	        } else {
 	            // Holding doesn't exist, add holding
@@ -96,11 +102,12 @@ public class PortfolioService {
 	                    
 	                    // Create new holding
 	                    Holding newHolding = new Holding(executedTrade.getInstrumentId(),executedTrade.getQuantity(), totalCostOfTrade.divide(new BigDecimal(executedTrade.getQuantity()), BigDecimal.ROUND_HALF_UP));
-	                    clientPortfolioDao.addClientHoldings(clientPortfolio.getClientId(), newHolding);
+	                     clientPortfolioDao.addClientHoldings(clientPortfolio.getClientId(), newHolding);
 	            } else { //Cannot sell if holding doesnt exist
 	            	 throw new IllegalArgumentException("Instrument not part of holdings! Cannot sell and update the portfolio");
 	            }
 	        }
+			
     
     	}catch(NullPointerException e) {
 			throw e;
@@ -108,4 +115,5 @@ public class PortfolioService {
 			throw e;
 		}
     }
+   
 }
