@@ -6,6 +6,7 @@ import { ClientProfile } from 'src/app/models/Client/ClientProfile';
 import { ClientPreferencesService } from 'src/app/services/Client/client-preferences.service';
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
 import { RoboAdvisorComponent } from './_components/robo-advisor/robo-advisor.component';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-home',
@@ -18,10 +19,14 @@ export class HomeComponent implements OnInit {
   clientPreferencesData!: ClientPreferences | null //Client Preferences data 
   isSideMenuExpanded: boolean = false; //Side Menu
   isHomeContent:boolean = true; //Home Content displayed
-
-  constructor(private clientProfileService: ClientProfileService, private clientPreferencesService: ClientPreferencesService, private router: Router, public dialog: MatDialog) { }
+  snackBarConfig = new MatSnackBarConfig();
+   
+  constructor(private clientProfileService: ClientProfileService, private clientPreferencesService: ClientPreferencesService, 
+        private snackBar: MatSnackBar, private router: Router, public dialog: MatDialog) { }
 
   ngOnInit() {
+    this.snackBarConfig.duration = 3000;
+    this.snackBarConfig.panelClass = ['form-submit-snackbar'];
     this.isSideMenuExpanded = false
     console.log('Router URL: ',this.router.url)
     if(this.router.url === '/home')
@@ -33,8 +38,9 @@ export class HomeComponent implements OnInit {
     this.clientProfileService.getClientProfile().subscribe(profile => {
       this.clientProfileData = profile
       console.log('Logged In Client Profile Data: ', this.clientProfileData);
-      this.clientPreferencesService.getClientPreferences(this.clientProfileData?.client?.clientId).subscribe({
+      this.clientPreferencesService.getClientPreferences(profile.client?.clientId).subscribe({
         next: (data: ClientPreferences) => {
+          console.log(data)
           if(data) {
             this.clientPreferencesData = data
           }
@@ -44,7 +50,7 @@ export class HomeComponent implements OnInit {
         },
         error: (err) => {
           console.log(err)
-
+          this.snackBar.open(err, '', this.snackBarConfig)
         }
       })
     })

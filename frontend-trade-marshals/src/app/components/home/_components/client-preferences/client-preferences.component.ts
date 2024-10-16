@@ -17,6 +17,7 @@ export class ClientPreferencesComponent {
   clientProfileData!: ClientProfile
   clientPreferencesData!: any
   isClientFormFilled: boolean = false
+  acceptAdvisor: boolean = false
 
   snackBarConfig = new MatSnackBarConfig();
 
@@ -68,36 +69,32 @@ export class ClientPreferencesComponent {
     private router: Router, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
-    this.clientProfileService.getClientProfile().subscribe(profile => {
-      this.clientProfileData = profile
-      console.log('Logged In Client Profile Data: ', this.clientProfileData);
-      this.clientPreferencesService.getClientPreferences(this.clientProfileData?.client?.clientId).subscribe({
-        next: (data: any) => {
-          if (data) {
-            this.isClientFormFilled = true
-            this.clientPreferencesData = data
-            this.setPreferencesFormData(this.clientPreferencesData)
-          }
-          else {
-            this.clientPreferencesData = null
-          }
-        },
-        error: (err) => {
-          console.log(err)
-
+    this.snackBarConfig.duration = 3000;
+    this.snackBarConfig.panelClass = ['form-submit-snackbar'];
+    this.clientProfileService.getClientProfile().subscribe({
+      next: (profile) => {
+        console.log('Logged In Client Profile Data: ', profile);
+        if(profile.client !== null){
+          this.clientProfileData = profile
+          this.getPreferences(profile.client.clientId);
         }
-      })
+      },
+      error: (e) => {
+        console.log('Registering Client error: ', e)
+        this.snackBar.open(e, '', this.snackBarConfig)
+      }
     })
   }
 
-  setPreferencesFormData(clientPreferences: any) {
+  setPreferencesFormData(clientPreferences: ClientPreferences) {
+    this.acceptAdvisor = (clientPreferences.acceptAdvisor == "true") ? true : false
     this.preferences.patchValue({
       investmentPurpose: clientPreferences.investmentPurpose,
       incomeCategory: clientPreferences.incomeCategory,
       lengthOfInvestment: clientPreferences.lengthOfInvestment,
       percentageOfSpend: clientPreferences.percentageOfSpend,
       riskTolerance: clientPreferences.riskTolerance,
-      acceptAdvisor: clientPreferences.acceptAdvisor,
+      acceptAdvisor: this.acceptAdvisor,
     })
   }
 
@@ -107,11 +104,26 @@ export class ClientPreferencesComponent {
     this.isClientFormFilled ? this.updatePreferences(obj) : this.setPreferences(obj)
   }
 
+  getPreferences(clientId: string){
+    this.clientPreferencesService.getClientPreferences(clientId).subscribe({
+      next: (data: any) => {
+        if (data) {
+          this.isClientFormFilled = true
+          this.clientPreferencesData = data
+          this.setPreferencesFormData(this.clientPreferencesData)
+        }
+        else {
+          this.clientPreferencesData = null
+        }
+      }
+    })
+  }
+
   updatePreferences(obj: any) {
     this.snackBarConfig.duration = 3000;
     this.snackBarConfig.panelClass = ['form-submit-snackbar'];
 
-    this.clientPreferencesService.updateClientPreferences(this.clientPreferencesData?.id, obj).subscribe({
+    this.clientPreferencesService.updateClientPreferences(obj).subscribe({
       next: (data: any) => {
         console.log('New Preferences Submitted Data: ', data)
         if (data && data.clientId === this.clientProfileData?.client?.clientId) {
@@ -119,7 +131,7 @@ export class ClientPreferencesComponent {
           this.redirectToHome()
         }
         else {
-          this.snackBar.open('Client preferences couldnt be updated! Unexpected error at service!', '', this.snackBarConfig)
+          this.snackBar.open('Client preferences couldn\'t be updated! Unexpected error at service!', '', this.snackBarConfig)
         }
       },
       error: (err) => {
@@ -143,11 +155,12 @@ export class ClientPreferencesComponent {
           this.redirectToHome()
         }
         else {
-          this.snackBar.open('Client preferences couldnt be saved! Unexpected error at service!', '', this.snackBarConfig)
+          this.snackBar.open('Client preferences couldn\'t be saved! Unexpected error at service!', '', this.snackBarConfig)
         }
 
       },
       error: (err) => {
+        console.log(err)
         this.snackBar.open(err, '', this.snackBarConfig)
       }
     })

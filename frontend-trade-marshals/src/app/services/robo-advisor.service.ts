@@ -31,6 +31,7 @@ export class RoboAdvisorService {
     return this.httpClient.post<Price[]>(apiUrl, clientPreferences, {headers}).pipe(catchError(this.handleError));
   }
 
+  //Function to handle errors
   handleError(response: HttpErrorResponse) {
     if (response.error instanceof ProgressEvent) {
       console.error('There is a client-side or network error - ' +
@@ -39,8 +40,14 @@ export class RoboAdvisorService {
       console.error(`There is an error with status: ${response.status}, ` +
         `and body: ${JSON.stringify(response.error)}`);
     }
+    if(response.status == 500){
+      return throwError(
+        () => 'Unexpected error at service while trying to register user. Please try again later!'
+      );
+    }
     return throwError(
-      () => 'Unexpected error at service while trying to fetch instruments. Please try again later!');
+      () => response.error.message
+    );
   }
   
 }
