@@ -42,8 +42,8 @@ export class TradingFormComponent implements OnInit{
   
 
   clientProfileData!: ClientProfile | null; //Client Profile data that is set with ClientProfileService
-  clientPortfolioData: any[] = [];
-
+  clientPortfolioData!: ClientPortfolio;
+  
   dbJsonTradesUrl = 'http://localhost:4000/trades';
   errorMessage: string = '' //For Form Validation
 
@@ -144,7 +144,7 @@ export class TradingFormComponent implements OnInit{
         next:   (data) => {
           this.clientPortfolioData = data;
           console.log('Client Portfolio Data: ', this.clientPortfolioData)
-          console.log(this.clientPortfolioData[0]);
+          console.log(this.clientPortfolioData);
         }
       })
   }
@@ -163,7 +163,7 @@ export class TradingFormComponent implements OnInit{
     // -> sell -> X 
 
 
-    let clientHoldings = this.clientPortfolioData[0].holdings;
+    let clientHoldings = this.clientPortfolioData.holdings;
     const PresentHolding = clientHoldings.find((holding:any) => holding.instrumentId === this.trade?.instrumentId);
     const indexPresentHolding = clientHoldings.findIndex((holding:any) => holding.instrumentId === this.trade?.instrumentId);
     // Holding exists
@@ -172,9 +172,9 @@ export class TradingFormComponent implements OnInit{
       if(this.trade?.direction === 'B'){
         const totalCostOfTrade = (this.trade.executionPrice * this.trade.quantity);
         // You have money to buy
-        if(this.clientPortfolioData[0].currBalance >= totalCostOfTrade){
+        if(this.clientPortfolioData.currBalance >= totalCostOfTrade){
           // Change curr balance
-          this.clientPortfolioData[0].currBalance -= totalCostOfTrade;
+          this.clientPortfolioData.currBalance -= totalCostOfTrade;
 
           // Holding ** check **
           clientHoldings[indexPresentHolding].avgPrice = (clientHoldings[indexPresentHolding].avgPrice + totalCostOfTrade)/(clientHoldings[indexPresentHolding].quantity + this.trade.quantity);
@@ -198,7 +198,7 @@ export class TradingFormComponent implements OnInit{
         if(this.trade?.quantity && PresentHolding.quantity >= this.trade?.quantity){
           const totalCostOfTrade = (this.trade.executionPrice * this.trade.quantity);
           // Change currentBalance
-          this.clientPortfolioData[0].currBalance += totalCostOfTrade;
+          this.clientPortfolioData.currBalance += totalCostOfTrade;
           // Edit Holding
           clientHoldings[indexPresentHolding].avgPrice = (clientHoldings[indexPresentHolding].avgPrice - totalCostOfTrade)/(clientHoldings[indexPresentHolding].quantity - this.trade.quantity);
           clientHoldings[indexPresentHolding].quantity -= this.trade.quantity;
@@ -226,9 +226,9 @@ export class TradingFormComponent implements OnInit{
       if(this.trade?.direction === 'B'){
         const totalCostOfTrade = (this.trade.executionPrice * this.trade.quantity);
         // You have money to buy
-        if(this.clientPortfolioData[0].currBalance >= totalCostOfTrade){
+        if(this.clientPortfolioData.currBalance >= totalCostOfTrade){
           // Change curr balance
-          this.clientPortfolioData[0].currBalance -= totalCostOfTrade;
+          this.clientPortfolioData.currBalance -= totalCostOfTrade;
 
           // Holding
           this.holding.categoryId = this.instrument.categoryId;
@@ -293,16 +293,16 @@ export class TradingFormComponent implements OnInit{
     */
     
     console.log('Client Portfolio Data: ', this.clientPortfolioData);
-    console.log('Holdings: ', this.clientPortfolioData[0].holdings);
+    console.log('Holdings: ', this.clientPortfolioData.holdings);
 
     
 
     // Everytime its a put request to update
 
-    this.clientPortfolioData[0].holdings = clientHoldings;
-    console.log('Client Data before the PUT Req', this.clientPortfolioData[0]);
+    this.clientPortfolioData.holdings = clientHoldings;
+    console.log('Client Data before the PUT Req', this.clientPortfolioData);
 
-    this.clientPortfolioService.updateClientHoldings(`http://localhost:4000/clients-portfolio/${this.clientPortfolioData[0].id}`, this.clientPortfolioData[0])
+    this.clientPortfolioService.updateClientHoldings(`http://localhost:4000/clients-portfolio/${this.clientPortfolioData.clientId}`, this.clientPortfolioData)
       .subscribe({
         next: (data) => {
         this.clientPortfolioDataUpdated = data;

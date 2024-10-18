@@ -8,21 +8,13 @@ import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
 })
 export class ClientPortfolioService {
 
-  private dataURL = 'http://localhost:4000/clients-portfolio';
+  private dataURL = 'http://localhost:8080/portfolio/client/';
 
   constructor(private http: HttpClient) { }
 
   // To retrieve a particular client's portfolio data by providing client ID
-  getClientPortfolio(clientId: string): Observable<any[]>{
-    return this.http.get<any[]>(this.dataURL).pipe(
-      tap(clientPortfolio => console.log("Client Portfolio -> " + JSON.stringify(clientPortfolio))
-      ),
-      map( (clientPortfolio) => 
-        clientPortfolio
-        .filter(portfolio => portfolio.clientId === clientId),
-      ),
-      catchError(this.handleError)
-    );
+  getClientPortfolio(clientId: string): Observable<ClientPortfolio>{
+    return this.http.get<ClientPortfolio>(this.dataURL + clientId)
   }
 
   updateClientHoldings(url: string, clientPortfolioData: ClientPortfolio): Observable<ClientPortfolio> {

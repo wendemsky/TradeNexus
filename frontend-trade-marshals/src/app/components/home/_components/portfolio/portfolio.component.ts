@@ -8,6 +8,7 @@ import { ClientProfile } from 'src/app/models/Client/ClientProfile';
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Instrument } from 'src/app/models/instrument';
+import { Holding } from 'src/app/models/Holding';
 
 
 @Component({
@@ -21,7 +22,7 @@ export class PortfolioComponent implements OnInit{
 
   clientProfileData!: ClientProfile | null;
 
-  portfolioData: ClientPortfolio[] = [];
+  portfolioData?: ClientPortfolio;
   transformedData: any[] = [];
   currentBalance: any;
   private _snackBar = inject(MatSnackBar);
@@ -29,19 +30,19 @@ export class PortfolioComponent implements OnInit{
   instrumentIdSelected?: string;
 
   public columnDefs: ColDef[] = [
-    {
-      headerName: "Instrument Description", 
-      field: "instrumentDesc",
-      minWidth: 400,
-    },
+    // {
+    //   headerName: "Instrument Description", 
+    //   field: "instrumentDesc",
+    //   minWidth: 400,
+    // },
     { 
       headerName: "Instrument ID", 
       field: "instrumentId",
     },
-    { 
-      headerName: "Category ID", 
-      field: "categoryId",
-    },
+    // { 
+    //   headerName: "Category ID", 
+    //   field: "categoryId",
+    // },
     { 
       headerName: "Quantity", 
       field: "quantity",
@@ -118,7 +119,7 @@ export class PortfolioComponent implements OnInit{
       next: (data) => {
         this.portfolioData = data;
         console.log('Portfolio Data: ', this.portfolioData);
-        this.transformData();
+        this.transformData(data);
       }, 
       error: (e) => {
         console.log('Error in loading Trade History: ',e);
@@ -130,18 +131,16 @@ export class PortfolioComponent implements OnInit{
   }
 
   // Function to flatten the holdings array into individual rows
-  transformData(){
-     this.transformedData = this.portfolioData.flatMap(portfolio =>
-      portfolio.holdings.map(holding => ({
-        instrumentId: holding.instrumentId,
-        categoryId: holding.categoryId,
-        instrumentDesc: holding.instrumentDesc,
-        quantity: holding.quantity,
-        avgPrice: holding.avgPrice
-      }),
-      this.currentBalance = portfolio.currBalance
-    )
-    )
+  transformData(portfolioData: any){
+    this.transformedData =  portfolioData.holdings.map((holding: Holding) => ({
+      clientId: portfolioData.clientId,
+      instrumentId: holding.instrumentId,
+      // categoryId: holding.categoryId,
+      // instrumentDesc: holding.instrumentDesc,
+      quantity: holding.quantity,
+      avgPrice: holding.avgPrice
+    }));
+    this.currentBalance = portfolioData.currBalance
   }
 
   cellClicked(event: CellClickedEvent) {
