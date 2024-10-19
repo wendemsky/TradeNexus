@@ -41,7 +41,7 @@ class FMTSServicePOJOUnitTest {
 	void setUp() throws Exception {
 		//Mock validated clients
 		validatedClients = new ArrayList<>(List.of(
-				new FMTSValidatedClient("739982664","john.doe@gmail.com",739859208), //Register
+				new FMTSValidatedClient("1654658070","sam@gmail.com",1654658070), //Register
 				new FMTSValidatedClient("1654658069","sowmya@gmail.com",1654658069) //Login
 		));
 		
@@ -100,7 +100,7 @@ class FMTSServicePOJOUnitTest {
 				new Instrument("Q456", "CUSIP", "88160R101", "STOCK", "Tesla, Inc. Common Stock", 1000, 1)));
 		
 		//Mock order and trade
-		order = new Order("NT123456", 10, new BigDecimal("100.00"), "B", "1654658069", "ORDER001", 123);
+		order = new Order("N123456", 10, new BigDecimal("100.00"), "B", "1654658069", "ORDER001", 123);
 		trade = new Trade(order, new BigDecimal("110.00"), "ORDER001TR", new BigDecimal("1100.00"));
 				
 		// Initializing the FMTS Service with a Mock Dao
