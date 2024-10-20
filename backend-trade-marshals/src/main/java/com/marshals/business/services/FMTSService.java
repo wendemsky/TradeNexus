@@ -58,12 +58,12 @@ public class FMTSService {
         		throw new NullPointerException("Order cannot be null");
         	}
         	Trade trade = fmtsDao.createTrade(order);
-        	if(trade==null) throw new FMTSException("Order is invalid, Cannot execute trade");
+        	if(trade == null || trade.getTradeId() == null || trade.getTradeId().isBlank()) throw new FMTSException("Order is invalid, Cannot execute trade");
         	return trade;
     	} catch(NullPointerException e) {
     		throw e;
     	} catch(FMTSException e) { //Any Exception thrown from fmtsDao
 			throw e;
-		}		
+    	} 	
     }
 }

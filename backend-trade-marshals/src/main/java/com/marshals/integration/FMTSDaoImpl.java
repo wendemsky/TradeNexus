@@ -5,6 +5,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -141,24 +142,33 @@ public class FMTSDaoImpl implements FMTSDao {
 			
 			HttpClient client = HttpClient.newBuilder().build();
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			if(response.statusCode()==406) { //Error in validation
+			if(response.body() == null) {
+				throw new NullPointerException("Trade returned null from fmts");
+			}
+			else if(response.statusCode()== 406) { //Error in validation
 				throw new FMTSException("Token expired or is invalid");
 			}
 			else if(response.statusCode() == 409) {
 				throw new FMTSException("Target price is not in the expected range of execution price");
 			}
+			else if(response.statusCode() == 400) {
+				throw new FMTSException("Order invalid");
+			}
 			else if(response.statusCode()!=200) { //Any other status code
 				throw new FMTSException("There was an unexpected error from FMTS while validating new client");
 			}
 			Trade processedTrade = objectMapper.readValue(response.body(), Trade.class);
+			System.out.println(processedTrade);
+			if(processedTrade == null) {
+				throw new FMTSException("Invalid order, trade returned null");
+			}
 			return processedTrade;
 		}
 		catch(FMTSException e){
 			throw e;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new FMTSException("There was an unexpected error from FMTS while executing trade");
-		}
+		} 
 		
 	}
 

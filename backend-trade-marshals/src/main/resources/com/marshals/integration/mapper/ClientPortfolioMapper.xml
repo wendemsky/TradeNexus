@@ -62,7 +62,7 @@
 	</update>
 	
 	<delete id="deleteClientHoldings">
-		DELETE FROM holdings (client_id, instrument_id, quantity, avg_price)
+		DELETE FROM holdings
 		WHERE client_id = #{clientId} AND instrument_id = #{holding.instrumentId}
 	</delete>
 

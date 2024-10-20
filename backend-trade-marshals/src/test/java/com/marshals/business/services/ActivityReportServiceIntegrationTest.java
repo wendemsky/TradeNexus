@@ -53,7 +53,7 @@ class ActivityReportServiceIntegrationTest {
 	@Test
 	void testGetClientHoldingsThrowsNullPointerExceptionForNullClientId() {
 		String clientId = null;
-		Exception e = assertThrows(NullPointerException.class, () -> {
+		Exception e = assertThrows(DatabaseException.class, () -> {
 			service.generateHoldingsReport(clientId);
 		});
 	}

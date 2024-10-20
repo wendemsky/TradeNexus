@@ -5,23 +5,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.marshals.business.Holding;
 import com.marshals.business.Trade;
 import com.marshals.business.TradeHistory;
 import com.marshals.integration.ClientActivityReportDao;
+import com.marshals.integration.DatabaseException;
  
 @Service("activityReportService")
 public class ActivityReportService {
+	@Autowired
+	private Logger logger;
 	
 	private ClientActivityReportDao dao;
 	
 	private TradeService tradeService; 
-	
-	@Autowired
+
 	public ActivityReportService(@Qualifier("clientActivityReportDao") ClientActivityReportDao activityDao, @Qualifier("tradeService") TradeService service) {
 		//Initializing the reqd Daos and TradeHistory Service
 		this.dao = activityDao;
@@ -30,10 +34,23 @@ public class ActivityReportService {
 	
 	//Generate Report with Clients Holdings
 	public List<Holding> generateHoldingsReport(String clientId) {
-		if(clientId == null) {
-			throw new NullPointerException("Client Id should not be null for Holdings");
+		List<Holding> holdings;
+		try {
+			holdings = dao.getClientHoldings(clientId);
+			if(clientId == null) {
+				throw new NullPointerException("Client Id should not be null for Holdings");
+			}
+		} catch(NullPointerException e) {
+			logger.error(e.getMessage());
+			throw e;
+		} catch(DataAccessException e) {
+			logger.error(e.getMessage());
+			throw e;
+		} catch(DatabaseException e) {
+			logger.error(e.getMessage());
+			throw e;
 		}
-		return dao.getClientHoldings(clientId);
+		return holdings;
 	}
 	
 	//Generate Report with Clients Trade History

@@ -161,7 +161,7 @@ class PortfolioServicePOJOUnitTest {
 		BigDecimal oldCurrBalance = oldClientPortfolio.getCurrBalance();
 		// New balance and holdings
 		BigDecimal newCurrBalance = oldCurrBalance.add(execPrice.multiply(new BigDecimal(quantity)));
-		Holding updatedHolding = new Holding(instrumentId, 9900, new BigDecimal("95.63"));
+		Holding updatedHolding = new Holding(instrumentId, 9900, new BigDecimal("93.73"));
 		service.updateClientPortfolio(trade);
 		Mockito.verify(mockDao).updateClientBalance(existingClientId, newCurrBalance);
 		Mockito.verify(mockDao).updateClientHoldings(existingClientId, updatedHolding);

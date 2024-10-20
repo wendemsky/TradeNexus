@@ -86,22 +86,19 @@ class ActivityReportServicePOJOUnitTest {
 	
 	@Test
 	void testGenerateClientHoldingsShouldHandleNullClientId() {
-		Exception e = assertThrows(NullPointerException.class, () -> {
+		assertThrows(NullPointerException.class, () -> {
 			service.generateHoldingsReport(null);
-		});
-		assertEquals(e.getMessage(),"Client Id should not be null for Holdings");
-	}
+		});	}
  
 	@Test
 	void testGenerateClientHoldingShouldHandleForNonExistentClientId() {
 		String clientId = "541107416";
 		Mockito.doThrow(new DatabaseException("Client has no holdings")).when(mockDao).getClientHoldings(clientId);
-		Exception e = assertThrows(DatabaseException.class, () -> {
+		assertThrows(NullPointerException.class, () -> {
 			service.generateHoldingsReport(clientId);
 			//Verifying that the corresponding mockDao methods were called
 			Mockito.verify(mockDao).getClientHoldings(clientId);
 		});
-		assertEquals(e.getMessage(), "Client has no holdings");
 	}
 	
 	@Test

@@ -106,14 +106,16 @@ class FMTSDaoImplTest {
 		//Set valid token but invalid instrument in order
 		FMTSValidatedClient validatedClient = dao.verifyClient(existingClientEmail,existingClientID);
 		Order order = new Order("INS124", 10, new BigDecimal("100"), "B", existingClientID, "ORDER001", validatedClient.getToken());
-		Trade trade = dao.createTrade(order);
-		assertNull(trade);
+		Exception e = assertThrows(FMTSException.class, () -> {
+			dao.createTrade(order);
+		});
+		assertEquals("Invalid order, trade returned null",e.getMessage());
 	}
 	@Test
 	void testForExecutionOfTradeWithOutOfRangeTargetPriceThrowsException() {
 		//Set valid token but invalid target price in order
 		FMTSValidatedClient validatedClient = dao.verifyClient(existingClientEmail,existingClientID);
-		Order order = new Order("N123456", 10, new BigDecimal("10"), "B", existingClientID, "ORDER001", validatedClient.getToken());
+		Order order = new Order("N123456", 10, new BigDecimal("10000"), "B", existingClientID, "ORDER001", validatedClient.getToken());
 		Exception e = assertThrows(FMTSException.class, () -> {
 			dao.createTrade(order);
 		});
@@ -125,7 +127,11 @@ class FMTSDaoImplTest {
 		FMTSValidatedClient validatedClient = dao.verifyClient(existingClientEmail,existingClientID);
 		Order order = new Order("N123456", 10, new BigDecimal("103.25"), "B", existingClientID, "ORDER001", validatedClient.getToken());
 		Trade trade = dao.createTrade(order);
+		trade.getOrder().setOrderId(order.getOrderId());
 		assertNotNull(trade);
-		assertTrue(trade.getOrder().equals(order) && trade.getInstrumentId().equals(order.getInstrumentId()));
+		System.out.println(trade.getOrder().toString());
+		System.out.println(order.toString());
+		assertTrue(trade.getOrder().equals(order));
+		assertTrue(trade.getInstrumentId().equals(order.getInstrumentId()));
 	}
 }

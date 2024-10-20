@@ -5,6 +5,9 @@ import java.math.RoundingMode;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +20,14 @@ import com.marshals.business.Price;
 import com.marshals.business.Trade;
 import com.marshals.business.TradeHistory;
 import com.marshals.integration.ClientTradeDao;
+import com.marshals.integration.DatabaseException;
+import com.marshals.integration.FMTSException;
 import com.marshals.utils.PriceScorer;
 
 @Service("tradeService")
 public class TradeService {
+	@Autowired
+	private Logger logger;
 	
 	private PortfolioService portfolioService;
 	
@@ -48,7 +55,13 @@ public class TradeService {
 		 if (trade == null) {
 	         throw new NullPointerException("Trade must not be null");
 		 }
-	    dao.addTrade(trade);
+		 try {
+			 dao.addTrade(trade);
+		 } catch(DatabaseException e) {
+			 throw e;
+		 } catch(NullPointerException e) {
+			 throw e;
+		 }
 	}
 	
 	//Executing the trade
@@ -57,43 +70,50 @@ public class TradeService {
     		if (order == null) {
                 throw new NullPointerException("order cannot be null");
             }
-        	
-        	List<Price> prices = new ArrayList<>();
-        
+        	        
         	ClientPortfolio clientPortfolio = portfolioService.getClientPortfolio(order.getClientId());
         	
-        	if(order.getDirection() == "B") {
+        	if(order.getDirection().equals("B")) {
         		for(Price price: priceList) {
             		if(price.getInstrument().getInstrumentId().equals(order.getInstrumentId())) {
             			//Call FMTS Service to create the trade
-            			
-        				Trade trade = fmtsService.createTrade(order);
+            			Trade trade;
+    					
+						trade = fmtsService.createTrade(order);
+    						
         				trade.getOrder().setOrderId(order.getOrderId());
+        				System.out.println(trade);
         				//Buy Condition Validation
         				//Getting the cost of trade and checking if its lesser than or equal to balance
         				BigDecimal totalCostOfTrade = trade.getCashValue();
     	                if (clientPortfolio.getCurrBalance().compareTo(totalCostOfTrade) >= 0) {	
 	        				//Updating portfolio and adding trade
-	        				portfolioService.updateClientPortfolio(trade);
-	        				this.addTrade(trade);	
+    	                	this.addTrade(trade);
+	        				portfolioService.updateClientPortfolio(trade);	
     	                } else {
     	                    throw new IllegalArgumentException("Insufficient balance! Cannot buy the instrument");
     	                }
     	                return trade;
             		}
             	}
-        	} else if (order.getDirection() == "S"){
+        	} else if (order.getDirection().equals("S")){
         		for(Holding holding: clientPortfolio.getHoldings()) {
         			//Sell condition checking
         			if(holding.getInstrumentId().equals(order.getInstrumentId())) {
         				//One more sell validation checking - To check if user has more quantity to sell
         				if(holding.getQuantity() >= order.getQuantity()) {
         					//Call FMTS Service to create the trade
-            				Trade trade = fmtsService.createTrade(order);
+        					Trade trade;
+        					
+    						trade = fmtsService.createTrade(order);
+    						System.out.println("Trade Object: "+ trade);
+        						
             				trade.getOrder().setOrderId(order.getOrderId());
+            				System.out.println(trade);
+            				
             				//Updating portfolio and adding Trade 
-            				portfolioService.updateClientPortfolio(trade);
-            				this.addTrade(trade);	
+            				this.addTrade(trade);
+            				portfolioService.updateClientPortfolio(trade);	
                 			return trade;
         				} else {
         					throw new IllegalArgumentException("Insufficient quantity in holdings to sell the instrument");
@@ -107,10 +127,18 @@ public class TradeService {
         	}    
             throw new IllegalArgumentException("Instrument is not present in the platform");
     	} catch(NullPointerException e) {
+    		logger.error(e.getMessage());
     		throw e;
     	} catch(IllegalArgumentException e) {
+    		logger.error(e.getMessage());
     		throw e;
-    	}
+    	} catch(DatabaseException e) {
+			logger.error(e.getMessage());
+			throw new DatabaseException(e.getMessage());
+		} catch(FMTSException e) {
+			logger.error(e.getMessage());
+			throw new FMTSException(e.getMessage());
+		}
     	
     }
     
