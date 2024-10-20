@@ -74,7 +74,7 @@ export class ClientPreferencesComponent {
     this.clientProfileService.getClientProfile().subscribe({
       next: (profile) => {
         console.log('Logged In Client Profile Data: ', profile);
-        if(profile.client !== null){
+        if(profile && profile.client?.clientId){
           this.clientProfileData = profile
           this.getPreferences(profile.client.clientId);
         }

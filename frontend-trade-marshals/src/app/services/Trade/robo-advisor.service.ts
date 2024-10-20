@@ -1,10 +1,10 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ClientPreferencesService } from './Client/client-preferences.service';
-import { ClientProfileService } from './Client/client-profile.service';
+import { ClientPreferencesService } from '../Client/client-preferences.service';
+import { ClientProfileService } from '../Client/client-profile.service';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Price } from '../models/price';
-import { ClientPreferences } from '../models/Client/ClientPreferences';
+import { Price } from '../../models/Trade/price';
+import { ClientPreferences } from '../../models/Client/ClientPreferences';
 
 @Injectable({
   providedIn: 'root'
@@ -40,9 +40,9 @@ export class RoboAdvisorService {
       console.error(`There is an error with status: ${response.status}, ` +
         `and body: ${JSON.stringify(response.error)}`);
     }
-    if(response.status == 500){
+    if(response.status == 500 || response.status == 0){
       return throwError(
-        () => 'Unexpected error at service while trying to register user. Please try again later!'
+        () => 'Unexpected error at service while trying to retrieve robo advisor recommendations. Please try again later!'
       );
     }
     return throwError(

@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Trade } from '../models/trade';
-import { Order } from '../models/order';
+import { Trade } from '../../models/Trade/trade';
+import { Order } from '../../models/Trade/order';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({

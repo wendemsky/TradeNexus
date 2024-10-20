@@ -9,7 +9,7 @@ import { ClientProfileService } from 'src/app/services/Client/client-profile.ser
 })
 export class ProfileComponent implements OnInit {
 
-  clientProfileData!: ClientProfile | null //Client Profile data that is set with ClientProfileService
+  clientProfileData!: ClientProfile //Client Profile data that is set with ClientProfileService
 
   constructor(private clientProfileService: ClientProfileService) { }
   ngOnInit() {

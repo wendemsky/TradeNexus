@@ -23,7 +23,7 @@ VALUES ('1236679496','Aadhar','674902441257');
 INSERT INTO client (client_id, email, password, name, date_of_birth, country, is_admin, curr_balance) 
 VALUES ('739982664', 'john.doe@gmail.com', 'Marsh2024', 'John Doe', to_date('1998-03-15', 'yyyy-mm-dd'), 'USA', 'N', 10000);
 INSERT INTO client_identification (client_id, type, value)
-VALUES ('739982664','SSN','1234573532');
+VALUES ('739982664','SSN','123457353');
 
 --Inserting 6 records into Client Preferences table
 INSERT INTO CLIENT_PREFERENCES (client_id ,investment_purpose, income_category, length_of_investment, percentage_of_spend, risk_tolerance, is_advisor_accepted) 
@@ -54,6 +54,10 @@ INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_va
 ('TRADE001', 'ORDER001', 95.92, 95920.00, to_date('2024-09-22 21:31:04', 'yyyy-mm-dd hh24-mi-ss'));
 INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value, executed_at) VALUES
 ('TRADE002', 'ORDER002', 1.03375, 10337.50, to_date('2024-09-22 22:01:34', 'yyyy-mm-dd hh24-mi-ss'));
+INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value, executed_at) VALUES
+('TRADE003', 'ORDER003', 96, 4800.00, to_date('2024-10-15 22:01:34', 'yyyy-mm-dd hh24-mi-ss'));
+INSERT INTO "MARSH"."CLIENT_TRADE" (trade_id, order_id, execution_price, cash_value, executed_at) VALUES
+('TRADE004', 'ORDER004', 1.035, 20.70, to_date('2024-10-16 12:12:44', 'yyyy-mm-dd hh24-mi-ss'));
  
 -- Add holdings for client 541107416
 INSERT INTO holdings (client_id, instrument_id, quantity, avg_price) VALUES

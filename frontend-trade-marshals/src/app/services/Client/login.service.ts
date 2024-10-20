@@ -31,7 +31,7 @@ export class LoginService {
       console.error(`There is an error with status: ${response.status}, ` +
         `and body: ${JSON.stringify(response.error)}`);
     }
-    if(response.status == 500){
+    if(response.status == 500 || response.status==0 ){
       return throwError(
         () => 'Unexpected error at service while trying to login user. Please try again later!'
       );

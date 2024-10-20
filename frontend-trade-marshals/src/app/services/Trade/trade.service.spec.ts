@@ -2,9 +2,6 @@ import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 
 import { TradeService } from './trade.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HttpErrorResponse } from '@angular/common/http';
-import { InstrumentService } from './instrument.service';
-import { Order } from '../models/order';
 
 describe('TradeService', () => {
   let service: TradeService;

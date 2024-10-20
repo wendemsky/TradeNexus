@@ -109,7 +109,7 @@
                             <mat-label>Govt ID No.</mat-label>
                             <input matInput placeholder="Enter Govt ID No" type="text" formControlName="value" required>
                         </mat-form-field>
-                        <div *ngIf="identificationDetails.errors?.['lengthNotMatched']" class="alert">
+                        <div *ngIf="identificationDetails.value!=='' && !identificationDetails.valid" class="alert">
                             *Enter a valid Govt ID No.
                         </div>
                         <br>

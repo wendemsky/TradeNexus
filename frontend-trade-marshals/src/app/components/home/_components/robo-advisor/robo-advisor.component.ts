@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { Price } from 'src/app/models/price';
-import { PriceService } from 'src/app/services/price.service';
+import { Price } from 'src/app/models/Trade/price';
 import { ColDef, SideBarDef } from 'ag-grid-community';
 import { SellComponent } from '../sell/sell.component';
 import { BuyComponent } from '../buy/buy.component';
-import { RoboAdvisorService } from 'src/app/services/robo-advisor.service';
+import { RoboAdvisorService } from 'src/app/services/Trade/robo-advisor.service';
 import { ClientPreferencesService } from 'src/app/services/Client/client-preferences.service';
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
 import { ClientPreferences } from 'src/app/models/Client/ClientPreferences';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-robo-advisor',
@@ -37,7 +37,7 @@ export class RoboAdvisorComponent {
     {
       headerName: "Bid Price",
       field: "bidPrice",
-    }, 
+    },
     {
       headerName: "Buy",
       field: "buy",
@@ -63,7 +63,7 @@ export class RoboAdvisorComponent {
     {
       headerName: "Ask Price",
       field: "askPrice",
-    }, 
+    },
     {
       headerName: "Sell",
       field: "sell",
@@ -144,8 +144,9 @@ export class RoboAdvisorComponent {
 
   constructor(
     private roboAdvisorService: RoboAdvisorService,
-    private preferencesService: ClientPreferencesService, 
-    private profileService: ClientProfileService
+    private preferencesService: ClientPreferencesService,
+    private profileService: ClientProfileService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -154,35 +155,52 @@ export class RoboAdvisorComponent {
 
   loadAllPrices() {
     this.profileService.getClientProfile().subscribe((profile) => {
-      let clientId = profile.client.clientId
-      this.preferencesService.getClientPreferences(clientId).subscribe((preferences) => {
-        this.retrieveAllTopBuys(preferences)
-        this.retrieveAllTopSells(preferences)
-      });
+      let clientId = profile?.client?.clientId
+      if (clientId)
+        this.preferencesService.getClientPreferences(clientId).subscribe((preferences) => {
+          this.retrieveAllTopBuys(preferences)
+          this.retrieveAllTopSells(preferences)
+        });
     })
   }
 
-  retrieveAllTopBuys(preferences: ClientPreferences){
+  retrieveAllTopBuys(preferences: ClientPreferences) {
+    const snackBarConfig = new MatSnackBarConfig();
+    snackBarConfig.duration = 2000;
+    snackBarConfig.panelClass = ['form-submit-snackbar'];
     this.roboAdvisorService.getTopBuyTrades(preferences)
-    .subscribe(
-      (data) => {
-        console.log(data)
-        this.buyPrices = data;
-        this.buyPrices = this.buyPrices.sort( () => 0.5 - Math.random())
-        this.buyPrices = this.buyPrices.slice(0, 5);
-      }
-    );
+      .subscribe({
+        next: (data) => {
+          if (data !== null) {
+            this.buyPrices = data;
+          } else {
+            this.snackBar.open("Unexpected error in retrieving robo advisor buy recommendations", '', snackBarConfig)
+          }
+        },
+        error: (e) => {
+          console.log(e)
+          this.snackBar.open(e, '', snackBarConfig)
+        }
+      });
   }
 
-  retrieveAllTopSells(preferences: ClientPreferences){
+  retrieveAllTopSells(preferences: ClientPreferences) {
+    const snackBarConfig = new MatSnackBarConfig();
+    snackBarConfig.duration = 2000;
+    snackBarConfig.panelClass = ['form-submit-snackbar'];
     this.roboAdvisorService.getTopSellTrades(preferences)
-    .subscribe(
-      (data) => {
-        console.log(data)
-        this.sellPrices = data;
-        this.sellPrices = this.sellPrices.sort( () => 0.5 - Math.random())
-        this.sellPrices = this.sellPrices.slice(0, 5);
-      }
-    )
+      .subscribe({
+        next: (data) => {
+          if (data !== null) {
+            this.sellPrices = data;
+          } else {
+           this.snackBar.open("Client has no holdings for robo advisor to give sell recommendations", '', snackBarConfig)
+          }
+        },
+        error: (e) => {
+          console.log(e)
+          this.snackBar.open(e, '', snackBarConfig)
+        }
+      });
   }
 }

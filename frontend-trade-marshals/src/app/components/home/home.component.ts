@@ -7,6 +7,7 @@ import { ClientPreferencesService } from 'src/app/services/Client/client-prefere
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
 import { RoboAdvisorComponent } from './_components/robo-advisor/robo-advisor.component';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { PriceService } from 'src/app/services/Trade/price.service';
 
 @Component({
   selector: 'app-home',
@@ -15,21 +16,21 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 })
 export class HomeComponent implements OnInit {
 
-  clientProfileData!: ClientProfile | null //Client Profile data that is set with ClientProfileService
+  clientProfileData!: ClientProfile //Client Profile data that is set with ClientProfileService
   clientPreferencesData!: ClientPreferences | null //Client Preferences data 
   isSideMenuExpanded: boolean = false; //Side Menu
-  isHomeContent:boolean = true; //Home Content displayed
+  isHomeContent: boolean = true; //Home Content displayed
   snackBarConfig = new MatSnackBarConfig();
-   
-  constructor(private clientProfileService: ClientProfileService, private clientPreferencesService: ClientPreferencesService, 
-        private snackBar: MatSnackBar, private router: Router, public dialog: MatDialog) { }
+
+  constructor(private clientProfileService: ClientProfileService, private clientPreferencesService: ClientPreferencesService,
+    private priceService: PriceService, private snackBar: MatSnackBar, private router: Router, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.snackBarConfig.duration = 3000;
     this.snackBarConfig.panelClass = ['form-submit-snackbar'];
     this.isSideMenuExpanded = false
-    console.log('Router URL: ',this.router.url)
-    if(this.router.url === '/home')
+    console.log('Router URL: ', this.router.url)
+    if (this.router.url === '/home')
       this.isHomeContent = true //Set Home Page Content
     else
       this.isHomeContent = false
@@ -38,21 +39,22 @@ export class HomeComponent implements OnInit {
     this.clientProfileService.getClientProfile().subscribe(profile => {
       this.clientProfileData = profile
       console.log('Logged In Client Profile Data: ', this.clientProfileData);
-      this.clientPreferencesService.getClientPreferences(profile.client?.clientId).subscribe({
-        next: (data: ClientPreferences) => {
-          console.log(data)
-          if(data) {
-            this.clientPreferencesData = data
+      if (this.clientProfileData && this.clientProfileData.client?.clientId)
+        this.clientPreferencesService.getClientPreferences(this.clientProfileData.client.clientId).subscribe({
+          next: (data: ClientPreferences) => {
+            console.log(data)
+            if (data) {
+              this.clientPreferencesData = data
+            }
+            else {
+              this.clientPreferencesData = null
+            }
+          },
+          error: (err) => {
+            console.log(err)
+            this.snackBar.open(err, '', this.snackBarConfig)
           }
-          else{
-            this.clientPreferencesData = null
-          }
-        },
-        error: (err) => {
-          console.log(err)
-          this.snackBar.open(err, '', this.snackBarConfig)
-        }
-      })
+        })
     })
   }
 
@@ -70,6 +72,7 @@ export class HomeComponent implements OnInit {
 
   //When client logs out - To go back to Landing
   logout() {
+    this.priceService.removeLivePrices() //Erasing live prices data - from FMTS
     this.clientProfileService.removeClientProfile() //Erasing Client data
     this.router.navigateByUrl('/')
   }
