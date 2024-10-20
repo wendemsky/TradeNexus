@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Instrument } from '../models/instrument';
+import { Instrument } from '../../models/Trade/instrument';
 import { catchError, Observable, of, throwError } from 'rxjs';
 // import { MockInstruments } from '../../assets/mock-data/mock-instruments';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';

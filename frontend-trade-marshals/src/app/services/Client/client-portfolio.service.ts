@@ -21,10 +21,23 @@ export class ClientPortfolioService {
     return this.http.put<ClientPortfolio>(url, clientPortfolioData).pipe(catchError(this.handleError));
   }
 
+  //Function to handle errors
   handleError(response: HttpErrorResponse) {
+    if (response.error instanceof ProgressEvent) {
+      console.error('There is a client-side or network error - ' +
+        `${response.message} ${response.status} ${response.statusText}`);
+    } else {
+      console.error(`There is an error with status: ${response.status}, ` +
+        `and body: ${JSON.stringify(response.error)}`);
+    }
+    if(response.status == 500 || response.status == 0){
+      return throwError(
+        () => 'Unexpected error at service while trying to retrieve portfolio. Please try again later!'
+      );
+    }
     return throwError(
-    () => 'Unable to contact service; please try again later.');
+      () => response.error.message
+    );
   }
-
   
 }

@@ -2,8 +2,7 @@ import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 
 import { TradeHistoryService } from './trade-history.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { MaterialModule } from '../material.module';
-import { HttpErrorResponse } from '@angular/common/http';
+import { MaterialModule } from '../../material.module';
 
 describe('TradeHistoryService', () => {
   let service: TradeHistoryService;

@@ -2,11 +2,10 @@ import { Component, inject, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ColDef, GridOptions, SideBarDef } from 'ag-grid-community';
 import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
-import { ClientPreferences } from 'src/app/models/Client/ClientPreferences';
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
-import { Trade } from 'src/app/models/trade';
+import { Trade } from 'src/app/models/Trade/trade';
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
-import { TradeHistoryService } from 'src/app/services/trade-history.service';
+import { TradeHistoryService } from 'src/app/services/Trade/trade-history.service';
 
 @Component({
   selector: 'app-trading-history',

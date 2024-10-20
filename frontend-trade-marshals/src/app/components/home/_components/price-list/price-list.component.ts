@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Price } from 'src/app/models/price';
-import { PriceService } from 'src/app/services/price.service';
+import { Price } from 'src/app/models/Trade/price';
+import { PriceService } from 'src/app/services/Trade/price.service';
 import { CellClickedEvent, ColDef, SideBarDef } from 'ag-grid-community';
 import { SellComponent } from '../sell/sell.component';
 import { BuyComponent } from '../buy/buy.component';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 // import {
 //   ColGroupDef,
 //   GridApi,
@@ -85,7 +86,7 @@ public defaultColDef: ColDef = {
   }
 
   constructor(
-    private priceService: PriceService,
+    private priceService: PriceService, private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -93,8 +94,25 @@ public defaultColDef: ColDef = {
   }
 
   loadAllPrices() {
-    this.priceService.getPrices()
-      .subscribe(data => this.prices = data);
+    const snackBarConfig = new MatSnackBarConfig();
+    snackBarConfig.duration = 2000;
+    snackBarConfig.panelClass = ['form-submit-snackbar'];
+
+    this.priceService.getPricesFromFMTS()
+      .subscribe({
+        next: (data) => {
+          if(data!==null) {
+            this.prices = data;
+            this.priceService.setLivePrices(this.prices); //Set the prices
+          }else{
+            this.snackBar.open("Unexpected error in retrieving live instrument prices", '', snackBarConfig)
+          }
+        },
+        error: (e) => {
+          console.log(e)
+          this.snackBar.open(e, '', snackBarConfig)
+        }
+      })
   }
 
   // onGridReady(params){

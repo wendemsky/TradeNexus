@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
-import { Trade } from '../models/trade';
+import { Trade } from '../../models/Trade/trade';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Order } from '../models/order';
+import { Order } from '../../models/Trade/order';
 
 @Injectable({
   providedIn: 'root'

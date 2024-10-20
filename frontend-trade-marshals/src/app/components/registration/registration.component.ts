@@ -46,14 +46,30 @@ export class RegistrationComponent implements OnInit {
   validateGovernmentProof: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     let idType = control.get('type')?.value;
     let idValue = control.get('value')?.value;
-
+    
+    // Aadhar validation: must be exactly 12 digits
     if (idType === "Aadhar") {
-      return idValue?.length !== 12 ? { lengthNotMatched: true } : null
+      if (!/^\d{12}$/.test(idValue)) {
+        return { validID: true };
+      }
+      return null;
     }
+    // PAN validation: must be 5 uppercase letters, 4 digits, 1 uppercase letter
     else if (idType === "PAN") {
-      return idValue?.length !== 10 ? { lengthNotMatched: true } : null
+      if (!/^[A-Z]{5}\d{4}[A-Z]$/.test(idValue)) {
+        return { validID: true };
+      }
+      return null;
     }
-    return idValue?.length !== 10 ? { lengthNotMatched: true } : null //For SSN
+    // SSN validation: must be exactly 9 digits
+    else if (idType === "SSN") {
+      if (!/^\d{9}$/.test(idValue)) {
+        return { validID: true };
+      }
+      return null;
+    }
+    // If none of the conditions are met, return an error for id not matched
+    return { validID: false };
   };
 
   //3 FormGroups for the Registration Step Up Forms
@@ -90,7 +106,7 @@ export class RegistrationComponent implements OnInit {
   identificationTypes: any //To set the Govt ID Types for the third form
 
   clientData!: Client | null  //For registration / storing
-  clientProfileData!: ClientProfile | null //Client Profile data that is set with ClientProfileService
+  clientProfileData!: ClientProfile  //Client Profile data that is set with ClientProfileService
 
   constructor(private route: Router, private snackBar: MatSnackBar, private datePipe: DatePipe,
     private registerService: RegisterService, private clientProfileService: ClientProfileService) { }
@@ -129,13 +145,13 @@ export class RegistrationComponent implements OnInit {
             this.snackBar.open('User is already registered! Register with a different email', '', snackBarConfig)
             this.signupForm.reset()
             // Client is now successfully registered and clientId is retrieved - Going to next stop
-          }else{
+          } else {
             stepper.next()
           }
         },
         error: (e) => { //Error in hitting register service
           console.log(e)
-          this.snackBar.open(e,'', snackBarConfig)
+          this.snackBar.open(e, '', snackBarConfig)
           this.signupForm.reset()
         }
       })
@@ -175,16 +191,16 @@ export class RegistrationComponent implements OnInit {
     this.registerService.saveClientDetails(this.clientData).subscribe({
       next: (data) => {
         //After successful client validation - Set Client Profile data
-        if(data !== null){
+        if (data !== null) {
           let formattedDate = this.datePipe.transform(data?.client?.dateOfBirth, 'dd/MM/yyyy');
-          if(data.client !== null){
+          if (data.client !== null) {
             data.client.dateOfBirth = String(formattedDate)
           }
           this.clientProfileData = data
           this.clientProfileService.setClientProfile(this.clientProfileData)
           //After setting profile redirect to Client Preferences Component
           this.redirectToClientPreferencesPage()
-        }else{
+        } else {
           this.snackBar.open("Unexpected error in retrieving new client details", '', snackBarConfig)
         }
       },

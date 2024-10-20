@@ -25,7 +25,7 @@ export class LandingPageComponent implements OnInit {
     password: new FormControl('',Validators.required)
   })
 
-  clientProfile!: ClientProfile | null  //Logging in Client Data fetched from LoginService
+  clientProfile!: ClientProfile  //Logging in Client Data fetched from LoginService
 
   constructor(private dialog: MatDialog, private snackBar: MatSnackBar, private datePipe: DatePipe,
     private loginService: LoginService, private clientProfileService: ClientProfileService, private route: Router) { }

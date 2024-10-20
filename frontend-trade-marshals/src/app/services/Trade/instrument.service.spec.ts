@@ -2,7 +2,7 @@ import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 
 import { InstrumentService } from './instrument.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { MaterialModule } from '../material.module';
+import { MaterialModule } from '../../material.module';
 import { HttpErrorResponse } from '@angular/common/http';
 
 describe('InstrumentService', () => {
