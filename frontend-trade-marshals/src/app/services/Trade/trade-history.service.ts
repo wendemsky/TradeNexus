@@ -24,11 +24,6 @@ export class TradeHistoryService {
     )
   }
 
-  addTrade(trade: Trade) {
-    return this.httpClient.post<Trade>(this.url, trade)
-    .pipe(catchError(this.handleError))
-  }
-
   //Function to handle errors
   handleError(response: HttpErrorResponse) {
     if (response.error instanceof ProgressEvent) {

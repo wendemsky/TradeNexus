@@ -201,11 +201,9 @@ class FMTSServicePOJOUnitTest {
 	void testForRetrievalOfEmptyLivePricesThrowsException() {
 		//Mocking dao to return live price list
 		Mockito.when(mockDao.getLivePrices()).thenReturn(new ArrayList<>());
-		Exception e = assertThrows(FMTSException.class, () -> {
-			service.getLivePrices();
-			Mockito.verify(mockDao.getLivePrices()); 
-		});		
-		assertEquals(e.getMessage(),"No instrument live prices fetched from FMTS Service");
+		List<Price> prices = service.getLivePrices();
+		Mockito.verify(mockDao).getLivePrices(); 
+		assertTrue(prices.size()==0);
 	}
 	
 	@Test

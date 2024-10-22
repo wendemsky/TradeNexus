@@ -3,7 +3,6 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { catchError, Observable, throwError } from 'rxjs';
 import { Trade } from '../../models/Trade/trade';
 import { Order } from '../../models/Trade/order';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +13,7 @@ export class TradeService {
 
   constructor(private httpClient: HttpClient) { }
 
-  addOrder(order: Order): Observable<Trade> {
+  executeTrade(order: Order): Observable<Trade> {
     return this.httpClient.post<Trade>(this.url, order).pipe(catchError(this.handleError));
   }
 

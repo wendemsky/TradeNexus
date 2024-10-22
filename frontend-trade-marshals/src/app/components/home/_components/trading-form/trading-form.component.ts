@@ -91,7 +91,7 @@ export class TradingFormComponent implements OnInit{
 
   executeTrade(order: Order) {
     console.log('Order: ', order);
-    this.tradeService.addOrder(order)
+    this.tradeService.executeTrade(order)
       .subscribe({
         next:   (data) => {
           this.trade = data;
@@ -117,19 +117,6 @@ export class TradingFormComponent implements OnInit{
           })
         }
       });
-  }
-
-  tradeSaved?: Trade;
-  saveTrade(trade: Trade) { 
-    this.tradeHistoryService.addTrade(trade).pipe()
-      .subscribe(data => {
-        this.tradeSaved = data;
-        console.log(this.tradeSaved);
-        // this._snackBar.open('Trade saved successfully', '', {
-        //   duration: 3000,
-        //   panelClass: ['form-submit-snackbar']
-        // });
-      }); 
   }
 
 }

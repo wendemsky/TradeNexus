@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.marshals.business.Order;
 import com.marshals.business.Trade;
 import com.marshals.business.TradeHistory;
+import com.marshals.business.services.FMTSService;
 import com.marshals.business.services.TradeService;
 import com.marshals.integration.DatabaseException;
 
@@ -37,10 +38,10 @@ class TradeControllerWebLayerTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private TradeService mockService;
-
+	private TradeService mockTradeService;
+	
 	@MockBean
-	private Logger mockLogger;
+	private FMTSService mockFMTSService;
 
 //	Test client trade-history details
 	List<Trade> tradeObjectList = List.of(
@@ -63,7 +64,7 @@ class TradeControllerWebLayerTest {
 	@Test
 	void testForGetClientTradeHistoryRespond200() throws Exception {
 		String id = "541107416";
-		when(mockService.getClientTradeHistory(id)).thenReturn(clientTradeHistoryList);
+		when(mockTradeService.getClientTradeHistory(id)).thenReturn(clientTradeHistoryList);
 
 		String expectedFirstTradeJson = """
 					   	{
@@ -101,7 +102,7 @@ class TradeControllerWebLayerTest {
 	void testForGetClientTradeHistoryRespond204() throws Exception {
 		String id = "12345678";
 
-		when(mockService.getClientTradeHistory(id)).thenThrow(DatabaseException.class);
+		when(mockTradeService.getClientTradeHistory(id)).thenThrow(DatabaseException.class);
 
 		mockMvc.perform(get("/trade/trade-history/" + id)).andExpect(status().isBadRequest())
 				.andExpect(content().string(is(emptyOrNullString())));
@@ -111,7 +112,7 @@ class TradeControllerWebLayerTest {
 	void testForGetClientTradeHistoryRespond400ForRandomClientIdString() throws Exception {
 		String id = "invalid-cliend-id";
 
-		when(mockService.getClientTradeHistory(id)).thenThrow(IllegalArgumentException.class);
+		when(mockTradeService.getClientTradeHistory(id)).thenThrow(IllegalArgumentException.class);
 
 		mockMvc.perform(get("/trade/trade-history/" + id)).andExpect(status().isNotAcceptable())
 				.andExpect(content().string(is(emptyOrNullString())));
@@ -121,7 +122,7 @@ class TradeControllerWebLayerTest {
 	@Test
 	void testForGetClientTradeHistoryRespond406ForInvalidClientId() throws Exception {
 		String id = "-10000";
-		when(mockService.getClientTradeHistory(id)).thenThrow(IllegalArgumentException.class);
+		when(mockTradeService.getClientTradeHistory(id)).thenThrow(IllegalArgumentException.class);
 		
 		mockMvc.perform(get("/trade/trade-history/" + id))
 			.andExpect(status().isNotAcceptable())
@@ -131,7 +132,7 @@ class TradeControllerWebLayerTest {
 	@Test
 	void testForGetClientTradeHistoryRespond500() throws Exception {
 		String id = "541107416";
-		when(mockService.getClientTradeHistory(id)).thenThrow(RuntimeException.class);
+		when(mockTradeService.getClientTradeHistory(id)).thenThrow(RuntimeException.class);
 		
 		mockMvc.perform(get("/trade/trade-history/" + id))
 			.andExpect(status().isInternalServerError())
