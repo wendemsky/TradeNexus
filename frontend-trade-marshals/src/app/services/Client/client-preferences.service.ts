@@ -39,7 +39,7 @@ export class ClientPreferencesService {
     }
     if(response.status == 500 || response.status == 0){
       return throwError(
-        () => 'Unexpected error at service while trying to register user. Please try again later!'
+        () => 'Unexpected error occurred at the service. Please try again later!'
       );
     }
     return throwError(

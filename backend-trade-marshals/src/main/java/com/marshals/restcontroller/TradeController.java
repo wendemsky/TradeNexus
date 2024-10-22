@@ -21,6 +21,7 @@ import com.marshals.business.Order;
 import com.marshals.business.Price;
 import com.marshals.business.Trade;
 import com.marshals.business.TradeHistory;
+import com.marshals.business.services.FMTSService;
 import com.marshals.business.services.TradeService;
 import com.marshals.integration.DatabaseException;
 import com.marshals.integration.FMTSException;
@@ -31,6 +32,9 @@ public class TradeController {
 
 	@Autowired
 	private TradeService tradeService;
+	
+	@Autowired
+	private FMTSService fmtsService;
 
 	@Autowired
 	private Logger logger;
@@ -45,7 +49,6 @@ public class TradeController {
 	// Execute trade - call tradeService executeTrade method
 	// TradeService method itself takes care of updating portfolio, balance etc no
 	// need to do here
-	
 	@GetMapping(value = "/trade-history/{clientId}", produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<TradeHistory> getClientTradeHistoryByClientId(@PathVariable String clientId){
 		
@@ -78,6 +81,25 @@ public class TradeController {
 		
 	}
 
+	@GetMapping(value="/live-prices",
+			produces = { MediaType.APPLICATION_JSON_VALUE }
+	)
+	public ResponseEntity<List<Price>> getLivePrices(){
+		ResponseEntity<List<Price>> response = null;
+		try {
+			List<Price> priceList = fmtsService.getLivePrices();
+			if(priceList == null || priceList.isEmpty()) {
+				response = ResponseEntity.noContent().build();
+			}else {
+				response = ResponseEntity.ok(priceList);
+			}
+			return response;
+		}
+		catch(FMTSException e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getLocalizedMessage());
+		}
+	}
+	
 	@PostMapping(value = "/execute-trade", 
 			consumes = { MediaType.APPLICATION_JSON_VALUE }, 
 			produces = { MediaType.APPLICATION_JSON_VALUE }

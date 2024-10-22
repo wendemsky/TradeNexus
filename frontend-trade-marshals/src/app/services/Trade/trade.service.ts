@@ -10,18 +10,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class TradeService {
 
-  url = 'http://localhost:3000/fmts/trades/trade';
+  url = 'http://localhost:8080/trade/execute-trade';
 
   constructor(private httpClient: HttpClient) { }
-
-  orderRequest(order: Order): Observable<Trade> {
-    return this.httpClient.post<Trade>(this.url, order).pipe(catchError(this.handleError));
-  }
 
   addOrder(order: Order): Observable<Trade> {
     return this.httpClient.post<Trade>(this.url, order).pipe(catchError(this.handleError));
   }
 
+  //Function to handle errors
   handleError(response: HttpErrorResponse) {
     if (response.error instanceof ProgressEvent) {
       console.error('There is a client-side or network error - ' +
@@ -30,8 +27,14 @@ export class TradeService {
       console.error(`There is an error with status: ${response.status}, ` +
         `and body: ${JSON.stringify(response.error)}`);
     }
+    if(response.status == 500 || response.status == 0){
+      return throwError(
+        () => 'Unexpected error at service while trying to save trade. Please try again later!'
+      );
+    }
     return throwError(
-      () => 'Unexpected error at service while trying to save trade. Please try again later!');
+      () => response.error.message
+    );
   }
 }
 

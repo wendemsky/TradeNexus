@@ -20,4 +20,10 @@ export class ProfileComponent implements OnInit {
     })
   }
 
+  maskCardNumber(idValue: string): string {
+    const lastFour = idValue.slice(-4);
+    const maskedPart = '*'.repeat(idValue.length - 4);
+    return maskedPart + lastFour;
+  }
+
 }

@@ -42,6 +42,7 @@ mat-toolbar img {
     justify-content: center;
     align-items: center;
     width: fit-content;
+    cursor: pointer;
 }
  
 .spacer-right {
@@ -87,6 +88,7 @@ mat-drawer button:hover {
  
 ::ng-deep .dropdown-menu-button mat-label {
     color: white;
+    max-height: fit-content;
 }
  
  

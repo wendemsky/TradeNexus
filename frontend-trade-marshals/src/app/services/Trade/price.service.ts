@@ -8,7 +8,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 })
 export class PriceService {
   prices: Price[] = [];
-  url = 'http://localhost:3000/fmts/trades/prices';
+  url = 'http://localhost:8080/trade/live-prices';
 
   constructor(private httpClient: HttpClient) { }
 
