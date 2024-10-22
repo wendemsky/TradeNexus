@@ -141,15 +141,19 @@ public class TradeService {
 		}
     	
     }
-    
      
     //Get Trade History
     public TradeHistory getClientTradeHistory(String clientId) {
-        if (clientId == null) {
-            throw new NullPointerException("Client ID must not be null");
-        }
-        TradeHistory tradeHistory;      
-        tradeHistory = dao.getClientTradeHistory(clientId);
+    	TradeHistory tradeHistory = null;
+    	try {
+    		 if (clientId == null) {
+    	            throw new NullPointerException("Client ID must not be null");
+    	        }
+    	        tradeHistory = dao.getClientTradeHistory(clientId);
+    	}catch (NullPointerException e) {
+    		throw e;
+    	}
+       
         return tradeHistory;
  
     }

@@ -1,5 +1,6 @@
 package com.marshals.restcontroller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +20,7 @@ import com.marshals.business.ClientPreferences;
 import com.marshals.business.Order;
 import com.marshals.business.Price;
 import com.marshals.business.Trade;
+import com.marshals.business.TradeHistory;
 import com.marshals.business.services.TradeService;
 import com.marshals.integration.DatabaseException;
 import com.marshals.integration.FMTSException;
@@ -31,11 +34,49 @@ public class TradeController {
 
 	@Autowired
 	private Logger logger;
+	
+	@GetMapping(value="/ping")
+	public String ping() {
+		return "Trade web service is alive at " + LocalDateTime.now();
+	}
+	
 	// Get live instrument prices - from fmts - Directly call fmtsService
 	// Display Trade History - call tradeService method
 	// Execute trade - call tradeService executeTrade method
 	// TradeService method itself takes care of updating portfolio, balance etc no
 	// need to do here
+	
+	@GetMapping(value = "/trade-history/{clientId}", produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<TradeHistory> getClientTradeHistoryByClientId(@PathVariable String clientId){
+		
+		ResponseEntity<TradeHistory> response = null;
+		
+		try {
+			if(Long.parseLong(clientId) <= 0) {
+				throw new IllegalArgumentException("Invalid format for client id");
+			}
+			TradeHistory clientTradeHistory = tradeService.getClientTradeHistory(clientId);
+			if(clientTradeHistory == null) {
+				response = ResponseEntity.noContent().build();
+			}else {
+				response = ResponseEntity.ok(clientTradeHistory);
+			}
+			return response;
+		}catch(IllegalArgumentException e) {
+			logger.error("Error in request for getting client trade-history", e);
+			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getLocalizedMessage());
+		}
+		catch(DatabaseException e) {
+			logger.error("Error in fetching data", e);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+		}
+		catch(RuntimeException e) {
+			logger.error("Problem occured from server", e);
+			response = ResponseEntity.internalServerError().build();
+			return response;
+		}
+		
+	}
 
 	@PostMapping(value = "/execute-trade", 
 			consumes = { MediaType.APPLICATION_JSON_VALUE }, 

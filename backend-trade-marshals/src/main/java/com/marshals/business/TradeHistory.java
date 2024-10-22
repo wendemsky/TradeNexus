@@ -19,6 +19,11 @@ public class TradeHistory {
     		throw e;
     	}
 	}
+	
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
 	public String getClientId() {
         return clientId;
     }
@@ -46,4 +51,11 @@ public class TradeHistory {
 		TradeHistory other = (TradeHistory) obj;
 		return Objects.equals(clientId, other.clientId) && Objects.equals(trades, other.trades);
 	}
+
+	@Override
+	public String toString() {
+		return "TradeHistory [clientId=" + clientId + ", trades=" + trades + "]";
+	}
+	
+	
 }
