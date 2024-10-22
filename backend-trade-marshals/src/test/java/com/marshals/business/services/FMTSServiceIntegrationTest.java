@@ -100,7 +100,7 @@ class FMTSServiceIntegrationTest {
 		Exception e = assertThrows(FMTSException.class, () -> {
 			service.createTrade(order);
 		});
-		assertEquals("Order is invalid, Cannot execute trade",e.getMessage());
+		assertEquals("Invalid order, trade returned null",e.getMessage());
 	}
 	@Test
 	void testForExecutionOfTradeWithOutOfRangeTargetPriceThrowsException() {

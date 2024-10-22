@@ -45,22 +45,25 @@ public class TradeController {
 		ResponseEntity<Trade> response;
 		try {
 			if (order == null) {
-				response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+				 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "order cannot be null");
 			}
 			Trade trade = tradeService.executeTrade(order);
 			response = ResponseEntity.status(HttpStatus.OK).body(trade);
+		} catch (ResponseStatusException e) {
+			logger.error(e.getMessage());
+			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
 		} catch (NullPointerException e) {
 			logger.error("Received null order", e);
-			response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
 		} catch (IllegalArgumentException e) {
 			logger.error("Illegal argument for trade execution", e);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
 		} catch (DatabaseException e) {
 			logger.error("Database error while executing trade", e);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getLocalizedMessage());
 		} catch(FMTSException e) {
-			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			logger.error("FMTS Exception while executing trade", e);
+			 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
 		} catch (RuntimeException e) {
 			logger.error("An unexpected error occurred while executing trade", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

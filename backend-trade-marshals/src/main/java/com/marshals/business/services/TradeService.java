@@ -52,9 +52,9 @@ public class TradeService {
 	
 	//Adding the trade to the DB
 	public void addTrade(Trade trade) {
-		 if (trade == null) {
-	         throw new NullPointerException("Trade must not be null");
-		 }
+		if(trade == null) {
+			throw new NullPointerException("trade must not be null");
+		}
 		 try {
 			 dao.addTrade(trade);
 		 } catch(DatabaseException e) {
@@ -128,10 +128,10 @@ public class TradeService {
             throw new IllegalArgumentException("Instrument is not present in the platform");
     	} catch(NullPointerException e) {
     		logger.error(e.getMessage());
-    		throw e;
+    		throw new NullPointerException(e.getMessage());
     	} catch(IllegalArgumentException e) {
     		logger.error(e.getMessage());
-    		throw e;
+    		throw new IllegalArgumentException(e.getMessage());
     	} catch(DatabaseException e) {
 			logger.error(e.getMessage());
 			throw new DatabaseException(e.getMessage());

@@ -233,8 +233,7 @@ public class TradeServicePOJOUnitTest {
 		Exception e = assertThrows(NullPointerException.class, () -> {
 			service.addTrade(trade);
 		});
-		assertEquals(e.getMessage(), "Trade must not be null");
-
+		assertEquals(e.getMessage(), "trade must not be null");
 	}
 
 	/* EXECUTE TRADE TESTS */

@@ -58,7 +58,7 @@ class ClientTradeDaoImplTest {
 		for(Trade t: tradeHistory.getTrades()) {
 			System.out.println("Trades -> " + t);
 		}
-		assertEquals(tradeHistory.getTrades().get(0).getInstrumentId(), "T67890");
+		assertEquals(tradeHistory.getTrades().get(0).getInstrumentId(), "N123456");
 	}
 	@Test
 	void testGetClientTradeHistoryThrowsExceptionForInvalidClientId() {

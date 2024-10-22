@@ -221,10 +221,10 @@ class FMTSServicePOJOUnitTest {
 	/*FMTS Execution of Trade given Order*/
 	@Test
 	void testForExecutionOfNullOrderThrowsException() {
-		Exception e = assertThrows(NullPointerException.class, () -> {
+		Exception e = assertThrows(FMTSException.class, () -> {
 			service.createTrade(null);
 		});
-		assertEquals("Order cannot be null",e.getMessage());
+		assertEquals("Order is invalid, Cannot execute trade",e.getMessage());
 	}
 	
 	@Test

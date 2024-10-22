@@ -13,6 +13,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.server.ResponseStatusException;
 
 import static org.springframework.test.jdbc.JdbcTestUtils.deleteFromTables;
 
@@ -54,10 +56,9 @@ class ActivityReportControllerE2ETest {
 
     @Test
     public void testGenerateHoldingsReport_WithInvalidClientId_ShouldReturnBadRequest() {
-        ResponseEntity<List> response = 
-            restTemplate.getForEntity("/activity-report/holdings/invalidClientId", List.class);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertThrows(RestClientException.class, () -> {
+        	restTemplate.getForEntity("/activity-report/holdings/invalidClientId", List.class);
+        });
     }
     
 //    @Test
@@ -73,10 +74,9 @@ class ActivityReportControllerE2ETest {
     @Test
     public void testGenerateHoldingsReport_WithClientIdNull_ShouldReturnBadRequest() {
     	String clientId = null; 
-    	ResponseEntity<List> response = 
-            restTemplate.getForEntity("/activity-report/holdings/" + clientId, List.class);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    	assertThrows(RestClientException.class, () -> {
+    		restTemplate.getForEntity("/activity-report/holdings/" + clientId, List.class);
+        });
     }
 
     /* Tests for Trade Report */

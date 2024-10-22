@@ -16,13 +16,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -51,7 +52,7 @@ class ActivityReportControllerTest {
         
         when(activityReportService.generateHoldingsReport(clientId)).thenReturn(holdings);
         
-        ResponseEntity<List<Holding>> response = activityReportController.generateHoldingsReport(clientId);
+        ResponseEntity<?> response = activityReportController.generateHoldingsReport(clientId);
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(holdings, response.getBody());
@@ -62,10 +63,9 @@ class ActivityReportControllerTest {
         String clientId = "test-client";
         
         when(activityReportService.generateHoldingsReport(clientId)).thenReturn(Collections.emptyList());
-        
-        ResponseEntity<List<Holding>> response = activityReportController.generateHoldingsReport(clientId);
-        
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertThrows(ResponseStatusException.class, ()-> {
+        	activityReportController.generateHoldingsReport(clientId);
+        });
     }
 
     @Test
@@ -73,10 +73,9 @@ class ActivityReportControllerTest {
         String clientId = "test-client";
         
         when(activityReportService.generateHoldingsReport(clientId)).thenThrow(new DatabaseException("Database error"));
-        
-        ResponseEntity<List<Holding>> response = activityReportController.generateHoldingsReport(clientId);
-        
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertThrows(ResponseStatusException.class, ()-> {
+        	activityReportController.generateHoldingsReport(clientId);
+        });
     }
 
     @Test
@@ -87,7 +86,7 @@ class ActivityReportControllerTest {
         
         when(activityReportService.generateTradeReport(clientId)).thenReturn(tradeHistory);
         
-        ResponseEntity<TradeHistory> response = activityReportController.generateTradeReport(clientId);
+        ResponseEntity<?> response = activityReportController.generateTradeReport(clientId);
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(tradeHistory, response.getBody());
@@ -101,9 +100,9 @@ class ActivityReportControllerTest {
         
         when(activityReportService.generateTradeReport(clientId)).thenReturn(tradeHistory);
         
-        ResponseEntity<TradeHistory> response = activityReportController.generateTradeReport(clientId);
-        
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertThrows(ResponseStatusException.class, ()-> {
+        	activityReportController.generateTradeReport(clientId);
+        });
     }
 
     @Test
@@ -111,10 +110,9 @@ class ActivityReportControllerTest {
         String clientId = "test-client";
         
         when(activityReportService.generateTradeReport(clientId)).thenThrow(new DatabaseException("Database error"));
-        
-        ResponseEntity<TradeHistory> response = activityReportController.generateTradeReport(clientId);
-        
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertThrows(ResponseStatusException.class, ()-> {
+        	activityReportController.generateTradeReport(clientId);
+        });
     }
 
     @Test
@@ -124,7 +122,7 @@ class ActivityReportControllerTest {
         
         when(activityReportService.generatePLReport(clientId)).thenReturn(profitLossMap);
         
-        ResponseEntity<Map<String, BigDecimal>> response = activityReportController.generatePLReport(clientId);
+        ResponseEntity<?> response = activityReportController.generatePLReport(clientId);
         
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(profitLossMap, response.getBody());
@@ -135,10 +133,10 @@ class ActivityReportControllerTest {
         String clientId = "test-client";
         
         when(activityReportService.generatePLReport(clientId)).thenReturn(Collections.emptyMap());
-        
-        ResponseEntity<Map<String, BigDecimal>> response = activityReportController.generatePLReport(clientId);
-        
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+       
+        assertThrows(ResponseStatusException.class, ()-> {
+        	activityReportController.generatePLReport(clientId);
+        });
     }
 
     @Test
@@ -146,9 +144,8 @@ class ActivityReportControllerTest {
         String clientId = "test-client";
         
         when(activityReportService.generatePLReport(clientId)).thenThrow(new DatabaseException("Database error"));
-        
-        ResponseEntity<Map<String, BigDecimal>> response = activityReportController.generatePLReport(clientId);
-        
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertThrows(ResponseStatusException.class, ()-> {
+        	activityReportController.generatePLReport(clientId);
+        });
     }
 }

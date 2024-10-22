@@ -12,6 +12,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,15 +37,18 @@ public class ActivityReportController {
         try {
             List<Holding> holdings = activityReportService.generateHoldingsReport(clientId);
             if(holdings == null || holdings.isEmpty()) {
-            	return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            	throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Client has no holdings");
             }
             return ResponseEntity.ok(holdings);
-        } catch(NullPointerException e) {
+        } catch(ResponseStatusException e) {
 			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getLocalizedMessage());
+		} catch(NullPointerException e) {
+			logger.error(e.getMessage());
+        	throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
 		} catch(DatabaseException e) {
 			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        	throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getLocalizedMessage());
 		} catch(RuntimeException e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -57,15 +61,18 @@ public class ActivityReportController {
         try {
             TradeHistory tradeHistory = activityReportService.generateTradeReport(clientId);
             if(tradeHistory.getTrades() == null || tradeHistory.getTrades().isEmpty()) {
-            	return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            	throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Client has no trade history");
             }
             return ResponseEntity.ok(tradeHistory);
-        } catch (NullPointerException e) {
+        } catch(ResponseStatusException e) {
+			logger.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getLocalizedMessage());
+		} catch (NullPointerException e) {
         	logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
         } catch(DatabaseException e) {
 			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
 		} catch(RuntimeException e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -78,15 +85,18 @@ public class ActivityReportController {
         try {
             Map<String, BigDecimal> profitLossMap = activityReportService.generatePLReport(clientId);
             if(profitLossMap == null || profitLossMap.isEmpty()) {
-            	return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            	throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Client has no pl");
             }
             return ResponseEntity.ok(profitLossMap);
+        } catch (ResponseStatusException e) {
+        	logger.error(e.getMessage());
+			throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getLocalizedMessage());
         } catch (NullPointerException e) {
         	logger.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
         } catch(DatabaseException e) {
 			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
 		} catch(RuntimeException e) {
 			logger.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

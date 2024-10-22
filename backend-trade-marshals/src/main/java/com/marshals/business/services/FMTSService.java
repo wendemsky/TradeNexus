@@ -54,16 +54,13 @@ public class FMTSService {
 	//Service that takes in order and returns trade
     public Trade createTrade(Order order) {
     	try {
-    		if(order == null) {
-        		throw new NullPointerException("Order cannot be null");
-        	}
         	Trade trade = fmtsDao.createTrade(order);
-        	if(trade == null || trade.getTradeId() == null || trade.getTradeId().isBlank()) throw new FMTSException("Order is invalid, Cannot execute trade");
+        	if(trade == null || trade.getTradeId() == null || trade.getTradeId().isBlank()) {
+        		throw new FMTSException("Order is invalid, Cannot execute trade");
+        	}
         	return trade;
-    	} catch(NullPointerException e) {
-    		throw e;
     	} catch(FMTSException e) { //Any Exception thrown from fmtsDao
-			throw e;
+			throw new FMTSException(e.getMessage());
     	} 	
     }
 }
