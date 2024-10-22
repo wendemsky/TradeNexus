@@ -82,8 +82,8 @@ export class TradingHistoryComponent  implements OnInit{
   loadTrades() {
     this.clientId !== undefined ? this.tradeHistoryService.getTrades(this.clientId)
       .subscribe({
-        next: (data) => {
-          this.tradeHistoryData = data;
+        next: (data: any) => {
+          this.tradeHistoryData = data.trades;
           this.tradeHistoryData = this.tradeHistoryData.reverse()
         },
         error: (e) => {

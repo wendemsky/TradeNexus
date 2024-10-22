@@ -12,17 +12,14 @@ export class TradeHistoryService {
 
   // trades: Trade[] = mockTrades;
   private _snackBar = inject(MatSnackBar);
-  url = 'http://localhost:4000/trades';
+  url = 'http://localhost:8080/trade/trade-history/';
 
   constructor(private httpClient: HttpClient) { }
 
-  getTrades(clientId: string): Observable<Trade[]> {
+  getTrades(clientId: string): Observable<any[]> {
     // return of(this.trades);
-    return this.httpClient.get<Trade[]>(this.url).pipe(
+    return this.httpClient.get<Trade[]>(this.url + clientId).pipe(
       tap(trades => { console.log(trades)}),
-      map(trades => 
-        trades.filter(trade => trade.clientId === clientId),
-      ),
       catchError(this.handleError)
     )
   }
@@ -32,6 +29,7 @@ export class TradeHistoryService {
     .pipe(catchError(this.handleError))
   }
 
+  //Function to handle errors
   handleError(response: HttpErrorResponse) {
     if (response.error instanceof ProgressEvent) {
       console.error('There is a client-side or network error - ' +
@@ -40,9 +38,14 @@ export class TradeHistoryService {
       console.error(`There is an error with status: ${response.status}, ` +
         `and body: ${JSON.stringify(response.error)}`);
     }
-    
+    if(response.status == 500 || response.status==0 ){
+      return throwError(
+        () => 'Unexpected error at service while trying to fetch trade history of user. Please try again later!'
+      );
+    }
     return throwError(
-      () => 'Unexpected error at service while trying to fetch trade history. Please try again later!');
+      () => response.error.message
+    );
   }
 }
 
