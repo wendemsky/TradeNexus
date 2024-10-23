@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,7 +33,7 @@ public class ActivityReportController {
     }
 
     // Generate holdings report
-    @GetMapping("/holdings/{clientId}")
+    @GetMapping(value = "/holdings/{clientId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<Holding>> generateHoldingsReport(@PathVariable String clientId) {
         try {
             List<Holding> holdings = activityReportService.generateHoldingsReport(clientId);
@@ -56,7 +57,7 @@ public class ActivityReportController {
     }
 
     // Generate trade report
-    @GetMapping("/trades/{clientId}")
+    @GetMapping(value = "/trades/{clientId}" , produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<TradeHistory> generateTradeReport(@PathVariable String clientId) {
         try {
             TradeHistory tradeHistory = activityReportService.generateTradeReport(clientId);
@@ -80,12 +81,12 @@ public class ActivityReportController {
     }
 
     // Generate P&L report
-    @GetMapping("/pl/{clientId}")
+    @GetMapping(value = "/pl/{clientId}" , produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Map<String, BigDecimal>> generatePLReport(@PathVariable String clientId) {
         try {
             Map<String, BigDecimal> profitLossMap = activityReportService.generatePLReport(clientId);
             if(profitLossMap == null || profitLossMap.isEmpty()) {
-            	throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Client has no pl");
+            	throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Client has no holdings for pl report");
             }
             return ResponseEntity.ok(profitLossMap);
         } catch (ResponseStatusException e) {

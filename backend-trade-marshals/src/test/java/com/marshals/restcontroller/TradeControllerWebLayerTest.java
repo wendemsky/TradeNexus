@@ -18,6 +18,7 @@ import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -36,10 +37,10 @@ import com.marshals.integration.DatabaseException;
 class TradeControllerWebLayerTest {
 	@Autowired
 	private MockMvc mockMvc;
-
+	
 	@MockBean
 	private TradeService mockTradeService;
-	
+
 	@MockBean
 	private FMTSService mockFMTSService;
 
