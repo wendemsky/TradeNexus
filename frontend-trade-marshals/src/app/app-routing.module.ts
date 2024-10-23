@@ -8,20 +8,22 @@ import { ClientPreferencesComponent } from './components/home/_components/client
 import { PortfolioComponent } from './components/home/_components/portfolio/portfolio.component';
 import { TradingHistoryComponent } from './components/home/_components/trading-history/trading-history.component';
 import { ReportActivityComponent } from './components/home/_components/report-activity/report-activity.component';
+import { AuthGuard } from './guards/auth-guard/auth.guard';
 
 export const routes: Routes = [
   {path: '', component: LandingPageComponent},
   {path: 'register', component: RegistrationComponent},
   {path: 'home', component: HomeComponent,
     children: [
-      {path: 'profile', component:ProfileComponent},
-      {path: 'client-preferences', component: ClientPreferencesComponent},
-      {path: 'client-portfolio', component: PortfolioComponent},
-      {path: 'client-trading-history', component: TradingHistoryComponent},
-      {path: 'report-activity', component: ReportActivityComponent},
-      {path: 'client-preferences', component: ClientPreferencesComponent},
+      {path: 'profile', component:ProfileComponent , canActivate: [AuthGuard]},
+      {path: 'client-preferences', component: ClientPreferencesComponent , canActivate: [AuthGuard]},
+      {path: 'client-portfolio', component: PortfolioComponent , canActivate: [AuthGuard]},
+      {path: 'client-trading-history', component: TradingHistoryComponent , canActivate: [AuthGuard]},
+      {path: 'report-activity', component: ReportActivityComponent , canActivate: [AuthGuard]},
+      {path: 'client-preferences', component: ClientPreferencesComponent , canActivate: [AuthGuard]},
       {path: 'home', component: HomeComponent}
-    ]
+    ],
+    canActivate: [AuthGuard]
   },
   {path:'**', redirectTo:'/'}
 ];
