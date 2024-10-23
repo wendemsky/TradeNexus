@@ -23,26 +23,30 @@ import { RoboAdvisorComponent } from './_components/robo-advisor/robo-advisor.co
 class MockPriceListComponent {
 }
 
+@Component({
+  selector: 'app-robo-advisor'
+})
+class MockRoboAdvisorComponent {
+}
+
 let testClientProfile: any =
 {
-  "client":
-  {
-    "id": "688f",
-    "email": "rishi@gmail.com",
-    "clientId": "1212794226",
+  "client": {
+    "email": "sowmya@gmail.com",
+    "clientId": "1654658069",
     "password": "Marsh2024",
-    "name": "Rishiyanth",
-    "dateOfBirth": "11/04/2002",
+    "name": "Sowmya",
+    "dateOfBirth": "11/12/2002",
     "country": "India",
     "identification": [
       {
         "type": "Aadhar",
-        "value": "123412341234"
+        "value": "123456789102"
       }
     ],
-    "isAdmin": false
+    "isAdmin": true
   },
-  "token": 1212670770
+  "token": 123456789102
 }
 
 let testClientPreferences: any =
@@ -83,7 +87,8 @@ describe('HomeComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [HomeComponent,
-        MockPriceListComponent
+        MockPriceListComponent,
+        MockRoboAdvisorComponent
       ],
       imports: [
         MaterialModule,

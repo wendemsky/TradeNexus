@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TradingHistoryComponent } from './trading-history.component';
 import { of } from 'rxjs';
-import { TradeHistoryService } from 'src/app/services/trade-history.service';
+import { TradeHistoryService } from 'src/app/services/Trade/trade-history.service';
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
 import { MaterialModule } from 'src/app/material.module';
 import { AgGridAngular, AgGridModule } from 'ag-grid-angular';

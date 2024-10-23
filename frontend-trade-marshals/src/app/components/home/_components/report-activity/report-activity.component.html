@@ -17,7 +17,7 @@
       </div>
 
       <div class="download-button">
-        <button type="submit" [disabled]="!yourReport.valid" mat-raised-button> Download Report </button>
+        <button type="submit" [disabled]="!yourReport.valid" mat-raised-button> View Report </button>
       </div>
     </form>
   </div>
@@ -44,23 +44,20 @@
             </div>
 
             <div class="download-button">
-              <button type="submit" [disabled]="!yourReport.valid" mat-raised-button> Download Report </button>
+              <button type="submit" [disabled]="!yourReport.valid" mat-raised-button> View Report </button>
             </div>
           </form>
-          
         </div>
         <div *ngIf="yourReport.value.reportType === 'Holdings Report'">
           <div class="grid-container ag-theme-alpine">
-            <ag-grid-angular style="height: 100%; width:96%;" [rowData]="transformedData" [columnDefs]="holdingsColumnDefs"
-                [defaultColDef]="defaultColDef" [sideBar]="sidebar"
-            />
+            <ag-grid-angular style="height: 100%; width:96%;" [rowData]="transformedData"
+              [columnDefs]="holdingsColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar" />
           </div>
         </div>
         <div *ngIf="yourReport.value.reportType === 'Trade Report'">
           <div class="grid-container ag-theme-alpine">
-            <ag-grid-angular style="height: 100%; width:96%;" [rowData]="tradeHistoryData" [columnDefs]="tradesColumnDefs"
-                [defaultColDef]="defaultColDef" [sideBar]="sidebar"
-            />
+            <ag-grid-angular style="height: 100%; width:96%;" [rowData]="tradeHistoryData"
+              [columnDefs]="tradesColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar" />
           </div>
         </div>
       </div>
@@ -68,17 +65,18 @@
 
     <mat-tab label="View other clients' activity">
       <div class="mat-tab-content">
-        <h2> Please select the client and the kind of report you'd like to download for their activity from the options below: </h2>
+        <h2> Please select the client and the kind of report you'd like to download for their activity from the options
+          below: </h2>
         <div class="form">
           <form [formGroup]="othersReport" (ngSubmit)="onSubmitOthersReportForm()">
             <div class="horizontal-fields">
               <mat-form-field appearance="outline">
                 <!-- <mat-label>Client</mat-label>
-                <mat-select formControlName="clientId">
-                  <mat-option *ngFor="let report of report_types" [value]="report.value">
+<mat-select formControlName="clientId">
+<mat-option *ngFor="let report of report_types" [value]="report.value">
                     {{report.name}}
-                  </mat-option>
-                </mat-select> -->
+</mat-option>
+</mat-select> -->
                 <mat-label>Client ID</mat-label>
                 <input formControlName="clientId" matInput placeholder="12345678">
               </mat-form-field>
@@ -92,25 +90,23 @@
               </mat-form-field>
             </div>
 
-            
+
             <!-- [disabled]="!othersReport.valid" -->
             <div class="download-button">
-              <button type="submit"  mat-raised-button> Download Report </button> 
+              <button type="submit" mat-raised-button> View Report </button>
             </div>
           </form>
         </div>
         <div *ngIf="othersReport.value.reportType === 'Holdings Report'">
           <div class="grid-container ag-theme-alpine">
-            <ag-grid-angular style="height: 100%; width:96%;" [rowData]="transformedData" [columnDefs]="holdingsColumnDefs"
-                [defaultColDef]="defaultColDef" [sideBar]="sidebar"
-            />
+            <ag-grid-angular style="height: 100%; width:96%;" [rowData]="transformedData"
+              [columnDefs]="holdingsColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar" />
           </div>
         </div>
         <div *ngIf="othersReport.value.reportType === 'Trade Report'">
           <div class="grid-container ag-theme-alpine">
-            <ag-grid-angular style="height: 100%; width:96%;" [rowData]="tradeHistoryData" [columnDefs]="tradesColumnDefs"
-                [defaultColDef]="defaultColDef" [sideBar]="sidebar"
-            />
+            <ag-grid-angular style="height: 100%; width:96%;" [rowData]="tradeHistoryData"
+              [columnDefs]="tradesColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar" />
           </div>
         </div>
       </div>

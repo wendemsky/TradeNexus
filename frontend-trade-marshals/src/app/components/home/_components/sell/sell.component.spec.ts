@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SellComponent } from './sell.component';
-import { PriceService } from 'src/app/services/price.service';
+import { PriceService } from 'src/app/services/Trade/price.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { of, throwError } from 'rxjs';
 import { TradingFormComponent } from '../trading-form/trading-form.component';

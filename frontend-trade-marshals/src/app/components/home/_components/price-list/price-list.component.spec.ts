@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PriceListComponent } from './price-list.component';
 import { of } from 'rxjs';
-import { PriceService } from 'src/app/services/price.service';
+import { PriceService } from 'src/app/services/Trade/price.service';
 import { AgGridModule } from 'ag-grid-angular';
 
 const mockPrices = [

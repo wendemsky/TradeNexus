@@ -8,7 +8,7 @@ import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
 })
 export class ClientPortfolioService {
 
-  private dataURL = 'http://localhost:8080/portfolio/client/';
+  dataURL = 'http://localhost:8080/portfolio/client/';
 
   constructor(private http: HttpClient) { }
 

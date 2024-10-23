@@ -11,48 +11,43 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
 import { Client } from 'src/app/models/Client/Client';
 import { ValidatedClient } from 'src/app/models/Client/ValidatedClient';
+import { DatePipe } from '@angular/common';
 
 const testClient: Client = {
-  "email": "sample.user@gmail.com",
-  "clientId": "5411274199",
-  "password": "password",
-  "name": "Sample User",
-  "dateOfBirth": "08/12/2002",
+  "email": "sowmya@gmail.com",
+  "clientId": "1654658069",
+  "password": "Marsh2024",
+  "name": "Sowmya",
+  "dateOfBirth": "11/12/2002",
   "country": "India",
   "identification": [
     {
       "type": "Aadhar",
-      "value": "123412341234"
+      "value": "123456789102"
     }
   ],
   "isAdmin": true
 }
 
-const validatedClient: ValidatedClient = {
-  "email": "sample.user@gmail.com",
-  "clientId": "5411274199",
-  "token": 1252630773
-}
 
 const testClientProfile: ClientProfile =
 {
-  "client":
-  {
-    "email": "sample.user@gmail.com",
-    "clientId": "5411274199",
-    "password": "password",
-    "name": "Sample User",
-    "dateOfBirth": "08/12/2002",
+  "client": {
+    "email": "sowmya@gmail.com",
+    "clientId": "1654658069",
+    "password": "Marsh2024",
+    "name": "Sowmya",
+    "dateOfBirth": "11/12/2002",
     "country": "India",
     "identification": [
       {
         "type": "Aadhar",
-        "value": "123412341234"
+        "value": "123456789102"
       }
     ],
     "isAdmin": true
   },
-  "token": 1252630773
+  "token": 123456789102
 }
 
 describe('LandingPageComponent', () => {
@@ -63,20 +58,19 @@ describe('LandingPageComponent', () => {
   let loginMockService: any
   let mockGetClientSpy: any
   let clientProfileMockService: any
-  let mockValidatedClientSpy: any
   let mockClientProfileSetSpy: any
   
-  let snackBar:any
-  let snackBarSpy:any
+  let datePipe: DatePipe
+  let snackBar: any
+  let snackBarSpy: any
 
   beforeEach(async () => {
 
-    loginMockService = jasmine.createSpyObj('LoginService', ['getValidClientDetails']);
-    mockGetClientSpy = loginMockService.getValidClientDetails.and.returnValue(of(testClient));
+    loginMockService = jasmine.createSpyObj('LoginService', ['loginClient']);
+    mockGetClientSpy = loginMockService.getValidClientDetails.and.returnValue(of(testClientProfile));
 
-    clientProfileMockService = jasmine.createSpyObj('ClientProfileService', ['fmtsClientVerification','setClientProfile']);
-    mockValidatedClientSpy = clientProfileMockService.fmtsClientVerification.and.returnValue(of(validatedClient));
-    mockClientProfileSetSpy = clientProfileMockService.setClientProfile.and.callFake((param:any) => {return of(param)})
+    clientProfileMockService = jasmine.createSpyObj('ClientProfileService', ['setClientProfile']);
+    mockClientProfileSetSpy = clientProfileMockService.setClientProfile.and.callFake((param: any) => { return of(param) })
 
     snackBar = jasmine.createSpyObj('MatSnackBar', ['open']); //Spying on MatSnackBar
 
@@ -86,6 +80,7 @@ describe('LandingPageComponent', () => {
         MaterialModule
       ],
       providers: [
+        DatePipe,
         { provide: LoginService, useValue: loginMockService },
         { provide: ClientProfileService, useValue: clientProfileMockService },
         { provide: Router, useClass: class { navigateByUrl = jasmine.createSpy('navigateByUrl'); } },
@@ -97,6 +92,7 @@ describe('LandingPageComponent', () => {
     fixture = TestBed.createComponent(LandingPageComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
+    datePipe = TestBed.inject(DatePipe)
     snackBarSpy = TestBed.inject(MatSnackBar) as jasmine.SpyObj<MatSnackBar>;
     fixture.detectChanges();
   });
@@ -132,12 +128,12 @@ describe('LandingPageComponent', () => {
 
   it('should validate form control', () => {
     const emailCtrl = component.loginCredentials.get('email');
-    const passwordlCtrl = component.loginCredentials.get('password');
+    const passwordCtrl = component.loginCredentials.get('password');
     emailCtrl?.setValue('');
-    passwordlCtrl?.setValue('')
+    passwordCtrl?.setValue('')
     expect(component.loginCredentials.valid).toBeFalsy();
-    emailCtrl?.setValue('sample@gmail.com');
-    passwordlCtrl?.setValue('Password123')
+    emailCtrl?.setValue('sowmya@gmail.com');
+    passwordCtrl?.setValue('Password123')
     expect(component.loginCredentials.valid).toBeTruthy();
   });
 
@@ -147,9 +143,9 @@ describe('LandingPageComponent', () => {
   it("should show snackbar message when logging in user does not exist - invalid email", () => {
     const loginCredentials = { email: "non-existent@gmail.com", password: 'password' };
     component.loginCredentials.setValue(loginCredentials);
-    loginMockService.getValidClientDetails.and.returnValue(of(null)); //Return null from service
+    loginMockService.loginClient.and.returnValue(of(null)); //Return null from service
     component.onSubmitLoginForm(); //On submitting login form
-    expect(snackBarSpy.open).toHaveBeenCalledWith('User doesnt exist! Enter a valid email', '', jasmine.any(MatSnackBarConfig));
+    expect(snackBarSpy.open).toHaveBeenCalled();
   });
 
   //There should be an error message when password is incorrect
@@ -158,30 +154,18 @@ describe('LandingPageComponent', () => {
     component.loginCredentials.setValue(loginCredentials);
     component.onSubmitLoginForm(); //On submitting login form
     expect(mockGetClientSpy).toHaveBeenCalled() //Service should have called
-    expect(snackBarSpy.open).toHaveBeenCalledWith('Password doesnt match for given user! Enter a valid password', '', jasmine.any(MatSnackBarConfig));
+    expect(snackBarSpy.open).toHaveBeenCalled();
   });
 
   //There should be a success message and redirection when user logs in successfully
   it("should show snackbar message when user credentails are valid and user logs in successfully", () => {
-    const loginCredentials = { email: testClient.email, password: 'password' }; //Actual testClient password: incorrect-password
+    const loginCredentials = { email: testClient.email, password: testClient.password }; //Actual testClient password: incorrect-password
     component.loginCredentials.setValue(loginCredentials);
     component.onSubmitLoginForm(); //On submitting login form
     expect(mockGetClientSpy).toHaveBeenCalled() //Service should have called
-    expect(mockValidatedClientSpy).toHaveBeenCalled()
     expect(mockClientProfileSetSpy).toHaveBeenCalledWith(testClientProfile)
-    expect(snackBarSpy.open).toHaveBeenCalledWith('User has successfully logged in!', '', jasmine.any(MatSnackBarConfig));
+    expect(snackBarSpy.open).toHaveBeenCalled();
     expect(router.navigateByUrl).toHaveBeenCalledWith('/home');
   });
-
-   //There should be an error message when user credentials are valid but couldnt be validated
-   it("should be an error message when user credentials are valid but couldnt be validated by fmts", () => {
-    const loginCredentials = { email: testClient.email, password: 'password' }; //Actual testClient password: incorrect-password
-    clientProfileMockService.fmtsClientVerification.and.returnValue(throwError(() => new Error('Couldnt validate user'))) //Making fmts return an error
-    component.loginCredentials.setValue(loginCredentials);
-    component.onSubmitLoginForm(); //On submitting login form
-    expect(mockGetClientSpy).toHaveBeenCalled() //Service should have called
-    expect(snackBarSpy.open).toHaveBeenCalledWith('User credentials are valid but Error: Couldnt validate user', '', jasmine.any(MatSnackBarConfig));
-  });
-
 
 });

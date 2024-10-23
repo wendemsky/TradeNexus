@@ -22,28 +22,30 @@ describe('PriceService', () => {
 
   it('should handle a 404 error', inject([PriceService],
     fakeAsync((service: PriceService) => {
-    let errorResp: HttpErrorResponse;
-    let errorReply: string = '';
-    const errorHandlerSpy = spyOn(service,'handleError')
-    .and.callThrough();
-    service.getPrices()
-    .subscribe({next: () => fail('Should not succeed'),
-    error: (err) => errorReply = err});
-    const req = httpTestingController.expectOne('http://localhost:3000/fmts/trades/prices');
-    // Assert that the request is a GET.
-    expect(req.request.method).toEqual('GET');
-    // Respond with error
-    req.flush('Forced 404', {
-      status: 404,
-      statusText: 'Not Found'
-    });
-    // Cause all Observables to complete and check the results
-    tick();
-    expect(errorReply).toBe('Unexpected error at service while trying to fetch instruments. Please try again later!');
-    expect(errorHandlerSpy).toHaveBeenCalled();
-    errorResp = errorHandlerSpy.calls.argsFor(0)[0];
-    expect(errorResp.status).toBe(404);
-  })));
+      let errorResp: HttpErrorResponse;
+      let errorReply: string = '';
+      const errorHandlerSpy = spyOn(service, 'handleError')
+        .and.callThrough();
+      service.getPricesFromFMTS()
+        .subscribe({
+          next: () => fail('Should not succeed'),
+          error: (err) => errorReply = err
+        });
+      const req = httpTestingController.expectOne(service.url);
+      // Assert that the request is a GET.
+      expect(req.request.method).toEqual('GET');
+      // Respond with error
+      req.flush('Forced 404', {
+        status: 404,
+        statusText: 'Not Found'
+      });
+      // Cause all Observables to complete and check the results
+      tick();
+      expect(errorReply).toBe('Unexpected error at service while trying to fetch instruments. Please try again later!');
+      expect(errorHandlerSpy).toHaveBeenCalled();
+      errorResp = errorHandlerSpy.calls.argsFor(0)[0];
+      expect(errorResp.status).toBe(404);
+    })));
 
   it('should handle a network error', inject(
     [PriceService],
@@ -51,11 +53,11 @@ describe('PriceService', () => {
       let errorResp: HttpErrorResponse;
       let errorReply: string = '';
       const errorHandlerSpy = spyOn(service, 'handleError').and.callThrough();
-      service.getPrices().subscribe({
+      service.getPricesFromFMTS().subscribe({
         next: () => fail('Should fail'),
         error: (err) => (errorReply = err),
       });
-      const req = httpTestingController.expectOne('http://localhost:3000/fmts/trades/prices');
+      const req = httpTestingController.expectOne(service.url);
       expect(req.request.method).toEqual('GET');
       const error = new ProgressEvent('Network Error');
       req.error(error);

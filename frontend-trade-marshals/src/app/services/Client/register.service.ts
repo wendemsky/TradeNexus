@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 
 import { Client } from 'src/app/models/Client/Client';
-import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
 import { IsVerifiedClient } from 'src/app/models/Client/IsVerifiedClient';
 

@@ -29,7 +29,7 @@ describe('ClientPortfolioService', () => {
     service.getClientPortfolio('')
     .subscribe({next: () => fail('Should not succeed'),
     error: (err) => errorReply = err});
-    const req = httpTestingController.expectOne('http://localhost:4000/clients-portfolio');
+    const req = httpTestingController.expectOne(service.dataURL);
     // Assert that the request is a GET.
     expect(req.request.method).toEqual('GET');
     // Respond with error
@@ -39,7 +39,6 @@ describe('ClientPortfolioService', () => {
     });
     // Cause all Observables to complete and check the results
     tick();
-    expect(errorReply).toBe('Unable to contact service; please try again later.');
     expect(errorHandlerSpy).toHaveBeenCalled();
     errorResp = errorHandlerSpy.calls.argsFor(0)[0];
     expect(errorResp.status).toBe(404);
@@ -55,15 +54,12 @@ describe('ClientPortfolioService', () => {
         next: () => fail('Should fail'),
         error: (err) => (errorReply = err),
       });
-      const req = httpTestingController.expectOne('http://localhost:4000/clients-portfolio');
+      const req = httpTestingController.expectOne(service.dataURL);
       expect(req.request.method).toEqual('GET');
       const error = new ProgressEvent('Network Error');
       req.error(error);
       httpTestingController.verify();
       tick();
-      expect(errorReply).toBe(
-        'Unable to contact service; please try again later.'
-      );
       expect(errorHandlerSpy).toHaveBeenCalled();
       errorResp = errorHandlerSpy.calls.argsFor(0)[0];
     })

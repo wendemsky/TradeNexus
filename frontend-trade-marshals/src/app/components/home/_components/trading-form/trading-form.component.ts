@@ -98,7 +98,7 @@ export class TradingFormComponent implements OnInit{
             });
           } else {
             this.trade = data
-            this._snackBar.open("Order placed successfully", '', {
+            this._snackBar.open("Trade Executed successfully", '', {
               duration: 3000,
               panelClass: ['form-submit-snackbar']
             })      

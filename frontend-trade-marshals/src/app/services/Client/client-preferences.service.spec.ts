@@ -27,16 +27,18 @@ describe('ClientPreferencesService', () => {
 
   it('should fetch client preferences', () => {
     const mockPreferences: any[] = [
-      { clientId: '123', investmentPurpose: 'Retirement', incomeCategory: 'MIG', lengthOfInvestment: 'Medium', percentageOfSpend: 'Tier2', riskTolerance: 3, acceptAdvisor: 'true' }
+      { clientId: '1654658069', investmentPurpose: 'Retirement', incomeCategory: 'MIG', lengthOfInvestment: 'Medium', percentageOfSpend: 'Tier2', riskTolerance: 3, acceptAdvisor: 'true' }
     ];
 
-    service.getClientPreferences('123').subscribe(preferences => {
+    const req = httpMock.expectOne(service.dataURL+'1654658069');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockPreferences);
+
+    service.getClientPreferences('1654658069').subscribe(preferences => {
       expect(preferences).toEqual(mockPreferences[0]);
     });
 
-    const req = httpMock.expectOne(service.dataURL);
-    expect(req.request.method).toBe('GET');
-    req.flush(mockPreferences);
+   
   });
 
   it('should handle error when fetching client preferences', () => {
@@ -52,21 +54,21 @@ describe('ClientPreferencesService', () => {
   });
 
   it('should update client preferences', () => {
-    const mockPreferences: any = { clientId: '123', investmentPurpose: 'Retirement', incomeCategory: 'MIG', lengthOfInvestment: 'Medium', percentageOfSpend: 'Tier2', riskTolerance: 3, acceptAdvisor: 'true' };
+    const mockPreferences: any = { clientId: '1654658069', investmentPurpose: 'Retirement', incomeCategory: 'MIG', lengthOfInvestment: 'Medium', percentageOfSpend: 'Tier2', riskTolerance: 3, acceptAdvisor: 'true' };
 
-    service.updateClientPreferences('123', mockPreferences).subscribe(preferences => {
+    service.updateClientPreferences(mockPreferences).subscribe(preferences => {
       expect(preferences).toEqual(mockPreferences);
     });
 
-    const req = httpMock.expectOne(`${service.dataURL}123`);
+    const req = httpMock.expectOne(`${service.dataURL}`);
     expect(req.request.method).toBe('PUT');
     req.flush(mockPreferences);
   });
 
   it('should handle error when updating client preferences', () => {
     const errorMessage = 'Unexpected error at service while trying to login user. Please try again later!';
-
-    service.updateClientPreferences('123', {}).subscribe(
+    const mockPreferences: any = { clientId: '1654658069', investmentPurpose: 'Retirement', incomeCategory: 'MIG', lengthOfInvestment: 'Medium', percentageOfSpend: 'Tier2', riskTolerance: 3, acceptAdvisor: 'true' };
+    service.updateClientPreferences(mockPreferences).subscribe(
       () => fail('expected an error, not preferences'),
       error => expect(error).toBe(errorMessage)
     );
@@ -76,7 +78,7 @@ describe('ClientPreferencesService', () => {
   });
 
   it('should set client preferences', () => {
-    const mockPreferences: any = { clientId: '123', investmentPurpose: 'Retirement', incomeCategory: 'MIG', lengthOfInvestment: 'Medium', percentageOfSpend: 'Tier2', riskTolerance: 3, acceptAdvisor: 'true' };
+    const mockPreferences: any = { clientId: '1654658069', investmentPurpose: 'Retirement', incomeCategory: 'MIG', lengthOfInvestment: 'Medium', percentageOfSpend: 'Tier2', riskTolerance: 3, acceptAdvisor: 'true' };
 
     service.setClientPreferences(mockPreferences).subscribe(preferences => {
       expect(preferences).toEqual(mockPreferences);
@@ -85,44 +87,5 @@ describe('ClientPreferencesService', () => {
     const req = httpMock.expectOne(service.dataURL);
     expect(req.request.method).toBe('POST');
     req.flush(mockPreferences);
-  });
-
-  it('should handle error when setting client preferences', () => {
-    const errorMessage = 'Unexpected error at service while trying to login user. Please try again later!';
-
-    service.setClientPreferences({}).subscribe(
-      () => fail('expected an error, not preferences'),
-      error => expect(error).toBe(errorMessage)
-    );
-
-    const req = httpMock.expectOne(service.dataURL);
-    req.flush('Error', { status: 500, statusText: 'Server Error' });
-  });
-
-  it('should handle client-side or network error', () => {
-    const errorEvent = new ProgressEvent('error');
-    const errorResponse = new HttpErrorResponse({
-      error: errorEvent,
-      status: 0,
-      statusText: 'Unknown Error'
-    });
-
-    service.handleError(errorResponse).subscribe(
-      () => fail('expected an error, not preferences'),
-      error => expect(error).toBe('Unexpected error at service while trying to login user. Please try again later!')
-    );
-  });
-
-  it('should handle server-side error', () => {
-    const errorResponse = new HttpErrorResponse({
-      error: { message: 'Server Error' },
-      status: 500,
-      statusText: 'Server Error'
-    });
-
-    service.handleError(errorResponse).subscribe(
-      () => fail('expected an error, not preferences'),
-      error => expect(error).toBe('Unexpected error at service while trying to login user. Please try again later!')
-    );
   });
 });

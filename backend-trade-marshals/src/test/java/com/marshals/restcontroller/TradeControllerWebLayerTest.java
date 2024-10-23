@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -138,5 +139,36 @@ class TradeControllerWebLayerTest {
 		mockMvc.perform(get("/trade/trade-history/" + id))
 			.andExpect(status().isInternalServerError())
 			.andExpect(content().string(is(emptyOrNullString())));;
+	}
+	
+	@Test
+	void testExecuteTradeSuccess() throws Exception {
+	    // Arrange
+	    Order order = new Order("ORDER9876", 10, new BigDecimal("104.75"), "B", "541107416", "N123456", 540983960);
+	    Trade expectedTrade = new Trade(
+	        order,
+	        new BigDecimal("104.75"), // executionPrice
+	        "f5ffmsn2rep-etjqfvr7an4-2g1137sdpvf", // tradeId
+	        new BigDecimal("1057.975") // cashValue
+	    );
+ 
+	    when(mockTradeService.executeTrade(order)).thenReturn(expectedTrade);
+ 
+	    // Act & Assert
+	    mockMvc.perform(post("/trade/execute-trade")
+	            .contentType(MediaType.APPLICATION_JSON)
+	            .content("""
+	                {
+	                    "orderId": "ORDER9876",
+	                    "quantity": 10,
+	                    "targetPrice": 104.75,
+	                    "direction": "B",
+	                    "clientId": "541107416",
+	                    "instrumentId": "N123456",
+	                    "token": 540983960
+	                }
+	            """))
+	            .andExpect(status().isOk())
+	            .andDo(print());
 	}
 }
