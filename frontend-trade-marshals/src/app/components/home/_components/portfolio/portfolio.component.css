@@ -13,3 +13,21 @@
     background-color: #fff;
 
 }
+
+  #MyChart {
+    width: 100%;
+    width: 500px; 
+    /* margin-top: 10px; */
+    height: 500px;
+  }
+
+  .chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.chart-container span {
+    margin-bottom: 10px; 
+    font-weight: 500;
+}

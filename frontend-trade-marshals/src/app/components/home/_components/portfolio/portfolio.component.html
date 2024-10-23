@@ -1,6 +1,13 @@
-<div class="balance">
+<div style="display: flex; align-items: center; justify-content: center;">
+<div class="balance" style="margin-right: 20px;">
     <h2 class="title">Current Balance: {{portfolioData?.currBalance}}</h2>
 </div>
+<div class="chart-container">
+    <span style="font-size: 1.2rem;font-weight: 500; text-align: center;">Your Portfolio Split(%)</span>
+    <canvas  id="MyChart" >{{ chart }}</canvas>
+    </div>
+</div>
+
 <h2> My Holdings </h2>
 
 <div class="grid-container ag-theme-alpine">

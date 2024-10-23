@@ -11,7 +11,7 @@ import { Instrument } from 'src/app/models/Trade/instrument';
 import { Holding } from 'src/app/models/Trade/Holding';
 import { Price } from 'src/app/models/Trade/price';
 import { PriceService } from 'src/app/services/Trade/price.service';
-
+import Chart from 'chart.js/auto'
 
 @Component({
   selector: 'app-portfolio',
@@ -21,7 +21,7 @@ import { PriceService } from 'src/app/services/Trade/price.service';
 export class PortfolioComponent implements OnInit {
 
   clientId: string | undefined;
-
+  public chart: any;
   clientProfileData!: ClientProfile | null;
 
   portfolioData?: ClientPortfolio;
@@ -96,7 +96,6 @@ export class PortfolioComponent implements OnInit {
     ],
     position: 'left',
   }
-
   constructor(
     private clientPortfolioService: ClientPortfolioService,
     private clientProfileService: ClientProfileService,
@@ -112,6 +111,7 @@ export class PortfolioComponent implements OnInit {
       this.clientProfileData?.client?.clientId !== undefined ? this.clientId = this.clientProfileData?.client?.clientId : console.error('Client ID is of type undefined');
       this.loadPortfolio();
     })
+    this.createChart();
 
   }
 
@@ -127,6 +127,7 @@ export class PortfolioComponent implements OnInit {
           this.transformData(data);
           this.portfolioData = data;
           console.log('Portfolio Data after transformation: ', this.portfolioData);
+          this.createChart();
         },
         error: (e) => {
           console.log('Error in loading Trade History: ', e);
@@ -175,4 +176,43 @@ export class PortfolioComponent implements OnInit {
   }
 
 
+  createChart() {
+    if (!this.transformedData.length) {
+      console.error('No data available for the chart');
+      return;
+    }
+  
+    const labels = this.transformedData.map(item => item.instrumentDesc);
+    const dataValues = this.transformedData.map(item => item.avgPrice); // or any other relevant metric
+  
+    this.chart = new Chart("MyChart", {
+      type: 'pie', // this denotes the type of chart
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Average Prices',
+          data: dataValues,
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        aspectRatio: 2,
+        plugins: {
+          legend: {
+            display: false // Hide legend labels
+          },
+          tooltip: {
+            enabled: true, 
+            callbacks: {
+              label: function(tooltipItem: any) {
+                let label = tooltipItem.label || '';
+                let value = tooltipItem.raw || 0;
+                return `${label}: $${value.toFixed(2)}`; 
+              }
+            }
+          }
+        }
+      }
+    });
+  }
 }
