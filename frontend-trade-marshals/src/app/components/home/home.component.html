@@ -38,6 +38,15 @@
                     </button>
                 </mat-list-item>
                 <mat-list-item routerLinkActive="active">
+                    <a routerLink="/home">
+                        <button mat-button class="menu-button" (click)="isHomeContent=false" (click)="redirectToHome()">
+                            <mat-icon mat-list-icon> home </mat-icon>
+                            <p matLine *ngIf="isSideMenuExpanded"> Home </p>
+                        </button>
+                    </a>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item routerLinkActive="active">
                     <a routerLink="/home/client-preferences">
                         <button mat-button class="menu-button" (click)="isHomeContent=false">
                             <mat-icon mat-list-icon> tune </mat-icon>
@@ -79,44 +88,6 @@
             <section class="body-content mat-elevation-z8">
                 <div *ngIf="isHomeContent" class="home-content">
                     <h1> Welcome {{clientProfileData?.client?.name}} ! </h1>
-                    <!-- <div class="client-data">
-                         <div class="clientInfo">
-                            <p>Client ID: {{clientProfileData?.client?.clientId}}</p>
-                            <p>Email: {{clientProfileData?.client?.email}}</p>
-                            <p>Country: {{clientProfileData?.client?.country}}</p>
-                        </div> 
-                        <mat-card appearance="outlined" class="client-content-card">
-                            <mat-card-header>
-                              <mat-card-title><h2>{{clientProfileData?.client?.name}}</h2></mat-card-title>
-                              <mat-card-subtitle>Profile</mat-card-subtitle>
-                            </mat-card-header>
-                            <mat-card-content>
-                                <p>Client ID: {{clientProfileData?.client?.clientId}}</p>
-                                <p>Email: {{clientProfileData?.client?.email}}</p>
-                                <p>Country: {{clientProfileData?.client?.country}}</p>
-                              </mat-card-content>
-                          </mat-card>
-                         <div class="balance">
-                            <h2 class="title">Current Balance: {{ 1000000 }}</h2>
-                        </div>
-                        <mat-card appearance="outlined" class="client-content-card">
-                            <mat-card-header>
-                              <mat-card-title>Current Balance</mat-card-title>
-                            </mat-card-header>
-                            <mat-card-content>
-                                <h2>{{ 1000000 }}</h2>
-                              </mat-card-content>
-                          </mat-card>
-                    </div> -->
-                    
-
-                    
-                        <!-- <h2> Robo Advisor </h2>
-                         <app-robo-advisor></app-robo-advisor> -->
-                         <!-- <button mat-button (click)="openDialog()">Open dialog</button> -->
-                         <!-- <div  (click)="openDialog()">
-                            
-                          </div> -->
 
                     <div (click)="openDialog()" *ngIf="clientPreferencesData?.acceptAdvisor == 'true'" class="chatbot-button mat-elevation-z9999">
                         <div class="button-content">

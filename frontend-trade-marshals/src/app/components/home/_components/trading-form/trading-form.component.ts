@@ -1,18 +1,15 @@
 import { Component, inject, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
-import { Holding } from 'src/app/models/Trade/Holding';
 import { Instrument } from 'src/app/models/Trade/instrument';
 import { Order } from 'src/app/models/Trade/order';
 import { Trade } from 'src/app/models/Trade/trade';
 import { ClientPortfolioService } from 'src/app/services/Client/client-portfolio.service';
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
-import { TradeHistoryService } from 'src/app/services/Trade/trade-history.service';
 import { TradeService } from 'src/app/services/Trade/trade.service';
 import { v4 as uuidv4 } from 'uuid';
-import { Router } from '@angular/router';
 
 
 
@@ -46,11 +43,9 @@ export class TradingFormComponent implements OnInit{
 
   constructor(
     private tradeService: TradeService,
-    private tradeHistoryService: TradeHistoryService,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public clientProfileService: ClientProfileService,
     public clientPortfolioService: ClientPortfolioService,
-    private router: Router
   ){
     this.askPrice = data.askPrice;
     this.bidPrice = data.bidPrice;
@@ -94,15 +89,15 @@ export class TradingFormComponent implements OnInit{
     this.tradeService.executeTrade(order)
       .subscribe({
         next:   (data) => {
-          this.trade = data;
           console.log('Trade Executed: ', this.trade);
           // Populate trade history, portfolio etc.
-          if(this.trade === null) {
+          if(data === null || Object.keys(data).length == 0) {
             console.error('Trade Execution Error');
             this._snackBar.open('Trade Execution Error', '', {
               duration: 3000
             });
           } else {
+            this.trade = data
             this._snackBar.open("Order placed successfully", '', {
               duration: 3000,
               panelClass: ['form-submit-snackbar']
@@ -120,9 +115,3 @@ export class TradingFormComponent implements OnInit{
   }
 
 }
-
-  
-
-
-
- 

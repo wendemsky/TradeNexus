@@ -107,13 +107,14 @@ export class ClientPreferencesComponent {
   getPreferences(clientId: string){
     this.clientPreferencesService.getClientPreferences(clientId).subscribe({
       next: (data: any) => {
-        if (data) {
+        if (data!==null && Object.keys(data).length != 0) {
           this.isClientFormFilled = true
           this.clientPreferencesData = data
           this.setPreferencesFormData(this.clientPreferencesData)
         }
         else {
           this.clientPreferencesData = null
+          this.snackBar.open("Unexpected error retrieving client preferences", '', this.snackBarConfig)
         }
       }
     })

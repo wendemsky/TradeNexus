@@ -21,7 +21,6 @@ export const routes: Routes = [
       {path: 'client-trading-history', component: TradingHistoryComponent , canActivate: [AuthGuard]},
       {path: 'report-activity', component: ReportActivityComponent , canActivate: [AuthGuard]},
       {path: 'client-preferences', component: ClientPreferencesComponent , canActivate: [AuthGuard]},
-      {path: 'home', component: HomeComponent}
     ],
     canActivate: [AuthGuard]
   },

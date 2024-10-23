@@ -83,8 +83,14 @@ export class TradingHistoryComponent  implements OnInit{
     this.clientId !== undefined ? this.tradeHistoryService.getTrades(this.clientId)
       .subscribe({
         next: (data: any) => {
-          this.tradeHistoryData = data.trades;
-          this.tradeHistoryData = this.tradeHistoryData.reverse()
+          if(data!==null && Object.keys(data).length != 0){
+            this.tradeHistoryData = data.trades;
+          }
+          else{
+            this._snackBar.open("No trade history data found for the client", '', {
+              duration: 3000,
+            })
+          }
         },
         error: (e) => {
           console.log('Error in loading Trade History: ',e);

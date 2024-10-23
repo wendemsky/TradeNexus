@@ -100,8 +100,8 @@ public defaultColDef: ColDef = {
 
     this.priceService.getPricesFromFMTS()
       .subscribe({
-        next: (data) => {
-          if(data!==null) {
+        next: (data: Price[]) => {
+          if(data!==null && Object.keys(data).length != 0) {
             this.prices = data;
             this.priceService.setLivePrices(this.prices); //Set the prices
           }else{

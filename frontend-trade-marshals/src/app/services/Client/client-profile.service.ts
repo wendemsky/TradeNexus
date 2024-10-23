@@ -25,7 +25,7 @@ export class ClientProfileService {
     let updatedClient = {...profile.client, password: hashedPassword }
     let updatedClientProfile = { ...profile, client: updatedClient}
     console.log(updatedClientProfile)
-    localStorage.setItem('clientDetails', JSON.stringify(profile) )
+    localStorage.setItem('clientDetails', JSON.stringify(updatedClientProfile) )
   }
 
   //Removing Client Profile from local storage on Logout

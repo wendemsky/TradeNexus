@@ -21,6 +21,9 @@ export class RoboAdvisorComponent {
   buyPrices: Price[] = [];
   sellPrices: Price[] = [];
 
+  snackBarConfig = new MatSnackBarConfig();
+    
+
   public buyColumnDefs: ColDef[] = [
     {
       headerName: "Instrument ID",
@@ -147,7 +150,10 @@ export class RoboAdvisorComponent {
     private preferencesService: ClientPreferencesService,
     private profileService: ClientProfileService,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    this.snackBarConfig.duration = 2000;
+    this.snackBarConfig.panelClass = ['form-submit-snackbar'];
+  }
 
   ngOnInit(): void {
     this.loadAllPrices();
@@ -155,51 +161,49 @@ export class RoboAdvisorComponent {
 
   loadAllPrices() {
     this.profileService.getClientProfile().subscribe((profile) => {
-      let clientId = profile?.client?.clientId
-      if (clientId)
-        this.preferencesService.getClientPreferences(clientId).subscribe((preferences) => {
-          this.retrieveAllTopBuys(preferences)
-          this.retrieveAllTopSells(preferences)
-        });
+      if(profile!==null || Object.keys(profile).length != 0){
+        let clientId = profile?.client?.clientId
+        if (clientId){
+          this.preferencesService.getClientPreferences(clientId).subscribe((preferences) => {
+            this.retrieveAllTopBuys(preferences)
+            this.retrieveAllTopSells(preferences)
+          });
+        }
+      }
     })
   }
 
   retrieveAllTopBuys(preferences: ClientPreferences) {
-    const snackBarConfig = new MatSnackBarConfig();
-    snackBarConfig.duration = 2000;
-    snackBarConfig.panelClass = ['form-submit-snackbar'];
+    
     this.roboAdvisorService.getTopBuyTrades(preferences)
       .subscribe({
         next: (data) => {
-          if (data !== null) {
+          if (data !== null && Object.keys(data).length != 0) {
             this.buyPrices = data;
           } else {
-            this.snackBar.open("Unexpected error in retrieving robo advisor buy recommendations", '', snackBarConfig)
+            this.snackBar.open("Unexpected error in retrieving robo advisor buy recommendations", '', this.snackBarConfig)
           }
         },
         error: (e) => {
           console.log(e)
-          this.snackBar.open(e, '', snackBarConfig)
+          this.snackBar.open(e, '', this.snackBarConfig)
         }
       });
   }
 
   retrieveAllTopSells(preferences: ClientPreferences) {
-    const snackBarConfig = new MatSnackBarConfig();
-    snackBarConfig.duration = 2000;
-    snackBarConfig.panelClass = ['form-submit-snackbar'];
     this.roboAdvisorService.getTopSellTrades(preferences)
       .subscribe({
         next: (data) => {
-          if (data !== null) {
+          if (data !== null  && Object.keys(data).length != 0) {
             this.sellPrices = data;
           } else {
-           this.snackBar.open("Client has no holdings for robo advisor to give sell recommendations", '', snackBarConfig)
+           this.snackBar.open("Client has no holdings for robo advisor to give sell recommendations", '', this.snackBarConfig)
           }
         },
         error: (e) => {
           console.log(e)
-          this.snackBar.open(e, '', snackBarConfig)
+          this.snackBar.open(e, '', this.snackBarConfig)
         }
       });
   }
