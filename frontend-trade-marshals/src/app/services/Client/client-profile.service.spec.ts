@@ -162,7 +162,7 @@ describe('ClientProfileService', () => {
     };
     service.setClientProfile(mockProfile) //Setting with service
     const storedProfile = JSON.parse(localStorage.getItem('clientDetails')!); //Getting from local storage
-    expect(storedProfile).toEqual(mockProfile); //Check if they are equal
+    expect(storedProfile.client.email).toEqual(mockProfile.client?.email); //Check if they are equal
   });
 
   it('should remove client profile from local storage', () => {

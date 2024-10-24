@@ -14,7 +14,7 @@ export class ClientPortfolioService {
 
   // To retrieve a particular client's portfolio data by providing client ID
   getClientPortfolio(clientId: string): Observable<ClientPortfolio>{
-    return this.http.get<ClientPortfolio>(this.dataURL + clientId)
+    return this.http.get<ClientPortfolio>(this.dataURL + clientId).pipe(catchError(this.handleError));
   }
 
   updateClientHoldings(url: string, clientPortfolioData: ClientPortfolio): Observable<ClientPortfolio> {

@@ -1,7 +1,6 @@
 import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 
 import { LoginService } from './login.service';
-import { Client } from 'src/app/models/Client/Client';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
@@ -57,7 +56,7 @@ describe('LoginService', () => {
             expect(clientData.client?.email).toEqual(testClients[0].client?.email); //Expect that returned client's email matches
         }
         );
-      const req = httpTestingController.expectOne(service.loginUrl);    //Checking if the url is right
+      const req = httpTestingController.expectOne(service.loginUrl+ "?email=sowmya@gmail.com&password=Marsh2024");    //Checking if the url is right
       expect(req.request.method).toEqual('GET');      // Assert that the request is a GET
       req.flush(testClients[0]); // Respond with mock data, causing Observable to resolve 
       tick();
@@ -68,8 +67,7 @@ describe('LoginService', () => {
   //Test to check if our service handles a 404 error - TESTING FOR FAILURES
   it('should handle a 404 error', inject([LoginService],
     fakeAsync((service: LoginService) => {
-      let errorResp: HttpErrorResponse;
-      let errorReply: string = '';
+      let errorReply: HttpErrorResponse;
       const errorHandlerSpy = spyOn(service, 'handleError')
         .and.callThrough();
       service.loginClient('sample@gmail.com', 'password')
@@ -77,7 +75,7 @@ describe('LoginService', () => {
           next: () => fail('Should fail'),
           error: (err) => errorReply = err
         });
-      const req = httpTestingController.expectOne(service.loginUrl); //Checking if url is right
+      const req = httpTestingController.expectOne(service.loginUrl+"?email=sample@gmail.com&password=password"); //Checking if url is right
       expect(req.request.method).toEqual('GET'); //Checking if method is right
       //Flushing with error
       req.flush('Forced 404', {
@@ -87,8 +85,8 @@ describe('LoginService', () => {
       httpTestingController.verify()
       tick();
       expect(errorHandlerSpy).toHaveBeenCalled();
-      errorResp = errorHandlerSpy.calls.argsFor(0)[0];
-      expect(errorResp.status).toBe(404);
+      errorReply = errorHandlerSpy.calls.argsFor(0)[0];
+      expect(errorReply.status).toBe(404);
     })));
 
   //Test to check if our service handles network error - TESTING FOR FAILURES
@@ -102,7 +100,7 @@ describe('LoginService', () => {
           next: () => fail('Should fail'),
           error: (err) => errorReply = err
         });
-      const req = httpTestingController.expectOne(service.loginUrl); //Checking if url is right
+      const req = httpTestingController.expectOne(service.loginUrl+"?email=sample@gmail.com&password=password"); //Checking if url is right
       expect(req.request.method).toEqual('GET'); //Checking if method is right
       //Flushing with error
       const error = new ProgressEvent('Network Error')

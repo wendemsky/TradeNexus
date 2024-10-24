@@ -83,7 +83,7 @@ describe('RegisterService', () => {
       service.saveClientDetails(newClient).subscribe();
       const req = httpTestingController.expectOne(service.clientDataURL);    //Checking if the url is right
       expect(req.request.method).toEqual('POST');      // Assert that the request is a POST
-      expect(req.request.body.client).toBe(testClients[0].client); //Expect that the posted client is same as the sent one
+      expect(req.request.body).toEqual(testClients[0].client); //Expect that the posted client is same as the sent one
     })));
 
   /*TESTING FOR FAILURES*/

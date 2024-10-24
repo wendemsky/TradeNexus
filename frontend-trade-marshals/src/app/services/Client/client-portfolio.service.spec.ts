@@ -22,46 +22,46 @@ describe('ClientPortfolioService', () => {
 
   it('should handle a 404 error', inject([ClientPortfolioService],
     fakeAsync((service: ClientPortfolioService) => {
-    let errorResp: HttpErrorResponse;
-    let errorReply: string = '';
-    const errorHandlerSpy = spyOn(service,'handleError')
-    .and.callThrough();
-    service.getClientPortfolio('')
-    .subscribe({next: () => fail('Should not succeed'),
-    error: (err) => errorReply = err});
-    const req = httpTestingController.expectOne(service.dataURL);
-    // Assert that the request is a GET.
-    expect(req.request.method).toEqual('GET');
-    // Respond with error
-    req.flush('Forced 404', {
-      status: 404,
-      statusText: 'Not Found'
-    });
-    // Cause all Observables to complete and check the results
-    tick();
-    expect(errorHandlerSpy).toHaveBeenCalled();
-    errorResp = errorHandlerSpy.calls.argsFor(0)[0];
-    expect(errorResp.status).toBe(404);
-  })));
+      let errorResp: HttpErrorResponse;
+      let errorReply: string = '';
+      const errorHandlerSpy = spyOn(service, 'handleError')
+        .and.callThrough();
+      service.getClientPortfolio('123')
+        .subscribe({
+          next: () => fail('Should not succeed'),
+          error: (err) => errorReply = err
+        });
+      const req = httpTestingController.expectOne(service.dataURL+'123');
+      // Assert that the request is a GET.
+      expect(req.request.method).toEqual('GET');
+      // Respond with error
+      req.flush('Forced 404', {
+        status: 404,
+        statusText: 'Not Found'
+      });
+      // Cause all Observables to complete and check the results
+      tick();
+      expect(errorHandlerSpy).toHaveBeenCalled();
+      errorResp = errorHandlerSpy.calls.argsFor(0)[0];
+      expect(errorResp.status).toBe(404);
+    })));
 
   it('should handle a network error', inject(
     [ClientPortfolioService],
     fakeAsync((service: ClientPortfolioService) => {
-      let errorResp: HttpErrorResponse;
       let errorReply: string = '';
       const errorHandlerSpy = spyOn(service, 'handleError').and.callThrough();
-      service.getClientPortfolio('').subscribe({
+      service.getClientPortfolio('123').subscribe({
         next: () => fail('Should fail'),
         error: (err) => (errorReply = err),
       });
-      const req = httpTestingController.expectOne(service.dataURL);
+      const req = httpTestingController.expectOne(service.dataURL+'123');
       expect(req.request.method).toEqual('GET');
       const error = new ProgressEvent('Network Error');
       req.error(error);
       httpTestingController.verify();
       tick();
       expect(errorHandlerSpy).toHaveBeenCalled();
-      errorResp = errorHandlerSpy.calls.argsFor(0)[0];
     })
   ));
 });

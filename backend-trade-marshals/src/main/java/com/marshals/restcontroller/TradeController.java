@@ -143,7 +143,7 @@ public class TradeController {
 		ResponseEntity<List<Price>> response = null;
 		try {
 			if (clientPreferences == null) {
-				throw new NullPointerException("Request body is null");
+				throw new NullPointerException("Client Preferences in Request Body cannot be null");
 			}
 			List<Price> recommendedBuyInstruments = tradeService.recommendTopBuyInstruments(clientPreferences);
 			if (recommendedBuyInstruments == null) {
@@ -152,7 +152,7 @@ public class TradeController {
 			response = ResponseEntity.ok(recommendedBuyInstruments);
 			return response;
 		} catch (NullPointerException e) {
-			throw new DatabaseException();
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
 		} catch (ResponseStatusException e) {
 			logger.error("Error in request for getting top buy trades from robo advisor", e);
 			throw e;
@@ -169,15 +169,20 @@ public class TradeController {
 	// Robo advisor - top 5 sell instruments : Must pass client preferences
 	@PostMapping("/suggest-sell")
 	public ResponseEntity<List<Price>> getRoboAdvisorTopSellInstruments(
-			@RequestBody ClientPreferences clienPreferences) {
+			@RequestBody ClientPreferences clientPreferences) {
 		ResponseEntity<List<Price>> response = null;
 		try {
-			List<Price> recommendedSellInstruments = tradeService.recommendTopSellInstruments(clienPreferences);
+			if (clientPreferences == null) {
+				throw new NullPointerException("Client Preferences in Request Body cannot be null");
+			}
+			List<Price> recommendedSellInstruments = tradeService.recommendTopSellInstruments(clientPreferences);
 			if (recommendedSellInstruments == null) {
 				throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Cannot retrieve top sell instruments");
 			}
 			response = ResponseEntity.ok(recommendedSellInstruments);
 			return response;
+		} catch (NullPointerException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
 		} catch (ResponseStatusException e) {
 			logger.error("Error in request for getting top sell trades from robo advisor", e);
 			throw e;
