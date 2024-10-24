@@ -6,45 +6,56 @@ import { of } from 'rxjs';
 import { AgGridModule } from 'ag-grid-angular';
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
 import { MaterialModule } from 'src/app/material.module';
+import { PriceService } from 'src/app/services/Trade/price.service';
 
 const testPortfolioData = {
-  "id": "aabd",
   "clientId": "1654658069",
   "currBalance": 10000,
   "holdings": []
 }
 
-const testClientProfile: any = 
+const testClientProfile: any =
 {
-  "client": 
-  {
-    "id":"688f",
-    "email":"rishi@gmail.com",
-    "clientId":"1212794226",
-    "password":"Marsh2024",
-    "name":"Rishiyanth",
-    "dateOfBirth":"11/04/2002",
-    "country":"India",
-    "identification":[
+  "client": {
+    "email": "sowmya@gmail.com",
+    "clientId": "1654658069",
+    "password": "Marsh2024",
+    "name": "Sowmya",
+    "dateOfBirth": "11/12/2002",
+    "country": "India",
+    "identification": [
       {
-        "type":"Aadhar",
-        "value":"123412341234"
+        "type": "Aadhar",
+        "value": "123456789102"
       }
     ],
-    "isAdmin":false
+    "isAdmin": true
   },
-  "token":1212670770
+  "token": 1654658069
 }
 
 describe('PortfolioComponent', () => {
   let component: PortfolioComponent;
   let fixture: ComponentFixture<PortfolioComponent>;
-  let clientProfileMockService: any = jasmine.createSpyObj('ClientProfileService', ['getClientProfile']);
-  let clientPortfolioMockService: any = jasmine.createSpyObj('ClientPortfolioService', ['getClientPortfolio']);
-  let getPortfolioSpy = clientPortfolioMockService.getClientPortfolio.and.returnValue(of(testPortfolioData));
-  let getProfileSpy = clientProfileMockService.getClientProfile.and.returnValue(of(testClientProfile));
+  
+  let clientProfileMockService: any 
+  let getProfileSpy:any 
+
+  let clientPortfolioMockService: any 
+  let getPortfolioSpy:any 
+
+  let priceMockService: any
 
   beforeEach(async () => {
+
+    clientProfileMockService = jasmine.createSpyObj('ClientProfileService', ['getClientProfile']);
+    getProfileSpy = clientProfileMockService.getClientProfile.and.returnValue(of(testClientProfile));
+
+    clientPortfolioMockService = jasmine.createSpyObj('ClientPortfolioService', ['getClientPortfolio']);
+    getPortfolioSpy =  clientPortfolioMockService.getClientPortfolio.and.returnValue(of(testPortfolioData));
+
+    priceMockService = jasmine.createSpyObj('PriceService', ['getLivePrices']);
+
     await TestBed.configureTestingModule({
       declarations: [PortfolioComponent],
       imports: [
@@ -52,8 +63,9 @@ describe('PortfolioComponent', () => {
         MaterialModule
       ],
       providers: [
-        {provide: ClientPortfolioService, useValue: clientPortfolioMockService},
-        {provide: ClientProfileService, useValue: clientProfileMockService}
+        { provide: ClientPortfolioService, useValue: clientPortfolioMockService },
+        { provide: ClientProfileService, useValue: clientProfileMockService },
+        { provide: PriceService, useValue: priceMockService }
       ]
     })
       .compileComponents();

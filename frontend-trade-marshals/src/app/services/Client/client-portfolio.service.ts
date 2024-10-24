@@ -16,11 +16,7 @@ export class ClientPortfolioService {
   getClientPortfolio(clientId: string): Observable<ClientPortfolio>{
     return this.http.get<ClientPortfolio>(this.dataURL + clientId).pipe(catchError(this.handleError));
   }
-
-  updateClientHoldings(url: string, clientPortfolioData: ClientPortfolio): Observable<ClientPortfolio> {
-    return this.http.put<ClientPortfolio>(url, clientPortfolioData).pipe(catchError(this.handleError));
-  }
-
+  
   //Function to handle errors
   handleError(response: HttpErrorResponse) {
     if (response.error instanceof ProgressEvent) {

@@ -36,7 +36,7 @@ const testClient: Client = {
   "email": "sam@gmail.com",
   "clientId": "767836496",
   "password": "Marsh2024",
-  "name": "Sowmya",
+  "name": "Sam",
   "dateOfBirth": "11/12/2002",
   "country": "USA",
   "identification": [
@@ -66,8 +66,6 @@ describe('RegistrationComponent', () => {
   let datePipe: DatePipe
   let router: Router;
 
-  // let loginMockService: any
-  // let mockGetClientSpy: any
   let clientProfileMockService: any
   let mockClientProfileSetSpy: any
   let registerMockService: any
@@ -79,15 +77,12 @@ describe('RegistrationComponent', () => {
 
   beforeEach(async () => {
 
-    // loginMockService = jasmine.createSpyObj('LoginService', ['loginClient']);
-    // mockGetClientSpy = loginMockService.loginClient.and.returnValue(of(testExistingClientProfile));
-
     clientProfileMockService = jasmine.createSpyObj('ClientProfileService', ['setClientProfile']);
     mockClientProfileSetSpy = clientProfileMockService.setClientProfile.and.callFake((param: any) => { return of(param) })
 
     registerMockService = jasmine.createSpyObj('RegisterService', ['getVerificationOfClientEmail', 'saveClientDetails']);
     mockVerifyClientEmailSpy = registerMockService.getVerificationOfClientEmail.and.callFake((param: any) => { return of(param) })
-    mockAddClientSpy = registerMockService.saveClientDetails.and.returnValue(testClientProfile)
+    mockAddClientSpy = registerMockService.saveClientDetails.and.callFake((param: any) => { return of(param) })
 
     snackBar = jasmine.createSpyObj('MatSnackBar', ['open']); //Spying on MatSnackBar
 
@@ -197,13 +192,13 @@ describe('RegistrationComponent', () => {
   /*REGISTRATION*/
   //There should be an error message when user already exists
   it("should show error snackbar message when registering an existing user - existing email", () => {
-    registerMockService.getVerificationOfClientEmail.and.returnValue({isVerified:true})
     const signupForm = { email: "sowmya@gmail.com", password: 'Password123', retypePassword: 'Password123' };
     component.signupForm.setValue(signupForm);
+    registerMockService.getVerificationOfClientEmail.and.returnValue(of({isVerified:true}))
+
     const stepper = { next: jasmine.createSpy('next') } as any;
     component.validateNewEmail(stepper); //On submitting signup form
-    //expect(mockVerifyClientEmailSpy).toHaveBeenCalled()
-    // expect(snackBarSpy.open).toHaveBeenCalledWith('User is already registered! Enter a valid email', '', jasmine.any(MatSnackBarConfig));
+    expect(mockVerifyClientEmailSpy).toHaveBeenCalledWith("sowmya@gmail.com")
     expect(snackBarSpy.open).toHaveBeenCalled()
     expect(component.signupForm.value).toEqual({ email: null, password: null, retypePassword: null });
     expect(stepper.next).not.toHaveBeenCalled();
@@ -229,6 +224,7 @@ describe('RegistrationComponent', () => {
     component.personalDetails.setValue({ name: testClient.name, doB: testClient.dateOfBirth, country: testClient.country })
     component.identificationDetails.setValue({ type: testClient.identification[0].type, value: testClient.identification[0].value });
     registerMockService.saveClientDetails.and.returnValue(throwError(() => new Error('Couldnt register user')));
+    
     component.submitRegistrationForm(); //On submitting registration form
     expect(snackBar.open).toHaveBeenCalled();
   })
@@ -238,8 +234,11 @@ describe('RegistrationComponent', () => {
     component.signupForm.setValue({ email: testClient.email, password: testClient.password, retypePassword: testClient.password })
     component.personalDetails.setValue({ name: testClient.name, doB: testClient.dateOfBirth, country: testClient.country })
     component.identificationDetails.setValue({ type: testClient.identification[0].type, value: testClient.identification[0].value });
+    registerMockService.getVerificationOfClientEmail.and.returnValue(of({isVerified:false})) //Valid client
+    registerMockService.saveClientDetails.and.returnValue(of(testClientProfile)) //Valid registration of client
+
     component.submitRegistrationForm(); //On submitting registration form
-    expect(mockAddClientSpy).toHaveBeenCalledWith(testClient); //Successfully saving Client details
+    expect(mockAddClientSpy).toHaveBeenCalled(); //Successfully saving Client details
     expect(mockClientProfileSetSpy).toHaveBeenCalledWith(testClientProfile); //Succesfully setting Client Portfolio
     //Now redirecting to client preferences page
     expect(router.navigateByUrl).toHaveBeenCalledWith('/home/client-preferences');

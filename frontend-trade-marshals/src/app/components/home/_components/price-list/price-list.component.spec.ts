@@ -4,6 +4,8 @@ import { PriceListComponent } from './price-list.component';
 import { of } from 'rxjs';
 import { PriceService } from 'src/app/services/Trade/price.service';
 import { AgGridModule } from 'ag-grid-angular';
+import { MaterialModule } from 'src/app/material.module';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const mockPrices = [
   {
@@ -36,19 +38,27 @@ const mockPrices = [
   },
 ]
 
-let priceMockService = jasmine.createSpyObj('PriceService', ['getPrices'])
-priceMockService.getPrices.and.returnValue(of(mockPrices))
-
 describe('PriceListComponent', () => {
   let component: PriceListComponent;
   let fixture: ComponentFixture<PriceListComponent>;
 
+  let priceMockService:any
+  let getLivePricesSpy:any
+
+  let snackBar: any
+
   beforeEach(async () => {
+    priceMockService = jasmine.createSpyObj('PriceService', ['getPricesFromFMTS','setLivePrices'])
+    getLivePricesSpy = priceMockService.getPricesFromFMTS.and.returnValue(of(mockPrices))
+
+    snackBar = jasmine.createSpyObj('MatSnackBar', ['open']); //Spying on MatSnackBar
+
     await TestBed.configureTestingModule({
       declarations: [PriceListComponent],
-      imports: [AgGridModule],
+      imports: [AgGridModule, MaterialModule],
       providers: [
-        {provide: PriceService, useValue: priceMockService}
+        {provide: PriceService, useValue: priceMockService},
+        { provide: MatSnackBar, useValue: snackBar }
       ]
     }).compileComponents();
 

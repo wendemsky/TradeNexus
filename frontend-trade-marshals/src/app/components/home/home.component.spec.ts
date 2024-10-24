@@ -14,6 +14,7 @@ import {Location} from '@angular/common'
 import {routes} from '../../app-routing.module'
 import { MatDialog } from '@angular/material/dialog';
 import { RoboAdvisorComponent } from './_components/robo-advisor/robo-advisor.component';
+import { PriceService } from 'src/app/services/Trade/price.service';
 
 
 //Mock Component for Price List
@@ -21,12 +22,6 @@ import { RoboAdvisorComponent } from './_components/robo-advisor/robo-advisor.co
   selector: 'app-price-list'
 })
 class MockPriceListComponent {
-}
-
-@Component({
-  selector: 'app-robo-advisor'
-})
-class MockRoboAdvisorComponent {
 }
 
 let testClientProfile: any =
@@ -69,26 +64,35 @@ describe('HomeComponent', () => {
 
   let clientProfileMockService: any;
   let mockGetClientProfileSpy: any;
+  let mockRemoveClientProfileSpy:any
 
   let clientPreferencesMockService: any;
   let mockGetClientPreferencesSpy: any;
 
-  let dialogMock: jasmine.SpyObj<MatDialog>;
+  let priceMockService:any
+  let mockRemoveLivePricesSpy:any
+
+  let dialogMock: jasmine.SpyObj<MatDialog>
+  //let routerMock: jasmine.SpyObj<Router>
 
   beforeEach(async () => {
 
-    clientProfileMockService = jasmine.createSpyObj('ClientProfileService', ['getClientProfile']);
+    clientProfileMockService = jasmine.createSpyObj('ClientProfileService', ['getClientProfile','removeClientProfile']);
     mockGetClientProfileSpy = clientProfileMockService.getClientProfile.and.returnValue(of(testClientProfile));
+    mockRemoveClientProfileSpy = clientProfileMockService.removeClientProfile.and.returnValue(of({}))
 
     clientPreferencesMockService = jasmine.createSpyObj('ClientPreferencesService', ['getClientPreferences', 'updateClientPreferences', "setClientPreferences"]);
     mockGetClientPreferencesSpy = clientPreferencesMockService.getClientPreferences.and.returnValue(of(testClientPreferences));
 
+    priceMockService = jasmine.createSpyObj('PriceService', ['removeLivePrices']);
+    mockRemoveLivePricesSpy = priceMockService.removeLivePrices.and.returnValue(of({}))
+
     dialogMock = jasmine.createSpyObj('MatDialog', ['open']);
+    //routerMock = jasmine.createSpyObj('Router', ['navigateByUrl']);
 
     await TestBed.configureTestingModule({
       declarations: [HomeComponent,
-        MockPriceListComponent,
-        MockRoboAdvisorComponent
+        MockPriceListComponent
       ],
       imports: [
         MaterialModule,
@@ -97,7 +101,9 @@ describe('HomeComponent', () => {
       providers: [
         { provide: ClientProfileService, useValue: clientProfileMockService },
         { provide: ClientPreferencesService, useValue: clientPreferencesMockService },
+        { provide: PriceService, useValue: priceMockService },
         { provide: MatDialog, useValue: dialogMock },
+        //{provide: Router, useValue: routerMock},
         provideAnimations()
       ]
     })
@@ -135,7 +141,7 @@ describe('HomeComponent', () => {
   })
 
   it('should render not robo advisor component if client preferences accept advisor t&c is set to false', () => {
-    testClientPreferences.acceptAdvisor = false;
+    testClientPreferences.acceptAdvisor = 'false';
     clientPreferencesMockService.getClientPreferences.and.returnValue(of(testClientPreferences));
     fixture.detectChanges()
     const roboAdvisorIcon = fixture.debugElement.query(By.css('.chatbot-button'));
@@ -143,7 +149,7 @@ describe('HomeComponent', () => {
   })
 
   it('should render robo advisor component if client preferences accept advisor t&c is set to true', () => {
-    testClientPreferences.acceptAdvisor = true;
+    testClientPreferences.acceptAdvisor = 'true';
     clientPreferencesMockService.getClientPreferences.and.returnValue(of(testClientPreferences));
     fixture.detectChanges()
     const roboAdvisorIcon = fixture.debugElement.query(By.css('.chatbot-button'));
@@ -151,10 +157,11 @@ describe('HomeComponent', () => {
   })
 
   it('should open a dialog on clicking robo advisor icon', () => {
-    testClientPreferences.acceptAdvisor = true;
+    testClientPreferences.acceptAdvisor = 'true';
     clientPreferencesMockService.getClientPreferences.and.returnValue(of(testClientPreferences));
     fixture.detectChanges()
     //Triggering the clicking of the chatbot icon
+    //console.log("Client Preferences: ",component.clientPreferencesData?.acceptAdvisor)
     const roboAdvisorIcon = fixture.debugElement.query(By.css('.chatbot-button'));
     roboAdvisorIcon.triggerEventHandler('click', null);
     fixture.detectChanges();
@@ -163,5 +170,12 @@ describe('HomeComponent', () => {
       width: '80%',
     });
   });
+
+  it('should call respective services clicking logout', () => {
+    component.logout()
+    expect(mockRemoveClientProfileSpy).toHaveBeenCalled();
+    expect(mockRemoveLivePricesSpy).toHaveBeenCalled();
+    //expect(routerMock.navigateByUrl).toHaveBeenCalledWith('/');
+  })
 
 });

@@ -42,12 +42,15 @@ describe('BuyComponent', () => {
   let component: BuyComponent;
   let fixture: ComponentFixture<BuyComponent>;
 
-  let priceMockService = jasmine.createSpyObj('PriceService', ['getPrices'])
-  let getSpy = priceMockService.getPrices.and.returnValue(of(mockPrices))
+  let priceMockService:any; 
+  let getLivePricesSpy:any; 
+  
   let dialogMock: jasmine.SpyObj<MatDialog>;
 
   beforeEach(async () => {
     dialogMock = jasmine.createSpyObj('MatDialog', ['open']);
+    priceMockService = jasmine.createSpyObj('PriceService', ['getLivePrices'])
+    getLivePricesSpy = priceMockService.getLivePrices.and.returnValue(of(mockPrices))
 
     await TestBed.configureTestingModule({
       declarations: [BuyComponent],
@@ -75,8 +78,8 @@ describe('BuyComponent', () => {
   });
 
   it('should load prices from the service and assign to the component', () => {
-    priceMockService.getPrices.and.returnValue(of(mockPrices));
     component.loadAllPrices();
+    expect(getLivePricesSpy).toHaveBeenCalled()
     expect(component.prices).toEqual(mockPrices);
   });
 

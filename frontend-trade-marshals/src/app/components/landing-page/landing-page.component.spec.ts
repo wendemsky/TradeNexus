@@ -29,7 +29,6 @@ const testClient: Client = {
   "isAdmin": true
 }
 
-
 const testClientProfile: ClientProfile =
 {
   "client": {
@@ -67,7 +66,7 @@ describe('LandingPageComponent', () => {
   beforeEach(async () => {
 
     loginMockService = jasmine.createSpyObj('LoginService', ['loginClient']);
-    mockGetClientSpy = loginMockService.getValidClientDetails.and.returnValue(of(testClientProfile));
+    mockGetClientSpy = loginMockService.loginClient.and.returnValue(of(testClientProfile));
 
     clientProfileMockService = jasmine.createSpyObj('ClientProfileService', ['setClientProfile']);
     mockClientProfileSetSpy = clientProfileMockService.setClientProfile.and.callFake((param: any) => { return of(param) })
