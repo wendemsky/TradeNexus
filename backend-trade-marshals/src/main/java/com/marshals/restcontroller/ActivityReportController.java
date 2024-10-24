@@ -2,6 +2,7 @@ package com.marshals.restcontroller;
 
 import com.marshals.business.Holding;
 import com.marshals.business.TradeHistory;
+import com.marshals.business.TradePL;
 import com.marshals.business.services.ActivityReportService;
 import com.marshals.integration.DatabaseException;
 
@@ -82,9 +83,9 @@ public class ActivityReportController {
 
     // Generate P&L report
     @GetMapping(value = "/pl/{clientId}" , produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Map<String, BigDecimal>> generatePLReport(@PathVariable String clientId) {
+    public ResponseEntity<List<TradePL>> generatePLReport(@PathVariable String clientId) {
         try {
-            Map<String, BigDecimal> profitLossMap = activityReportService.generatePLReport(clientId);
+            List<TradePL> profitLossMap = activityReportService.generatePLReport(clientId);
             if(profitLossMap == null || profitLossMap.isEmpty()) {
             	throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Client has no holdings for pl report");
             }

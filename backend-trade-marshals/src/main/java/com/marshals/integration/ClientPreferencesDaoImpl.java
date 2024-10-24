@@ -22,7 +22,7 @@ public class ClientPreferencesDaoImpl implements ClientPreferencesDao{
 	public ClientPreferences getClientPreferences(String clientId) {
 		ClientPreferences preferences = clientMapper.getClientPreferences(clientId);
 		if(preferences == null) {
-			throw new DatabaseException("Client id does not exist in Database");
+			throw new DatabaseException("Please enter your client preferences");
 		}
 		return preferences;
 	}

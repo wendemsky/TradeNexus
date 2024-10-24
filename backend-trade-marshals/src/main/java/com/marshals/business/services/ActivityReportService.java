@@ -1,6 +1,7 @@
 package com.marshals.business.services;
  
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.marshals.business.Holding;
 import com.marshals.business.Trade;
 import com.marshals.business.TradeHistory;
+import com.marshals.business.TradePL;
 import com.marshals.integration.ClientActivityReportDao;
 import com.marshals.integration.DatabaseException;
  
@@ -63,18 +65,19 @@ public class ActivityReportService {
 	}
 	
 	//Generate Report with Clients P&L Data
-	public Map<String, BigDecimal> generatePLReport(String clientId) {
+	public List<TradePL> generatePLReport(String clientId) {
 		//Make use of Trade History
 		  if(clientId == null) {
 			 throw new NullPointerException("Client Id should not be null to calculate Profit Loss");
 		  }
+		  
+		  List<TradePL> profitLossList = new ArrayList<TradePL>();
 		  Map<String, BigDecimal> profitLossMap = new HashMap<>();
 	      Map<String, BigDecimal> buyPositions = new HashMap<>();
 	      TradeHistory tradeHistory = tradeService.getClientTradeHistory(clientId);
  
 	      for (Trade trade : tradeHistory.getTrades()) {
 	            if (!trade.getClientId().equals(clientId)) continue;
- 
 	            String instrumentId = trade.getInstrumentId();
 	            BigDecimal tradeValue = trade.getCashValue();
 	            if (trade.getDirection().equals("B")) {
@@ -90,6 +93,11 @@ public class ActivityReportService {
 	                buyPositions.remove(instrumentId);
 	            }
 	        }
-	        return profitLossMap;
+	      for(Map.Entry<String, BigDecimal> entry: profitLossMap.entrySet()) {
+	    	  TradePL tradePl = new TradePL(entry.getKey(), entry.getValue());
+	    	  profitLossList.add(tradePl);
+	      }
+	      
+	      return profitLossList;
 	    }
 	}

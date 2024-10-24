@@ -20,6 +20,7 @@ import com.marshals.business.Holding;
 import com.marshals.business.Order;
 import com.marshals.business.Trade;
 import com.marshals.business.TradeHistory;
+import com.marshals.business.TradePL;
 import com.marshals.integration.ClientActivityReportDao;
 import com.marshals.integration.DatabaseException;
  
@@ -136,7 +137,7 @@ class ActivityReportServicePOJOUnitTest {
 		String clientId = "541107416";
 		Mockito.when(mockTradeService.getClientTradeHistory(clientId))
 		.thenReturn(mockTradeHistory);
-		Map<String, BigDecimal> expected = service.generatePLReport(clientId);
+		List<TradePL> expected = service.generatePLReport(clientId);
 		Mockito.verify(mockTradeService).getClientTradeHistory(clientId);
 		assertNotNull(expected);
 	}

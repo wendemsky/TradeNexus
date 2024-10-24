@@ -18,6 +18,7 @@ export class ClientPreferencesComponent {
   clientPreferencesData!: any
   isClientFormFilled: boolean = false
   acceptAdvisor: boolean = false
+  activeRoute: any ;
 
   snackBarConfig = new MatSnackBarConfig();
 
@@ -66,13 +67,17 @@ export class ClientPreferencesComponent {
   })
 
   constructor(private clientPreferencesService: ClientPreferencesService, private clientProfileService: ClientProfileService,
-    private router: Router, private snackBar: MatSnackBar) { }
+    private router: Router, public activatedRoute: ActivatedRoute, private snackBar: MatSnackBar) {
+        this.activeRoute = this.activatedRoute.snapshot
+    }
 
   ngOnInit() {
     this.snackBarConfig.duration = 3000;
     this.snackBarConfig.panelClass = ['form-submit-snackbar'];
+    console.log("Component:", this.activeRoute.component.name)
     this.clientProfileService.getClientProfile().subscribe({
       next: (profile) => {
+        console.log("Component:",this.activeRoute.component.name)
         console.log('Logged In Client Profile Data: ', profile);
         if(profile && profile.client?.clientId){
           this.clientProfileData = profile
@@ -80,7 +85,7 @@ export class ClientPreferencesComponent {
         }
       },
       error: (e) => {
-        console.log('Registering Client error: ', e)
+        console.log('Registering Client Preferences error: ', e)
         this.snackBar.open(e, '', this.snackBarConfig)
       }
     })
@@ -116,6 +121,10 @@ export class ClientPreferencesComponent {
           this.clientPreferencesData = null
           this.snackBar.open("Unexpected error retrieving client preferences", '', this.snackBarConfig)
         }
+      },
+      error: (e: any) => {
+        console.log('Getting client preferences error: ', e)
+        this.snackBar.open(e, '', this.snackBarConfig)
       }
     })
   }

@@ -1,6 +1,7 @@
 import { Component, inject, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { delay } from 'rxjs';
 import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
 import { Instrument } from 'src/app/models/Trade/instrument';
@@ -86,10 +87,10 @@ export class TradingFormComponent implements OnInit{
 
   executeTrade(order: Order) {
     console.log('Order: ', order);
+    
     this.tradeService.executeTrade(order)
       .subscribe({
         next:   (data) => {
-          console.log('Trade Executed: ', this.trade);
           // Populate trade history, portfolio etc.
           if(data === null || Object.keys(data).length == 0) {
             console.error('Trade Execution Error');

@@ -2,6 +2,8 @@ package com.marshals.restcontroller;
 
 import com.marshals.business.Holding;
 import com.marshals.business.TradeHistory;
+import com.marshals.business.TradePL;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -114,11 +116,11 @@ class ActivityReportControllerE2ETest {
     @Test
     public void testGeneratePLReport_ShouldReturnProfitLossMap() {
         String clientId = "541107416";
-        ResponseEntity<Map> response = 
-            restTemplate.getForEntity("/activity-report/pl/" + clientId, Map.class);
+        ResponseEntity<TradePL[]> response = 
+            restTemplate.getForEntity("/activity-report/pl/" + clientId, TradePL[].class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        Map<String, BigDecimal> profitLossMap = response.getBody();
+        TradePL[] profitLossMap = response.getBody();
         assertNotNull(profitLossMap);
     }
 

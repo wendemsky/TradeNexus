@@ -49,10 +49,6 @@ export class HomeComponent implements OnInit {
             else {
               this.clientPreferencesData = null
             }
-          },
-          error: (err) => {
-            console.log(err)
-            this.snackBar.open(err, '', this.snackBarConfig)
           }
         })
     })

@@ -3,6 +3,7 @@ package com.marshals.restcontroller;
 import com.marshals.business.Holding;
 import com.marshals.business.Trade;
 import com.marshals.business.TradeHistory;
+import com.marshals.business.TradePL;
 import com.marshals.business.services.ActivityReportService;
 import com.marshals.integration.DatabaseException;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -118,7 +120,9 @@ class ActivityReportControllerTest {
     @Test
     void testGeneratePLReport_Success() throws Exception {
         String clientId = "test-client";
-        Map<String, BigDecimal> profitLossMap = Map.of("Profit", BigDecimal.valueOf(100));
+        List<TradePL> profitLossMap = new ArrayList<TradePL>(List.of(
+        			new TradePL("T67890", new BigDecimal("-10337.5"))
+        		));
         
         when(activityReportService.generatePLReport(clientId)).thenReturn(profitLossMap);
         
@@ -132,7 +136,7 @@ class ActivityReportControllerTest {
     void testGeneratePLReport_NoContent() throws Exception {
         String clientId = "test-client";
         
-        when(activityReportService.generatePLReport(clientId)).thenReturn(Collections.emptyMap());
+        when(activityReportService.generatePLReport(clientId)).thenReturn(new ArrayList<TradePL>());
        
         assertThrows(ResponseStatusException.class, ()-> {
         	activityReportController.generatePLReport(clientId);

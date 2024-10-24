@@ -20,6 +20,15 @@ export class TradingHistoryComponent  implements OnInit{
   private _snackBar = inject(MatSnackBar);
 
   public columnDefs: ColDef[] = [{ 
+      headerName: "Instrument ID", 
+      field: "instrumentId"
+    },{ 
+      headerName: "Quantity", 
+      field: "quantity",
+    },{ 
+      headerName: "Execution Price", 
+      field: "executionPrice",
+    },{ 
       headerName: "Executed At", 
       field: "executedAt",
       valueFormatter: params => {
@@ -45,15 +54,6 @@ export class TradingHistoryComponent  implements OnInit{
         }
         return '';
       }
-    },{ 
-      headerName: "Instrument ID", 
-      field: "instrumentId"
-    },{ 
-      headerName: "Quantity", 
-      field: "quantity",
-    },{ 
-      headerName: "Execution Price", 
-      field: "executionPrice",
     },{ 
       headerName: "Direction", 
       field: "direction",

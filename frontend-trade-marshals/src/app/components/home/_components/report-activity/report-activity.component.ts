@@ -23,9 +23,12 @@ export class ReportActivityComponent implements OnInit {
 
   clientId: string | undefined;
 
-  clientProfileData!: ClientProfile | null;
+  clientProfileData!: any;
 
+  yourReportTypeSelected: string = ""
+  otherReportTypeSelected: string = ""
   portfolioData?: ClientPortfolio;
+  profitLossData: any [] = [];
   transformedData: any[] = [];
   public tradeHistoryData: Trade[] = [];
   private _snackBar = inject(MatSnackBar);
@@ -73,6 +76,22 @@ export class ReportActivityComponent implements OnInit {
     field: "cashValue",
   }]
 
+  public plReportColumnDefs: ColDef[] = [
+    {
+      headerName: "Instrument ID",
+      field: "instrumentId"
+    }, {
+      headerName: "Instrument Description",
+      field: "instrumentDesc",
+    }, {
+      headerName: "Category",
+      field: "categoryId",
+    }, {
+      headerName: "Profit / Loss",
+      field: "profitLossValue",
+    },
+  ]
+
   public defaultColDef: ColDef = {
     flex: 1,
     resizable: true,
@@ -102,7 +121,7 @@ export class ReportActivityComponent implements OnInit {
 
   report_types = [
     { value: "Holdings Report", name: "Holdings Report" }, //Get clients holdings
-    // {value:"P&L Report",name: "P&L Report"}, //Get Clients P&L
+    {value:"P&L Report",name: "P&L Report"}, //Get Clients P&L
     { value: "Trade Report", name: "Trade Report" }, //Get Clients trading history
   ]
 
@@ -129,6 +148,7 @@ export class ReportActivityComponent implements OnInit {
       console.log('client ID: ', this.clientProfileData?.client?.clientId);
       this.clientProfileData?.client?.clientId !== undefined ? this.clientId = this.clientProfileData?.client?.clientId : console.error('Client ID is of type undefined');
       console.log(this.clientId);
+      console.log(this.clientProfileData.client?.isAdmin);
     })
   }
 
@@ -147,7 +167,8 @@ export class ReportActivityComponent implements OnInit {
   onSubmitYourReportForm() {
     console.log("Your Report type -> " + JSON.stringify(this.yourReport.value));
     console.log(this.clientId);
-    if (this.yourReport.value.reportType == "Holdings Report") {
+    this.yourReportTypeSelected = this.yourReport.value.reportType
+    if (this.yourReportTypeSelected == "Holdings Report") {
       // this.clientId ? this.clientPortfolioService.getClientPortfolio(this.clientId)
       this.clientId ? this.clientActivityReportService.getClientHoldingsReport(this.clientId)
         .subscribe({
@@ -163,7 +184,7 @@ export class ReportActivityComponent implements OnInit {
         }) : console.error('Client ID is undefined');
     }
 
-    if (this.yourReport.value.reportType == "Trade Report") {
+    if (this.yourReportTypeSelected == "Trade Report") {
       // this.clientId !== undefined ? this.tradeHistoryService.getTrades(this.clientId)
       this.clientId !== undefined ? this.clientActivityReportService.getClientTradeReport(this.clientId)
         .subscribe({
@@ -181,28 +202,25 @@ export class ReportActivityComponent implements OnInit {
     }
     // P&L report
 
-    if (this.yourReport.value.reportType == "P&L Report") {
-      // this.clientId ? this.clientPortfolioService.getClientPortfolio(this.clientId)
+    if (this.yourReportTypeSelected == "P&L Report") {
       this.clientId ? this.clientActivityReportService.getClientProfitLossReport(this.clientId)
         .subscribe({
           next: (data) => {
-            console.log('P&L Data from service: ', data);
-            this.transformData(data);
-            this.portfolioData = data;
-            console.log('P&L Data after transformation: ', this.portfolioData);
+            this.transformDataForPLReport(data);
           },
           error: (e) => {
-            console.log('Failed to load client portfolio data: ', e);
+            console.log('Failed to load profit loss data: ', e);
           }
         }) : console.error('Client ID is undefined');
     }
 
   }
-
+  
   //On Submitting other clients report
   onSubmitOthersReportForm() {
     console.log(`Report type of Client ${this.othersReport.value.clientId} is ${this.othersReport.value.reportType}`);
-    if (this.othersReport.value.reportType == "Holdings Report") {
+    this.otherReportTypeSelected = this.othersReport.value.reportType
+    if (this.otherReportTypeSelected == "Holdings Report") {
       // this.othersReport.value.clientId ? this.clientPortfolioService.getClientPortfolio(this.othersReport.value.clientId)
       console.log(this.othersReport.value.clientId);
       this.othersReport.value.clientId ? this.clientActivityReportService.getClientHoldingsReport(this.othersReport.value.clientId)
@@ -219,14 +237,13 @@ export class ReportActivityComponent implements OnInit {
         }) : console.error('Client ID is undefined');
     }
 
-    if (this.othersReport.value.reportType == "Trade Report") {
+    if (this.otherReportTypeSelected == "Trade Report") {
       // this.othersReport.value.clientId !== undefined ? this.tradeHistoryService.getTrades(this.othersReport.value.clientId)
       console.log(this.othersReport.value.clientId);
       this.othersReport.value.clientId !== undefined ? this.clientActivityReportService.getClientTradeReport(this.othersReport.value.clientId)
         .subscribe({
           next: (data: any) => {
             this.tradeHistoryData = data.trades;
-            this.tradeHistoryData = this.tradeHistoryData.reverse()
           },
           error: (e) => {
             console.log('Error in loading Trade History: ', e);
@@ -235,6 +252,20 @@ export class ReportActivityComponent implements OnInit {
             })
           }
         }) : console.error('Client ID is undefined.')
+    }
+
+    if (this.otherReportTypeSelected == "P&L Report") {
+      // this.othersReport.value.clientId !== undefined ? this.tradeHistoryService.getTrades(this.othersReport.value.clientId)
+      console.log(this.othersReport.value.clientId);
+      this.othersReport.value.clientId !== undefined ? this.clientActivityReportService.getClientProfitLossReport(this.othersReport.value.clientId)
+        .subscribe({
+          next: (data) => {
+            this.transformDataForPLReport(data);
+          },
+          error: (e) => {
+            console.log('Failed to load profit loss data: ', e);
+          }
+        }) : console.error('Client ID is undefined');
     }
   }
 
@@ -259,5 +290,18 @@ export class ReportActivityComponent implements OnInit {
         avgPrice: holding.avgPrice
       }
     });
+  }
+
+  transformDataForPLReport(tradeProfitLoss: any) {
+    let prices: Price[] = []
+    this.priceService.getLivePrices()
+      .subscribe(data => prices = data);
+    this.profitLossData = tradeProfitLoss.map((data: any) => {
+      let price = prices.find(price => price.instrument.instrumentId === data.instrumentId);
+      data.instrumentDesc = price?.instrument.instrumentDescription
+      data.categoryId = price?.instrument.categoryId
+      return data
+    })
+    console.log('P&L Data after transformation: ', this.profitLossData);
   }
 }

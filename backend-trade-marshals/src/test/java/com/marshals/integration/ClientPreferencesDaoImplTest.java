@@ -95,7 +95,7 @@ class ClientPreferencesDaoImplTest {
 		Exception e = assertThrows(DatabaseException.class, () -> {
 			dao.getClientPreferences(id);
 		});
-		assertEquals(e.getMessage(), "Client id does not exist in Database");
+		assertEquals(e.getMessage(), "Please enter your client preferences");
 	}
 
 	/* TESTS FOR ADDING CLIENT PREFERENCES */
