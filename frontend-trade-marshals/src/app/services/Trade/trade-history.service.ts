@@ -4,6 +4,7 @@ import { Trade } from '../../models/Trade/trade';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Order } from '../../models/Trade/order';
+import { DatePipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +15,19 @@ export class TradeHistoryService {
   private _snackBar = inject(MatSnackBar);
   url = 'http://localhost:8080/trade/trade-history/';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private datePipe: DatePipe) { }
 
   getTrades(clientId: string): Observable<any[]> {
     // return of(this.trades);
     return this.httpClient.get<Trade[]>(this.url + clientId).pipe(
-      tap(trades => { console.log(trades)}),
+      tap(trades => { 
+        console.log(trades);
+        // trades.forEach(trade => {
+        //   if (trade.executedAt) {
+            
+        //   }
+        // });
+      }),
       catchError(this.handleError)
     )
   }

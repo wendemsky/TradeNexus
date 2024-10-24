@@ -20,6 +20,32 @@ export class TradingHistoryComponent  implements OnInit{
   private _snackBar = inject(MatSnackBar);
 
   public columnDefs: ColDef[] = [{ 
+      headerName: "Executed At", 
+      field: "executedAt",
+      valueFormatter: params => {
+        if (Array.isArray(params.value)) {
+          const dateParts = params.value;
+          const date = new Date(
+            dateParts[0],   // year
+            dateParts[1] - 1, // month (0-based)
+            dateParts[2],   // day
+            dateParts[3],   // hour
+            dateParts[4],   // minute
+            dateParts[5]    // second
+          );
+          const options: Intl.DateTimeFormatOptions = { 
+            year: 'numeric', 
+            month: '2-digit', 
+            day: '2-digit', 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: true 
+        };
+          return date.toLocaleString('en-US', options);
+        }
+        return '';
+      }
+    },{ 
       headerName: "Instrument ID", 
       field: "instrumentId"
     },{ 

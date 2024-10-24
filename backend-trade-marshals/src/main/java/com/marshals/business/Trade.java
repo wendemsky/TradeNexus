@@ -1,6 +1,7 @@
 package com.marshals.business;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Trade {
@@ -12,10 +13,12 @@ public class Trade {
     private Order order;
     private String tradeId;
     private BigDecimal cashValue;
+    private LocalDateTime executedAt;
     
     public Trade() {}
 
-    public Trade(Order order, BigDecimal executionPrice, String tradeId, BigDecimal cashValue) {
+    public Trade(Order order, BigDecimal executionPrice, String tradeId, 
+    		BigDecimal cashValue) {
         if (executionPrice == null || executionPrice.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("executionPrice must be greater than 0");
         }
@@ -34,6 +37,29 @@ public class Trade {
         this.order = order;
         this.tradeId = tradeId;
         this.cashValue = cashValue;
+    }
+    
+    public Trade(Order order, BigDecimal executionPrice, String tradeId, 
+    		BigDecimal cashValue, LocalDateTime executedAt) {
+        if (executionPrice == null || executionPrice.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("executionPrice must be greater than 0");
+        }
+        if (tradeId == null || tradeId.isEmpty()) {
+            throw new IllegalArgumentException("tradeId cannot be null or empty");
+        }
+        if (cashValue == null || cashValue.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("cashValue cannot be null and must be non-negative");
+        }
+        
+        this.instrumentId = order.getInstrumentId();
+        this.quantity = order.getQuantity();
+        this.executionPrice = executionPrice;
+        this.direction = order.getDirection();
+        this.clientId = order.getClientId();
+        this.order = order;
+        this.tradeId = tradeId;
+        this.cashValue = cashValue;
+        this.executedAt = executedAt;
     }
 
     public String getInstrumentId() {
@@ -68,6 +94,10 @@ public class Trade {
         return cashValue;
     }
     
+    public LocalDateTime getExecutedAt() {
+    	return executedAt;
+    }
+    
 	public void setInstrumentId(String instrumentId) {
 		this.instrumentId = instrumentId;
 	}
@@ -99,10 +129,15 @@ public class Trade {
 	public void setCashValue(BigDecimal cashValue) {
 		this.cashValue = cashValue;
 	}
+	
+	public void setExecutedAt(LocalDateTime executedAt) {
+		this.executedAt = executedAt;
+	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(cashValue, clientId, direction, executionPrice, instrumentId, order, quantity, tradeId);
+		return Objects.hash(cashValue, clientId, direction, executedAt, executionPrice, instrumentId, order, quantity,
+				tradeId);
 	}
 
 	@Override
@@ -115,7 +150,8 @@ public class Trade {
 			return false;
 		Trade other = (Trade) obj;
 		return Objects.equals(cashValue, other.cashValue) && Objects.equals(clientId, other.clientId)
-				&& Objects.equals(direction, other.direction) && Objects.equals(executionPrice, other.executionPrice)
+				&& Objects.equals(direction, other.direction) && Objects.equals(executedAt, other.executedAt)
+				&& Objects.equals(executionPrice, other.executionPrice)
 				&& Objects.equals(instrumentId, other.instrumentId) && Objects.equals(order, other.order)
 				&& Objects.equals(quantity, other.quantity) && Objects.equals(tradeId, other.tradeId);
 	}
@@ -124,7 +160,9 @@ public class Trade {
 	public String toString() {
 		return "Trade [instrumentId=" + instrumentId + ", quantity=" + quantity + ", executionPrice=" + executionPrice
 				+ ", direction=" + direction + ", clientId=" + clientId + ", order=" + order + ", tradeId=" + tradeId
-				+ ", cashValue=" + cashValue + "]";
+				+ ", cashValue=" + cashValue + ", executedAt=" + executedAt + "]";
 	}
+
+	
     
 }

@@ -12,6 +12,18 @@
 		<result property="direction" column="DIRECTION" />
 		<result property="clientId" column="CLIENT_ID" />
 	</resultMap>
+	
+	<resultMap type="Trade" id="TradeHistoryMap">
+		<id property="tradeId" column="TRADE_ID" />
+		<result property="executionPrice" column="EXECUTION_PRICE" />
+		<result property="cashValue" column="CASH_VALUE" />
+		<result property="instrumentId" column="INSTRUMENT_ID" />
+		<result property="quantity" column="QUANTITY" />
+		<result property="direction" column="DIRECTION" />
+		<result property="clientId" column="CLIENT_ID" />
+		<result property="executedAt" column="EXECUTED_AT"/>
+	</resultMap>
+	
 	<resultMap type="Order" id="OrderMap">
 		<id property="orderId" column="ORDER_ID" />
 		<result property="instrumentId" column="INSTRUMENT_ID" />
@@ -25,12 +37,17 @@
 	<resultMap id="TradeWithOrderMap" extends="TradeMap" type="Trade">
 		<association property="order" resultMap="OrderMap" />
 	</resultMap>
+	
+	<resultMap id="TradeHistoryWithOrderMap" extends="TradeHistoryMap" type="Trade">
+		<association property="order" resultMap="OrderMap" />
+	</resultMap>
 
-	<select id="getClientTradeHistory" resultMap="TradeWithOrderMap">
+	<select id="getClientTradeHistory" resultMap="TradeHistoryWithOrderMap">
 		SELECT
 		t.trade_id,
 		t.cash_value,
 		t.execution_price,
+		t.executed_at,
 		o.client_id,
 		o.instrument_id,
 		o.quantity,

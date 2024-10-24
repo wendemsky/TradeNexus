@@ -23,6 +23,7 @@ import com.marshals.business.Trade;
 import com.marshals.business.TradeHistory;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +44,7 @@ class TradeControllerE2ETest {
 //	Test client trade-history details
 	List<Trade> tradeObjectList = List.of(
 			new Trade(new Order("N123456", 20, new BigDecimal("1.03375"), "B", "541107416", "ORDER004", 4),
-					new BigDecimal("1.035"), "TRADE004", new BigDecimal("20.7")),
+					new BigDecimal("1.035"), "TRADE004", new BigDecimal("20.7"), LocalDateTime.parse("2024-10-16T12:12:44")),
 			new Trade(new Order("T67894", 50, new BigDecimal("95.92"), "B", "541107416", "ORDER003", 3),
 					new BigDecimal("96"), "TRADE003", new BigDecimal("4800")),
 			new Trade(new Order("T67890", 10000, new BigDecimal("1.03375"), "S", "541107416", "ORDER002", 4),
@@ -69,6 +70,7 @@ class TradeControllerE2ETest {
 		assertTrue(expected.getClientId().equals(clientTradeHistoryList.getClientId()));
 
 //		verify the first trade out of fetched trades
+		assertEquals(expected.getTrades().get(0), clientTradeHistoryList.getTrades().get(0));
 		assertTrue(expected.getTrades().get(0).equals(clientTradeHistoryList.getTrades().get(0)));
 	}
 	
