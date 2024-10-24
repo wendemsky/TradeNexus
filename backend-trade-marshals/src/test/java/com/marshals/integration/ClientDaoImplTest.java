@@ -6,23 +6,21 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
 
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTable;
 import static org.springframework.test.jdbc.JdbcTestUtils.countRowsInTableWhere;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import com.marshals.models.Client;
-import com.marshals.models.ClientIdentification;
-import com.marshals.models.ClientPortfolio;
+import org.springframework.transaction.annotation.Transactional;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration("classpath:beans.xml")
+import com.marshals.business.Client;
+import com.marshals.business.ClientIdentification;
+import com.marshals.business.ClientPortfolio;
+
+@SpringBootTest
 @Transactional
 class ClientDaoImplTest {
 	

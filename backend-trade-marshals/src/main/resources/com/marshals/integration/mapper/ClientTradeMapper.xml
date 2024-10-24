@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.marshals.integration.mapper.ClientTradeMapper">
+	
 	<resultMap type="Trade" id="TradeMap">
 		<id property="tradeId" column="TRADE_ID" />
 		<result property="executionPrice" column="EXECUTION_PRICE" />
@@ -11,6 +12,18 @@
 		<result property="direction" column="DIRECTION" />
 		<result property="clientId" column="CLIENT_ID" />
 	</resultMap>
+	
+	<resultMap type="Trade" id="TradeHistoryMap">
+		<id property="tradeId" column="TRADE_ID" />
+		<result property="executionPrice" column="EXECUTION_PRICE" />
+		<result property="cashValue" column="CASH_VALUE" />
+		<result property="instrumentId" column="INSTRUMENT_ID" />
+		<result property="quantity" column="QUANTITY" />
+		<result property="direction" column="DIRECTION" />
+		<result property="clientId" column="CLIENT_ID" />
+		<result property="executedAt" column="EXECUTED_AT"/>
+	</resultMap>
+	
 	<resultMap type="Order" id="OrderMap">
 		<id property="orderId" column="ORDER_ID" />
 		<result property="instrumentId" column="INSTRUMENT_ID" />
@@ -24,12 +37,17 @@
 	<resultMap id="TradeWithOrderMap" extends="TradeMap" type="Trade">
 		<association property="order" resultMap="OrderMap" />
 	</resultMap>
+	
+	<resultMap id="TradeHistoryWithOrderMap" extends="TradeHistoryMap" type="Trade">
+		<association property="order" resultMap="OrderMap" />
+	</resultMap>
 
-	<select id="getClientTradeHistory" resultMap="TradeWithOrderMap">
+	<select id="getClientTradeHistory" resultMap="TradeHistoryWithOrderMap">
 		SELECT
 		t.trade_id,
 		t.cash_value,
 		t.execution_price,
+		t.executed_at,
 		o.client_id,
 		o.instrument_id,
 		o.quantity,
@@ -60,64 +78,5 @@
 		VALUES(#{instrumentId}, #{quantity}, #{targetPrice}, #{direction},
 		#{clientId}, #{orderId}, #{token})
 	</insert>
-
-	<resultMap id="holdingMap" type="Holding">
-		<id property="instrumentId" column="instrument_id" />
-		<result property="quantity" column="quantity" />
-		<result property="avgPrice" column="avg_price" />
-	</resultMap>
-
-	<resultMap id="clientPortfolioResultMap" type="ClientPortfolio">
-		<id property="clientId" column="client_id" />
-		<result property="currBalance" column="curr_balance" />
-	</resultMap>
-
-	<resultMap id="clientPortfolioWithHoldings"
-		extends="clientPortfolioResultMap" type="ClientPortfolio">
-		<collection property="holdings" ofType="Holding" resultMap="holdingMap"
-			column="instrument_id" />
-	</resultMap>
-
-	<select id="getClientPortfolio" resultMap="clientPortfolioWithHoldings">
-		SELECT
-		c.client_id,
-		c.curr_balance,
-		h.instrument_id,
-		h.quantity,
-		h.avg_price
-		FROM
-		client c
-		LEFT JOIN
-		holdings h ON c.client_id = h.client_id
-		WHERE
-		c.client_id = #{clientId}
-		ORDER BY
-		c.client_id, h.instrument_id
-	</select>
-
-
-	<update id="updateClientBalance">
-		UPDATE client
-		SET curr_balance = #{currBalance}
-		WHERE client_id = #{clientId}
-	</update>
-
-	<insert id="addClientHoldings">
-		INSERT INTO holdings (client_id, instrument_id, quantity, avg_price)
-		VALUES
-		(
-		#{clientId},
-		#{holding.instrumentId},
-		#{holding.quantity},
-		#{holding.avgPrice}
-		)
-	</insert>
-
-	<update id="updateClientHoldings">
-		UPDATE holdings
-		SET quantity = #{holding.quantity}, avg_price = #{holding.avgPrice}
-		WHERE client_id = #{clientId} AND instrument_id =
-		#{holding.instrumentId}
-	</update>
 
 </mapper>

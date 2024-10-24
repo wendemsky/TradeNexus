@@ -147,7 +147,7 @@ describe('ClientPreferencesComponent', () => {
     
     component.savePreferences();
     tick();
-    expect(service.updateClientPreferences).toHaveBeenCalledWith('15b4', obj);
+    expect(service.updateClientPreferences).toHaveBeenCalledWith(obj);
     flush();
   })))
   

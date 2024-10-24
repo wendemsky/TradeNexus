@@ -1,7 +1,10 @@
 package com.marshals.integration.mapper;
 
-import com.marshals.models.ClientPreferences;
+import org.apache.ibatis.annotations.Mapper;
 
+import com.marshals.business.ClientPreferences;
+
+@Mapper
 public interface ClientPreferencesMapper {
 
 	// Client Preferences

@@ -1,40 +1,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.marshals</groupId>
 	<artifactId>BackendTradeMarshals</artifactId>
-	<version>1.0.0</version>
 	<packaging>jar</packaging>
+	<version>1.0.0</version>
 
 	<name>BackendTradeMarshals</name>
-	
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.6.7</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	
+
 	<properties>
+		<!-- Generic properties -->
 		<java.version>17</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<spring-framework.version>5.3.19</spring-framework.version>
+		<junit.jupiter.version>5.8.2</junit.jupiter.version>
 
-		<junit-jupiter.version>5.8.2</junit-jupiter.version>
-		<slf4j.version>1.7.36</slf4j.version>
-		<mybatis.version>3.5.9</mybatis.version>
-		<oracle.ojdbc.version>21.5.0.0</oracle.ojdbc.version>
-		<mybatis-spring.version>2.0.7</mybatis-spring.version>
-		<hsqldb.version>2.6.1</hsqldb.version>
-		<log4j-bom.version>2.17.2</log4j-bom.version>
-		<maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-		<maven-javadoc-plugin.version>3.4.0</maven-javadoc-plugin.version>
+		<mybatis.springboot.version>2.2.2</mybatis.springboot.version>
 	</properties>
-
 
 	<dependencies>
 		<!-- JUnit -->
@@ -50,56 +41,23 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Log4j2 -->
+		<!-- Spring and Transactions -->
 		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
+
 		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-params</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20220320</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.4.11</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis</artifactId>
-			<version>${mybatis.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-junit-jupiter</artifactId>
-			<version>5.7.0</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Oracle driver -->
 		<dependency>
-			<groupId>com.oracle.database.jdbc</groupId>
-			<artifactId>ojdbc11</artifactId>
-			<version>${oracle.ojdbc.version}</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-
-		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -120,37 +78,69 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 		</dependency>
+
+		<!-- Hsqldb In-memory Database Driver -->
 		<dependency>
-			<groupId>commons-dbutils</groupId>
-			<artifactId>commons-dbutils</artifactId>
-			<version>1.8.1</version>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 
+		<!-- Oracle Database Driver -->
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-pool2</artifactId>
-			<version>2.12.0</version>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc11</artifactId>
 		</dependency>
 
+		<!-- MyBatis -->
 		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis-spring</artifactId>
-			<version>${mybatis-spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-dbcp2</artifactId>
-			<version>2.11.0</version>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>${mybatis.springboot.version}</version>
 		</dependency>
 
-		<!-- Spring Dev Tool - Automatic restart of spring server -->
+		<!-- Spring Boot Actuator: STS Properties tab will list REST controller
+		request mappings -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<!-- JAXB defines the interface for converting JavaBeans to/from XML -->
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+		</dependency>
+
+		<!-- Jackson defines a JAXB implementation -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+		</dependency>
+
+		<!-- Spring Boot Dev Tools: restarts application on recompile (but it
+		can be annoying) -->
+		<!--
+		<dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-devtools</artifactId>
+	        <optional>true</optional>
+	    </dependency>
+		-->
+
+		<!-- Autogenerates a Swagger UI page with REST API documentation -->
+		<!-- Available @ http://host:port/swagger-ui.html-->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.6.12</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
 		</dependency>
-
-
 	</dependencies>
 
 	<!-- This section lets us add Bill Of Materials (bom) style poms. These 
@@ -161,21 +151,12 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-bom</artifactId>
-				<version>${log4j-bom.version}</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-
-			<dependency>
 				<groupId>org.junit</groupId>
 				<artifactId>junit-bom</artifactId>
-				<version>${junit-jupiter.version}</version>
+				<version>${junit.jupiter.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-framework-bom</artifactId>
@@ -190,17 +171,21 @@
 		<finalName>BackendTradeMarshals</finalName>
 		<plugins>
 			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven-compiler-plugin.version}</version>
 				<configuration>
 					<release>${java.version}</release>
 				</configuration>
 			</plugin>
 
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${maven-surefire-plugin.version}</version>
 			</plugin>
 
 			<!-- Generate Javadoc for this project with the following command
@@ -210,9 +195,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>${maven-javadoc-plugin.version}</version>
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

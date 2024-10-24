@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Price } from 'src/app/models/price';
+import { Price } from 'src/app/models/Trade/price';
 import { TradingFormComponent } from '../trading-form/trading-form.component';
-import { PriceService } from 'src/app/services/price.service';
+import { PriceService } from 'src/app/services/Trade/price.service';
 
 @Component({
   selector: 'app-buy',
@@ -26,7 +26,8 @@ export class BuyComponent {
   }
 
   loadAllPrices() {
-    this.priceService.getPrices()
+    //Get prices from local storage
+    this.priceService.getLivePrices()
       .subscribe(data => this.prices = data);
   }
 

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SellComponent } from './sell.component';
-import { PriceService } from 'src/app/services/price.service';
+import { PriceService } from 'src/app/services/Trade/price.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { of, throwError } from 'rxjs';
 import { TradingFormComponent } from '../trading-form/trading-form.component';
@@ -41,12 +41,16 @@ describe('SellComponent', () => {
   let component: SellComponent;
   let fixture: ComponentFixture<SellComponent>;
 
-  let priceMockService = jasmine.createSpyObj('PriceService', ['getPrices'])
-  let getSpy = priceMockService.getPrices.and.returnValue(of(mockPrices))
+  let priceMockService:any; 
+  let getLivePricesSpy:any; 
+
   let dialogMock: jasmine.SpyObj<MatDialog>;
 
   beforeEach(async () => {
     dialogMock = jasmine.createSpyObj('MatDialog', ['open']);
+    priceMockService = jasmine.createSpyObj('PriceService', ['getLivePrices'])
+    getLivePricesSpy = priceMockService.getLivePrices.and.returnValue(of(mockPrices))
+
     await TestBed.configureTestingModule({
       declarations: [ SellComponent ],
       imports: [
@@ -75,8 +79,8 @@ describe('SellComponent', () => {
   });
 
   it('should load prices from the service and assign to the component', () => {
-    priceMockService.getPrices.and.returnValue(of(mockPrices));
     component.loadAllPrices();
+    expect(getLivePricesSpy).toHaveBeenCalled()
     expect(component.prices).toEqual(mockPrices);
   });
 

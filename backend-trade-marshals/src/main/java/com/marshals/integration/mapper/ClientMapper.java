@@ -2,12 +2,14 @@ package com.marshals.integration.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.marshals.models.Client;
-import com.marshals.models.ClientIdentification;
-import com.marshals.models.ClientPortfolio;
+import com.marshals.business.Client;
+import com.marshals.business.ClientIdentification;
+import com.marshals.business.ClientPortfolio;
 
+@Mapper
 public interface ClientMapper {
 	
 	//Client

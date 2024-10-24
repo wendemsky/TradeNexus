@@ -29,7 +29,7 @@
                     <tbody>
                         <tr *ngFor="let ID of clientProfileData?.client?.identification">
                             <td style="font-weight: bold;"> {{ID.type}} </td>
-                            <td> {{ID.value}} </td>
+                            <td> {{ maskCardNumber(ID.value)}} </td>
                         </tr>
                     </tbody>
                 </table>

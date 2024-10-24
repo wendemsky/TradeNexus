@@ -2,11 +2,10 @@ import { Component, inject, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ColDef, GridOptions, SideBarDef } from 'ag-grid-community';
 import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
-import { ClientPreferences } from 'src/app/models/Client/ClientPreferences';
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
-import { Trade } from 'src/app/models/trade';
+import { Trade } from 'src/app/models/Trade/trade';
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
-import { TradeHistoryService } from 'src/app/services/trade-history.service';
+import { TradeHistoryService } from 'src/app/services/Trade/trade-history.service';
 
 @Component({
   selector: 'app-trading-history',
@@ -29,6 +28,32 @@ export class TradingHistoryComponent  implements OnInit{
     },{ 
       headerName: "Execution Price", 
       field: "executionPrice",
+    },{ 
+      headerName: "Executed At", 
+      field: "executedAt",
+      valueFormatter: params => {
+        if (Array.isArray(params.value)) {
+          const dateParts = params.value;
+          const date = new Date(
+            dateParts[0],   // year
+            dateParts[1] - 1, // month (0-based)
+            dateParts[2],   // day
+            dateParts[3],   // hour
+            dateParts[4],   // minute
+            dateParts[5]    // second
+          );
+          const options: Intl.DateTimeFormatOptions = { 
+            year: 'numeric', 
+            month: '2-digit', 
+            day: '2-digit', 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: true 
+        };
+          return date.toLocaleString('en-US', options);
+        }
+        return '';
+      }
     },{ 
       headerName: "Direction", 
       field: "direction",
@@ -83,9 +108,15 @@ export class TradingHistoryComponent  implements OnInit{
   loadTrades() {
     this.clientId !== undefined ? this.tradeHistoryService.getTrades(this.clientId)
       .subscribe({
-        next: (data) => {
-          this.tradeHistoryData = data;
-          this.tradeHistoryData = this.tradeHistoryData.reverse()
+        next: (data: any) => {
+          if(data!==null && Object.keys(data).length != 0){
+            this.tradeHistoryData = data.trades;
+          }
+          else{
+            this._snackBar.open("No trade history data found for the client", '', {
+              duration: 3000,
+            })
+          }
         },
         error: (e) => {
           console.log('Error in loading Trade History: ',e);

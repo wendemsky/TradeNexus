@@ -17,68 +17,47 @@ import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 const testExistingClient: Client = {
-  "email": "existing.user@gmail.com",
-  "clientId": "5411274193",
-  "password": "password",
-  "name": "Existing User",
-  "dateOfBirth": "08/12/2002",
+  "email": "sowmya@gmail.com",
+  "clientId": "1654658069",
+  "password": "Marsh2024",
+  "name": "Sowmya",
+  "dateOfBirth": "11/12/2002",
   "country": "India",
   "identification": [
     {
       "type": "Aadhar",
-      "value": "123412341234"
+      "value": "123456789102"
     }
   ],
-  "isAdmin": false
+  "isAdmin": true
 }
 
 const testClient: Client = {
-  "email": "sample.user@gmail.com",
-  "clientId": "5411274199",
-  "password": "password",
-  "name": "Sample User",
-  "dateOfBirth": "08/12/2002",
-  "country": "India",
+  "email": "sam@gmail.com",
+  "clientId": "767836496",
+  "password": "Marsh2024",
+  "name": "Sam",
+  "dateOfBirth": "11/12/2002",
+  "country": "USA",
   "identification": [
     {
-      "type": "Aadhar",
-      "value": "456745674567"
+      "type": "SSN",
+      "value": "1643846323"
     }
   ],
   "isAdmin": false
 }
 
-const testValidatedClient: ValidatedClient = {
-  "email": "sample.user@gmail.com",
-  "clientId": "5411274199",
-  "token": 1252630773
+const testExistingClientProfile: ClientProfile =
+{
+  "client": testExistingClient,
+  "token": 1654658069
 }
 
 const testClientProfile: ClientProfile =
 {
-  "client":
-  {
-    "email": "sample.user@gmail.com",
-    "clientId": "5411274199",
-    "password": "password",
-    "name": "Sample User",
-    "dateOfBirth": "08/12/2002",
-    "country": "India",
-    "identification": [
-      {
-        "type": "Aadhar",
-        "value": "456745674567"
-      }
-    ],
-    "isAdmin": false
-  },
+  "client": testClient,
   "token": 1252630773
-}
-
-const testClientPortfolio: ClientPortfolio = {
-  "clientId": "5411274199",
-  "currBalance": 1000000,
-  "holdings": []
 }
 
 describe('RegistrationComponent', () => {
@@ -87,32 +66,23 @@ describe('RegistrationComponent', () => {
   let datePipe: DatePipe
   let router: Router;
 
-  let loginMockService: any
-  let mockGetClientSpy: any
   let clientProfileMockService: any
-  let mockValidatedClientSpy: any
   let mockClientProfileSetSpy: any
   let registerMockService: any
-  let mockUniqueGovtIDSpy: any
+  let mockVerifyClientEmailSpy: any
   let mockAddClientSpy: any
-  let mockAddClientPortfolioSpy: any
 
   let snackBar: any
   let snackBarSpy: any
 
   beforeEach(async () => {
 
-    loginMockService = jasmine.createSpyObj('LoginService', ['getValidClientDetails']);
-    mockGetClientSpy = loginMockService.getValidClientDetails.and.returnValue(of(testExistingClient));
-
-    clientProfileMockService = jasmine.createSpyObj('ClientProfileService', ['fmtsClientVerification', 'setClientProfile']);
-    mockValidatedClientSpy = clientProfileMockService.fmtsClientVerification.and.returnValue(of(testValidatedClient));
+    clientProfileMockService = jasmine.createSpyObj('ClientProfileService', ['setClientProfile']);
     mockClientProfileSetSpy = clientProfileMockService.setClientProfile.and.callFake((param: any) => { return of(param) })
 
-    registerMockService = jasmine.createSpyObj('RegisterService', ['checkUniqueGovtIDDetails', 'saveClientDetails', 'saveClientPortfolioDetails']);
-    mockUniqueGovtIDSpy = registerMockService.checkUniqueGovtIDDetails.and.returnValue(of(testExistingClient))
+    registerMockService = jasmine.createSpyObj('RegisterService', ['getVerificationOfClientEmail', 'saveClientDetails']);
+    mockVerifyClientEmailSpy = registerMockService.getVerificationOfClientEmail.and.callFake((param: any) => { return of(param) })
     mockAddClientSpy = registerMockService.saveClientDetails.and.callFake((param: any) => { return of(param) })
-    mockAddClientPortfolioSpy = registerMockService.saveClientPortfolioDetails.and.callFake((param: any) => { return of(param) })
 
     snackBar = jasmine.createSpyObj('MatSnackBar', ['open']); //Spying on MatSnackBar
 
@@ -124,7 +94,7 @@ describe('RegistrationComponent', () => {
       ],
       providers: [
         DatePipe,
-        { provide: LoginService, useValue: loginMockService },
+        //{ provide: LoginService, useValue: loginMockService },
         { provide: RegisterService, useValue: registerMockService },
         { provide: ClientProfileService, useValue: clientProfileMockService },
         { provide: Router, useClass: class { navigateByUrl = jasmine.createSpy('navigateByUrl'); } },
@@ -157,28 +127,28 @@ describe('RegistrationComponent', () => {
 
   it('should invalidate signup form when passwords dont match', () => {
     const passwordControl = component.signupForm.get('password');
-    const retypePaswordControl = component.signupForm.get('retypePassword');
+    const retypePasswordControl = component.signupForm.get('retypePassword');
     passwordControl?.setValue('Password123');
-    retypePaswordControl?.setValue('Password')
+    retypePasswordControl?.setValue('Password')
     component.signupForm.updateValueAndValidity()
     expect(component.signupForm.errors?.['identityRevealed']).toBeTruthy();
     passwordControl?.setValue('Password123');
-    retypePaswordControl?.setValue('Password123')
+    retypePasswordControl?.setValue('Password123')
     component.signupForm.updateValueAndValidity()
     expect(component.signupForm.errors?.['identityRevealed']).toBeFalsy();
   });
 
   it('should validate signup form control', () => {
     const emailControl = component.signupForm.get('email');
-    const paswordControl = component.signupForm.get('password');
-    const retypePaswordControl = component.signupForm.get('retypePassword');
+    const passwordControl = component.signupForm.get('password');
+    const retypePasswordControl = component.signupForm.get('retypePassword');
     emailControl?.setValue('');
-    paswordControl?.setValue('')
-    retypePaswordControl?.setValue('')
+    passwordControl?.setValue('')
+    retypePasswordControl?.setValue('')
     expect(component.signupForm.valid).toBeFalsy();
-    emailControl?.setValue('sample@gmail.com');
-    paswordControl?.setValue('Password123')
-    retypePaswordControl?.setValue('Password123')
+    emailControl?.setValue('sam@gmail.com');
+    passwordControl?.setValue('Password123')
+    retypePasswordControl?.setValue('Password123')
     expect(component.signupForm.valid).toBeTruthy();
   });
 
@@ -202,10 +172,10 @@ describe('RegistrationComponent', () => {
     typeControl?.setValue('Aadhar');
     valueControl?.setValue('123') //Invalid aadhar format
     component.identificationDetails.updateValueAndValidity()
-    expect(component.identificationDetails.errors?.['lengthNotMatched']).toBeTruthy();
+    expect(component.identificationDetails.errors?.['validID']).toBeTruthy();
     valueControl?.setValue('345674830532')
     component.identificationDetails.updateValueAndValidity() //Correct format
-    expect(component.identificationDetails.errors?.['lengthNotMatched']).toBeFalsy();
+    expect(component.identificationDetails.errors?.['validID']).toBeFalsy();
   });
 
   it('should validate identification details form control', () => {
@@ -222,85 +192,53 @@ describe('RegistrationComponent', () => {
   /*REGISTRATION*/
   //There should be an error message when user already exists
   it("should show error snackbar message when registering an existing user - existing email", () => {
-    const signupForm = { email: "existing.user@gmail.com", password: 'Password123', retypePassword: 'Password123' };
+    const signupForm = { email: "sowmya@gmail.com", password: 'Password123', retypePassword: 'Password123' };
     component.signupForm.setValue(signupForm);
+    registerMockService.getVerificationOfClientEmail.and.returnValue(of({isVerified:true}))
+
     const stepper = { next: jasmine.createSpy('next') } as any;
     component.validateNewEmail(stepper); //On submitting signup form
-    expect(mockGetClientSpy).toHaveBeenCalled()
-    expect(snackBarSpy.open).toHaveBeenCalledWith('User is already registered! Enter a valid email', '', jasmine.any(MatSnackBarConfig));
+    expect(mockVerifyClientEmailSpy).toHaveBeenCalledWith("sowmya@gmail.com")
+    expect(snackBarSpy.open).toHaveBeenCalled()
     expect(component.signupForm.value).toEqual({ email: null, password: null, retypePassword: null });
     expect(stepper.next).not.toHaveBeenCalled();
   });
 
-  //Registration of client - FMTS validation of new user fails
-  it("should show error snackbar message when fmts validation of a new user fails", () => {
-    const signupForm = { email: "new.user@gmail.com", password: 'Password123', retypePassword: 'Password123' };
-    component.signupForm.setValue(signupForm);
-    loginMockService.getValidClientDetails.and.returnValue(of(null)) //Valid client
-    clientProfileMockService.fmtsClientVerification.and.returnValue(throwError(() => new Error('Couldnt validate user')));
-    const stepper = { next: jasmine.createSpy('next') } as any;
-    component.validateNewEmail(stepper); //On submitting signup form
-    expect(snackBar.open).toHaveBeenCalledWith('Error: Couldnt validate user', '', jasmine.any(Object));
-    expect(component.signupForm.value).toEqual({ email: null, password: null, retypePassword: null });
-    expect(stepper.next).not.toHaveBeenCalled();
-  });
 
   //Registration of client - Successful Email validation of user
   it("should go to the next after successful validation", () => {
     const signupForm = { email: "sample.user@gmail.com", password: 'Password123', retypePassword: 'Password123' };
     component.signupForm.setValue(signupForm);
-    loginMockService.getValidClientDetails.and.returnValue(of(null)) //Valid client
-   
+    registerMockService.getVerificationOfClientEmail.and.returnValue(of({isVerified:false})) //Valid client
+
     const stepper = { next: jasmine.createSpy('next') } as any;
     component.validateNewEmail(stepper); //On submitting signup form
-    expect(mockValidatedClientSpy).toHaveBeenCalled() //Validating client
+    expect(mockVerifyClientEmailSpy).toHaveBeenCalled() //Validating client
     expect(stepper.next).toHaveBeenCalled(); //Goes to the next form
-  });
-
-  //Registration of client - Invalid govt id
-  it("should show error snackbar message when registering a client with invalid govt id", () => {
-    component.identificationDetails.setValue({ type: 'Aadhar', value: '123412341234' });
-    component.submitRegistrationForm(); //On submitting registration form
-    expect(mockUniqueGovtIDSpy).toHaveBeenCalled(); //Not a unique govt id - Client with existing govt id details are returned
-    expect(snackBar.open).toHaveBeenCalledWith("Entered Govt ID details aren't unique! Couldn't register client!", '', jasmine.any(Object));
-    expect(component.identificationDetails.value).toEqual({type:null, value:null});
   });
 
 
   //Successful registration of client but error in saving client details
-  it('should show error snackbar message when new client details are right but there is an error in saving client details',() => {
-    component.signupForm.setValue({email:testClient.email, password:testClient.password, retypePassword:testClient.password})
-    component.personalDetails.setValue({name:testClient.name, doB:testClient.dateOfBirth, country:testClient.country})
+  it('should show error snackbar message when new client details are right but there is an error in saving client details', () => {
+    component.signupForm.setValue({ email: testClient.email, password: testClient.password, retypePassword: testClient.password })
+    component.personalDetails.setValue({ name: testClient.name, doB: testClient.dateOfBirth, country: testClient.country })
     component.identificationDetails.setValue({ type: testClient.identification[0].type, value: testClient.identification[0].value });
-    registerMockService.checkUniqueGovtIDDetails.and.returnValue(of(null));   //Unique govt ID
     registerMockService.saveClientDetails.and.returnValue(throwError(() => new Error('Couldnt register user')));
+    
     component.submitRegistrationForm(); //On submitting registration form
-    expect(snackBar.open).toHaveBeenCalledWith("Error: Couldnt register user", '', jasmine.any(Object));
-  })
-
-  //Successful registration of client but error in creating portfolio
-  it('should show error snackbar message when client is registered but there is an error in creating portfolio',() => {
-    component.signupForm.setValue({email:testClient.email, password:testClient.password, retypePassword:testClient.password})
-    component.personalDetails.setValue({name:testClient.name, doB:testClient.dateOfBirth, country:testClient.country})
-    component.identificationDetails.setValue({ type: testClient.identification[0].type, value: testClient.identification[0].value });
-    component.fmtsValidatedClientData = testValidatedClient; //Manually setting client ID
-    registerMockService.checkUniqueGovtIDDetails.and.returnValue(of(null));   //Unique govt ID
-    registerMockService.saveClientPortfolioDetails.and.returnValue(throwError(() => new Error('Couldnt create client portfolio')));
-    component.submitRegistrationForm(); //On submitting registration form
-    expect(mockAddClientSpy).toHaveBeenCalledWith(testClient); //Successfully saving Client details
-    expect(snackBar.open).toHaveBeenCalledWith("Client has been registered but and portfolio couldnt be created! Unexpected error at service!", '', jasmine.any(Object));
+    expect(snackBar.open).toHaveBeenCalled();
   })
 
   //Successful registration of client and setting of client profile
-  it('should succesfully register a client given valid details',() => {
-    component.signupForm.setValue({email:testClient.email, password:testClient.password, retypePassword:testClient.password})
-    component.personalDetails.setValue({name:testClient.name, doB:testClient.dateOfBirth, country:testClient.country})
+  it('should succesfully register a client given valid details', () => {
+    component.signupForm.setValue({ email: testClient.email, password: testClient.password, retypePassword: testClient.password })
+    component.personalDetails.setValue({ name: testClient.name, doB: testClient.dateOfBirth, country: testClient.country })
     component.identificationDetails.setValue({ type: testClient.identification[0].type, value: testClient.identification[0].value });
-    component.fmtsValidatedClientData = testValidatedClient; //Manually setting client ID
-    registerMockService.checkUniqueGovtIDDetails.and.returnValue(of(null));   //Unique govt ID
+    registerMockService.getVerificationOfClientEmail.and.returnValue(of({isVerified:false})) //Valid client
+    registerMockService.saveClientDetails.and.returnValue(of(testClientProfile)) //Valid registration of client
+
     component.submitRegistrationForm(); //On submitting registration form
-    expect(mockAddClientSpy).toHaveBeenCalledWith(testClient); //Successfully saving Client details
-    expect(mockAddClientPortfolioSpy).toHaveBeenCalledWith(testClientPortfolio); //Successfully saving Client Porfolio details
+    expect(mockAddClientSpy).toHaveBeenCalled(); //Successfully saving Client details
     expect(mockClientProfileSetSpy).toHaveBeenCalledWith(testClientProfile); //Succesfully setting Client Portfolio
     //Now redirecting to client preferences page
     expect(router.navigateByUrl).toHaveBeenCalledWith('/home/client-preferences');

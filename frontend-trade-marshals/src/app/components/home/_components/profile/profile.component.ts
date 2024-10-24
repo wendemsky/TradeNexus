@@ -9,7 +9,7 @@ import { ClientProfileService } from 'src/app/services/Client/client-profile.ser
 })
 export class ProfileComponent implements OnInit {
 
-  clientProfileData!: ClientProfile | null //Client Profile data that is set with ClientProfileService
+  clientProfileData!: ClientProfile //Client Profile data that is set with ClientProfileService
 
   constructor(private clientProfileService: ClientProfileService) { }
   ngOnInit() {
@@ -18,6 +18,12 @@ export class ProfileComponent implements OnInit {
       this.clientProfileData = profile
       console.log('Logged In Client Profile Data: ', this.clientProfileData);
     })
+  }
+
+  maskCardNumber(idValue: string): string {
+    const lastFour = idValue.slice(-4);
+    const maskedPart = '*'.repeat(idValue.length - 4);
+    return maskedPart + lastFour;
   }
 
 }

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RoboAdvisorComponent } from './robo-advisor.component';
-import { PriceService } from 'src/app/services/price.service';
+import { PriceService } from 'src/app/services/Trade/price.service';
 import { AgGridModule } from 'ag-grid-angular';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';

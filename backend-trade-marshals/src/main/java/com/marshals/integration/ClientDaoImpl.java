@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+import com.marshals.business.Client;
+import com.marshals.business.ClientIdentification;
+import com.marshals.business.ClientPortfolio;
 import com.marshals.integration.mapper.ClientMapper;
-import com.marshals.models.Client;
-import com.marshals.models.ClientIdentification;
-import com.marshals.models.ClientPortfolio;
 import com.marshals.utils.EmailValidator;
 
 @Repository("clientDao")

@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
  
 import { TradingFormComponent } from './trading-form.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TradeService } from 'src/app/services/trade.service';
-import { TradeHistoryService } from 'src/app/services/trade-history.service';
+import { TradeService } from 'src/app/services/Trade/trade.service';
+import { TradeHistoryService } from 'src/app/services/Trade/trade-history.service';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MaterialModule } from 'src/app/material.module';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';

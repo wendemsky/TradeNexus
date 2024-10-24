@@ -8,26 +8,23 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.marshals.models.Client;
-import com.marshals.models.ClientIdentification;
-import com.marshals.models.ClientPortfolio;
-import com.marshals.models.ClientPreferences;
+import com.marshals.business.Client;
+import com.marshals.business.ClientIdentification;
+import com.marshals.business.ClientPortfolio;
+import com.marshals.business.ClientPreferences;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration("classpath:beans.xml")
+@SpringBootTest
 @Transactional
 class ClientPreferencesDaoImplTest {
 
@@ -98,7 +95,7 @@ class ClientPreferencesDaoImplTest {
 		Exception e = assertThrows(DatabaseException.class, () -> {
 			dao.getClientPreferences(id);
 		});
-		assertEquals(e.getMessage(), "Client id does not exist in Database");
+		assertEquals(e.getMessage(), "Please enter your client preferences");
 	}
 
 	/* TESTS FOR ADDING CLIENT PREFERENCES */
@@ -133,7 +130,7 @@ class ClientPreferencesDaoImplTest {
 		Exception e = assertThrows(DatabaseException.class, () -> {
 			dao.addClientPreferences(clientPref1654658000);
 		});
-		assertEquals(e.getMessage(), "Error inserting client preferences - Should satisfy integrity constraints");
+		assertEquals(e.getMessage(), "Client doesn't exist with this Client ID");
 	}
 
 	// Failure - Addition of client preferences to client with existing preferences
@@ -143,7 +140,7 @@ class ClientPreferencesDaoImplTest {
 		Exception e = assertThrows(DatabaseException.class, () -> {
 			dao.addClientPreferences(clientPref1654658069);
 		});
-		assertEquals(e.getMessage(), "Error inserting client preferences - Should satisfy integrity constraints");
+		assertEquals(e.getMessage(), "Client already exists with this Client ID");
 	}
 
 	/* TESTS FOR UPDATING CLIENT PREFERENCES */
@@ -164,7 +161,7 @@ class ClientPreferencesDaoImplTest {
 		Exception e = assertThrows(DatabaseException.class, () -> {
 			dao.updateClientPreferences(clientPref1654658000);
 		});
-		assertEquals(e.getMessage(), "Client doesn't exist");
+		assertEquals(e.getMessage(), "Client doesn't exist with this Client ID");
 	}
 
 }

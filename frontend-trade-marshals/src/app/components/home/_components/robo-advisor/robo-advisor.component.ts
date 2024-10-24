@@ -1,9 +1,13 @@
 import { Component } from '@angular/core';
-import { Price } from 'src/app/models/price';
-import { PriceService } from 'src/app/services/price.service';
+import { Price } from 'src/app/models/Trade/price';
 import { ColDef, SideBarDef } from 'ag-grid-community';
 import { SellComponent } from '../sell/sell.component';
 import { BuyComponent } from '../buy/buy.component';
+import { RoboAdvisorService } from 'src/app/services/Trade/robo-advisor.service';
+import { ClientPreferencesService } from 'src/app/services/Client/client-preferences.service';
+import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
+import { ClientPreferences } from 'src/app/models/Client/ClientPreferences';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-robo-advisor',
@@ -14,70 +18,11 @@ export class RoboAdvisorComponent {
 
   isBuy: boolean = false;
 
-  prices: Price[] = [];
+  buyPrices: Price[] = [];
+  sellPrices: Price[] = [];
 
-  buyStocks: any[] = [
-    {
-      "askPrice": 0.998125,
-      "bidPrice": 0.99828125,
-      "priceTimestamp": "21-AUG-19 10.00.02.002000000 AM GMT",
-      "instrument": {
-      "instrumentId": "T67894",
-      "externalIdType": "CUSIP",
-      "externalId": "9128285Z9",
-      "categoryId": "GOVT",
-      "instrumentDescription": "USA, Note 2.5 31jan2024 5Y",
-      "maxQuantity": 10000,
-      "minQuantity": 100
-      }
-      },
-      {
-      "askPrice": 1,
-      "bidPrice": 1.00015625,
-      "priceTimestamp": "21-AUG-19 10.00.02.002000000 AM GMT",
-      "instrument": {
-      "instrumentId": "T67895",
-      "externalIdType": "CUSIP",
-      "externalId": "9128286A3",
-      "categoryId": "GOVT",
-      "instrumentDescription": "USA, Note 2.625 31jan2026 7Y",
-      "maxQuantity": 10000,
-      "minQuantity": 100
-      }
-      },
-      {
-      "askPrice": 0.999375,
-      "bidPrice": 0.999375,
-      "priceTimestamp": "21-AUG-19 10.00.02.002000000 AM GMT",
-      "instrument": {
-      "instrumentId": "T67897",
-      "externalIdType": "CUSIP",
-      "externalId": "9128285X4",
-      "categoryId": "GOVT",
-      "instrumentDescription": "USA, Note 2.5 31jan2021 2Y",
-      "maxQuantity": 10000,
-      "minQuantity": 100
-      }
-      },
-      {
-      "askPrice": 0.999375,
-      "bidPrice": 0.999375,
-      "priceTimestamp": "21-AUG-19 10.00.02.002000000 AM GMT",
-      "instrument": {
-      "instrumentId": "T67899",
-      "externalIdType": "CUSIP",
-      "externalId": "9128285V8",
-      "categoryId": "GOVT",
-      "instrumentDescription": "USA, Notes 2.5% 15jan2022 3Y",
-      "maxQuantity": 10000,
-      "minQuantity": 100
-      }
-      },
-  ]
-
-  longText = `The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog
-  from Japan. A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was
-  originally bred for hunting.`;
+  snackBarConfig = new MatSnackBarConfig();
+    
 
   public buyColumnDefs: ColDef[] = [
     {
@@ -95,7 +40,7 @@ export class RoboAdvisorComponent {
     {
       headerName: "Bid Price",
       field: "bidPrice",
-    }, 
+    },
     {
       headerName: "Buy",
       field: "buy",
@@ -121,7 +66,7 @@ export class RoboAdvisorComponent {
     {
       headerName: "Ask Price",
       field: "askPrice",
-    }, 
+    },
     {
       headerName: "Sell",
       field: "sell",
@@ -201,21 +146,65 @@ export class RoboAdvisorComponent {
   }
 
   constructor(
-    private priceService: PriceService,
-  ) { }
+    private roboAdvisorService: RoboAdvisorService,
+    private preferencesService: ClientPreferencesService,
+    private profileService: ClientProfileService,
+    private snackBar: MatSnackBar
+  ) {
+    this.snackBarConfig.duration = 2000;
+    this.snackBarConfig.panelClass = ['form-submit-snackbar'];
+  }
 
   ngOnInit(): void {
     this.loadAllPrices();
   }
 
   loadAllPrices() {
-    this.priceService.getPrices()
-      .subscribe(
-        (data) => {
-          this.prices = data;
-          this.prices = this.prices.sort( () => 0.5 - Math.random())
-          this.prices = this.prices.slice(0, 5);
+    this.profileService.getClientProfile().subscribe((profile) => {
+      if(profile!==null || Object.keys(profile).length != 0){
+        let clientId = profile?.client?.clientId
+        if (clientId){
+          this.preferencesService.getClientPreferences(clientId).subscribe((preferences) => {
+            this.retrieveAllTopBuys(preferences)
+            this.retrieveAllTopSells(preferences)
+          });
         }
-      );
+      }
+    })
+  }
+
+  retrieveAllTopBuys(preferences: ClientPreferences) {
+    
+    this.roboAdvisorService.getTopBuyTrades(preferences)
+      .subscribe({
+        next: (data) => {
+          if (data !== null && Object.keys(data).length != 0) {
+            this.buyPrices = data;
+          } else {
+            this.snackBar.open("Unexpected error in retrieving robo advisor buy recommendations", '', this.snackBarConfig)
+          }
+        },
+        error: (e) => {
+          console.log(e)
+          this.snackBar.open(e, '', this.snackBarConfig)
+        }
+      });
+  }
+
+  retrieveAllTopSells(preferences: ClientPreferences) {
+    this.roboAdvisorService.getTopSellTrades(preferences)
+      .subscribe({
+        next: (data) => {
+          if (data !== null  && Object.keys(data).length != 0) {
+            this.sellPrices = data;
+          } else {
+           this.snackBar.open("Client has no holdings for robo advisor to give sell recommendations", '', this.snackBarConfig)
+          }
+        },
+        error: (e) => {
+          console.log(e)
+          this.snackBar.open(e, '', this.snackBarConfig)
+        }
+      });
   }
 }
