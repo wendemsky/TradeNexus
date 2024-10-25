@@ -15,7 +15,7 @@
             <mat-card class="balance">
                 <h2 class="title">Current Balance:</h2> <br>
                 <mat-card-content class="balance-value">
-                    {{portfolioData?.currBalance | number: ".3"}}
+                    {{portfolioData?.currBalance | currency: "USD"}}
                 </mat-card-content>
             </mat-card>
         </div>
