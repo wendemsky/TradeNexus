@@ -100,6 +100,7 @@ export class TradingFormComponent implements OnInit{
             });
           } else {
             this.trade = data
+            window.location.reload();
             this._snackBar.open("Trade Executed successfully", '', {
               duration: 3000,
               panelClass: ['form-submit-snackbar']
