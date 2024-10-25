@@ -71,7 +71,7 @@ export class ClientPreferencesRestController{
         console.log(`Request for Update Client Preferences:`, req);
 
         const updatedClientPreferences: ClientPreferences = req.body;
-        if(updatedClientPreferences.acceptAdvisor && updatedClientPreferences.clientId && updatedClientPreferences.riskTolerance){
+        if(updatedClientPreferences.clientId && updatedClientPreferences.riskTolerance){
             try {
                 const response = await axios.put(`${this.backendApiUrl}`,updatedClientPreferences);
                 console.log(`Response for Update Client Preferences:`, response);

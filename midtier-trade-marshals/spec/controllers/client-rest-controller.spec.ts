@@ -1,10 +1,10 @@
-import axios, { AxiosStatic } from 'axios';
+import axios from 'axios';
 import { Request, Response } from 'express';
 import { ClientRestController } from '../../src/controllers/client-rest-controller';
 import defaultConfig from '../../src/constants';
 import { Client } from '../../src/models/Client/Client';
 import { ClientProfile } from '../../src/models/Client/ClientProfile';
-import { beforeEach, describe } from 'node:test';
+// import { beforeEach, describe } from 'node:test';
 
 const testExistingClient: Client = {
     "email": "sowmya@gmail.com",
@@ -223,8 +223,4 @@ describe('Client Rest Controller Unit Tests', () => {
     });
 
 });
-
-function spyOn(axios: AxiosStatic, arg1: string) {
-    throw new Error('Function not implemented.');
-}
 
