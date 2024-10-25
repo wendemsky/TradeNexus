@@ -11,5 +11,8 @@ router.get('/verify-email/:email', async (req, res) => {
 router.post('/register', async (req, res) => {
     await clientRestController.verifyClientEmail(req, res);
 });
+router.get('', async (req, res) => {
+    await clientRestController.loginExistingClient(req, res);
+});
 
 export default router;

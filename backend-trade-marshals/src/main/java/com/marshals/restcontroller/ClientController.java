@@ -26,108 +26,103 @@ import com.marshals.integration.FMTSException;
 @RestController("clientController")
 @RequestMapping("/client")
 public class ClientController {
-	
+
 	@Autowired
 	private Logger logger;
-	
+
 	@Autowired
 	private ClientService clientService;
 
-	@GetMapping(value="/ping")
+	@GetMapping(value = "/ping")
 	public String ping() {
 		return "Client web service is alive at " + LocalDateTime.now();
 	}
-	
-	//Verify client email
-	@GetMapping(value="/verify-email/{email}",produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<VerificationRequestResult> verifyClientEmail(@PathVariable String email){
+
+	// Verify client email
+	@GetMapping(value = "/verify-email/{email}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<VerificationRequestResult> verifyClientEmail(@PathVariable String email) {
 		ResponseEntity<VerificationRequestResult> response = null;
 		try {
-			boolean isEmailVerified = clientService.verifyClientEmail(email);  
-			response = ResponseEntity.ok(new VerificationRequestResult(isEmailVerified)); //200 - Successfully validated client
+			boolean isEmailVerified = clientService.verifyClientEmail(email);
+			response = ResponseEntity.ok(new VerificationRequestResult(isEmailVerified)); // 200 - Successfully
+																							// validated client
 			return response;
 		}
 //		catch(NullPointerException e) { //406
 //			logger.error("Error in request for validating client email", e);
 //			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getLocalizedMessage());
 //		}
-		catch(IllegalArgumentException e) { //406
+		catch (IllegalArgumentException e) { // 406
 			logger.error("Error in request for validating client email", e);
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getLocalizedMessage());
-		}
-		catch(RuntimeException e) { //Unexpected error - 500
+		} catch (RuntimeException e) { // Unexpected error - 500
 			logger.error("Problem occured from server", e);
 			response = ResponseEntity.internalServerError().build();
 			return response;
 		}
 	}
-	
-	//Register new client
-	@PostMapping(value="/register" , produces = {MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<LoggedInClient> registerNewClient(@RequestBody Client client){ //Get a client object with null clientId
+
+	// Register new client
+	@PostMapping(value = "/register", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = {
+			MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<LoggedInClient> registerNewClient(@RequestBody Client client) { // Get a client object with
+																							// null clientId
 		ResponseEntity<LoggedInClient> response = null;
 		try {
 //			if(client == null) {
 //				throw new NullPointerException("Client Request Body is null");
 //			}
-			SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy"); //doB Format stored in client model
-			if(client.getDateOfBirth()==null)
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy"); // doB Format stored in client model
+			if (client.getDateOfBirth() == null)
 				throw new NullPointerException("Client details cannot be null");
 			String dateOfBirth = dateFormat.format(client.getDateOfBirth());
-			LoggedInClient newClient = clientService.registerNewClient(client.getEmail(), client.getPassword(), client.getName(), 
-					dateOfBirth, client.getCountry(), client.getIdentification());
-			response = ResponseEntity.ok(newClient); //200
+			LoggedInClient newClient = clientService.registerNewClient(client.getEmail(), client.getPassword(),
+					client.getName(), dateOfBirth, client.getCountry(), client.getIdentification());
+			response = ResponseEntity.ok(newClient); // 200
 			return response;
-		}
-		catch(NullPointerException e) { //406
+		} catch (NullPointerException e) { // 406
 			logger.error("Error in request for registering new client", e);
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getLocalizedMessage());
-		}
-		catch(IllegalArgumentException e) { //406
+		} catch (IllegalArgumentException e) { // 406
 			logger.error("Error in request for registering new client", e);
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getLocalizedMessage());
-		}
-		catch(DatabaseException e) { //404
+		} catch (DatabaseException e) { // 404
 			logger.error("Error in request for registering new client", e);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
-		}
-		catch(FMTSException e) { //404
+		} catch (FMTSException e) { // 404
 			logger.error("Error in request for registering new client", e);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
-		}
-		catch(RuntimeException e) { //Unexpected error - 500
+		} catch (RuntimeException e) { // Unexpected error - 500
 			logger.error("Problem occured from server", e);
 			response = ResponseEntity.internalServerError().build();
 			return response;
 		}
 	}
-	
-	//Login existing client - Send email and password as Query Params
-	@GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<LoggedInClient> loginExistingClient(@RequestParam String email, @RequestParam String password){ 
+
+	// Login existing client - Send email and password as Query Params
+	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<LoggedInClient> loginExistingClient(@RequestParam String[] email, @RequestParam String[] password) {
+		String actualEmail = (email.length > 0) ? email[0] : ""; // Safely get the first email
+		String actualPassword = (password.length > 0) ? password[0] : ""; // Safely get the first password
+		System.out.println("Email: " + actualEmail + "\nPassword: " + actualPassword);
 		ResponseEntity<LoggedInClient> response = null;
-		System.out.println("Email: "+email+"Password: "+password);
 		try {
 //			if(email == null || password == null) {
 //				throw new NullPointerException("Client login credentials are null");
 //			}
-			LoggedInClient newClient = clientService.loginExistingClient(email, password);
-			response = ResponseEntity.ok(newClient); //200
+			LoggedInClient newClient = clientService.loginExistingClient(actualEmail, actualPassword);
+			response = ResponseEntity.ok(newClient); // 200
 			return response;
-		}
-		catch(IllegalArgumentException e) { //406
+		} catch (IllegalArgumentException e) { // 406
 			logger.error("Error in request for registering new client", e);
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getLocalizedMessage());
-		}
-		catch(DatabaseException e) { //404
+		} catch (DatabaseException e) { // 404
 			logger.error("Error in request for registering new client", e);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
-		}
-		catch(FMTSException e) { //404
+		} catch (FMTSException e) { // 404
 			logger.error("Error in request for registering new client", e);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
-		}
-		catch(RuntimeException e) { //Unexpected error - 500
+		} catch (RuntimeException e) { // Unexpected error - 500
 			logger.error("Problem occured from server", e);
 			response = ResponseEntity.internalServerError().build();
 			return response;
