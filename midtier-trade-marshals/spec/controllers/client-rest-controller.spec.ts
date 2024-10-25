@@ -20,6 +20,10 @@ const testExistingClient: Client = {
     ],
     "isAdmin": true
 }
+const testExistingClientProfile: ClientProfile = {
+    "client":testExistingClient,
+    "token": 1654658069
+}
 
 const testNewClient: Client = {
     "email": "sam@gmail.com",
@@ -121,7 +125,7 @@ describe('Client Rest Controller Unit Tests', () => {
             expect(mockHttpResponse.json).toHaveBeenCalledWith(testNewClientProfile);
         });
 
-        it('returns success 400 when few client details are empty in request', async () => {
+        it('returns 400 when few client details are empty in request', async () => {
             //Mocking request and response
             mockHttpRequest = { body: {'clientId':'','email':'','password':''} };
             await controller.registerNewClient(mockHttpRequest as Request, mockHttpResponse as Response);
@@ -159,6 +163,61 @@ describe('Client Rest Controller Unit Tests', () => {
 
             expect(mockHttpResponse.status).toHaveBeenCalledWith(500);
             expect(mockHttpResponse.json).toHaveBeenCalledWith({status: 500, message: 'Unexpected error in backend service while registering new client'});
+        });
+    });
+
+    //Login Existing Client
+    describe('Login Existing Client test', () => {
+        it('returns success 200 when backend returns the same when existing client is logged in', async () => {
+            //Mocking the response sent by axios
+            mockBackendResponse = { status: 200, data: testExistingClientProfile };
+            mockAxiosGet.and.returnValue(Promise.resolve(mockBackendResponse));
+
+            //Mocking request and response
+            mockHttpRequest = { query: { email: [testExistingClient.email], password: [testExistingClient.password] } };
+            await controller.loginExistingClient(mockHttpRequest as Request, mockHttpResponse as Response);
+
+            expect(mockHttpResponse.json).toHaveBeenCalledWith(testExistingClientProfile);
+        });
+
+        it('returns 400 when few client details are empty in request', async () => {
+            //Mocking request and response
+            mockHttpRequest = { query: { email: [''], password: [''] } };
+            await controller.loginExistingClient(mockHttpRequest as Request, mockHttpResponse as Response);
+
+            expect(mockHttpResponse.status).toHaveBeenCalledWith(400);
+            expect(mockHttpResponse.json).toHaveBeenCalledWith({status: 400, message: 'Login Credentials of Client cannot be null'});
+        });
+
+        it('returns 406 when backend throws the same when a non existing client cannot be logged in', async () => {
+            //Mocking the response sent by axios
+            mockBackendResponse = {
+                isAxiosError: true, // Indicates that this is an Axios error
+                response: {
+                    status: 406,
+                    data: { message: 'Logging in Client doesnt exist' }
+                }
+            };
+            mockAxiosGet.and.returnValue(Promise.reject(mockBackendResponse));
+
+            //Mocking request and response
+            mockHttpRequest = {  query: { email: [testNewClient.email], password: [testNewClient.password] } };
+            await controller.loginExistingClient(mockHttpRequest as Request, mockHttpResponse as Response);
+
+            expect(mockHttpResponse.status).toHaveBeenCalledWith(406);
+            expect(mockHttpResponse.json).toHaveBeenCalledWith({status: 406, message: mockBackendResponse.response.data.message});
+        });
+
+        it('returns 500 when backend throws Unexpected error', async () => {
+            //Mocking the response sent by axios
+            mockAxiosGet.and.returnValue(Promise.reject(new Error('Unexpected Error')));
+
+            //Mocking request and response
+            mockHttpRequest = {  query: { email: [testNewClient.email], password: [testNewClient.password] } };
+            await controller.loginExistingClient(mockHttpRequest as Request, mockHttpResponse as Response);
+
+            expect(mockHttpResponse.status).toHaveBeenCalledWith(500);
+            expect(mockHttpResponse.json).toHaveBeenCalledWith({status: 500, message: 'Unexpected error in backend service while logging in client'});
         });
     });
 
