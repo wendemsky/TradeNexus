@@ -2,13 +2,14 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
+import { URLS } from 'src/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientPortfolioService {
 
-  dataURL = 'http://localhost:8080/portfolio/client/';
+  dataURL = `${URLS.BASEURL}portfolio/client/`;
 
   constructor(private http: HttpClient) { }
 

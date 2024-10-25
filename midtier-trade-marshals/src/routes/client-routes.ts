@@ -9,7 +9,7 @@ router.get('/verify-email/:email', async (req, res) => {
     await clientRestController.verifyClientEmail(req, res);
 });
 router.post('/register', async (req, res) => {
-    await clientRestController.verifyClientEmail(req, res);
+    await clientRestController.registerNewClient(req, res);
 });
 router.get('', async (req, res) => {
     await clientRestController.loginExistingClient(req, res);

@@ -2,13 +2,14 @@ import { inject, Injectable } from '@angular/core';
 import { Price } from '../../models/Trade/price';
 import { catchError, Observable, of, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { URLS } from 'src/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PriceService {
   prices: Price[] = [];
-  url = 'http://localhost:8080/trade/live-prices';
+  url = `${URLS.BASEURL}trade/live-prices`;
 
   constructor(private httpClient: HttpClient) { }
 

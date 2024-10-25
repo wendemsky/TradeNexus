@@ -3,13 +3,14 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { catchError, Observable, throwError } from 'rxjs';
 import { Trade } from '../../models/Trade/trade';
 import { Order } from '../../models/Trade/order';
+import { URLS } from 'src/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TradeService {
 
-  url = 'http://localhost:8080/trade/execute-trade';
+  url = `${URLS.BASEURL}trade/execute-trade`;
 
   constructor(private httpClient: HttpClient) { }
 

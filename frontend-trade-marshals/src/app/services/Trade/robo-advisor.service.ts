@@ -5,13 +5,14 @@ import { ClientProfileService } from '../Client/client-profile.service';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Price } from '../../models/Trade/price';
 import { ClientPreferences } from '../../models/Client/ClientPreferences';
+import { URLS } from 'src/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoboAdvisorService {
 
-  url = 'http://localhost:8080/trade/'
+  url = `${URLS.BASEURL}trade/`
 
   constructor(private httpClient: HttpClient) { }
   

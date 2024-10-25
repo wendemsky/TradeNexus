@@ -1,13 +1,14 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
+import { URLS } from 'src/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientActivityReportService {
 
-  private dataURL: string = 'http://localhost:8080/activity-report/';
+  private dataURL: string = `${URLS.BASEURL}activity-report/`;
 
   constructor(private http: HttpClient) { }
 

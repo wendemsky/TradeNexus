@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
-import { ColDef, SideBarDef } from 'ag-grid-community';
+import { ColDef, GridApi, GridReadyEvent, SideBarDef } from 'ag-grid-community';
 import { ClientPortfolio } from 'src/app/models/Client/ClientPortfolio';
 import { Holding } from 'src/app/models/Trade/Holding';
 import { Price } from 'src/app/models/Trade/price';
@@ -21,6 +21,7 @@ import { ClientActivityReportService } from 'src/app/services/Client/client-acti
 })
 export class ReportActivityComponent implements OnInit {
 
+  gridApi!: GridApi<any>
   clientId: string | undefined;
 
   clientProfileData!: any;
@@ -31,7 +32,7 @@ export class ReportActivityComponent implements OnInit {
   profitLossData: any [] = [];
   transformedData: any[] = [];
   public tradeHistoryData: Trade[] = [];
-  private _snackBar = inject(MatSnackBar);
+  snackBarConfig = new MatSnackBarConfig();
 
   instrumentIdSelected?: string;
 
@@ -136,9 +137,8 @@ export class ReportActivityComponent implements OnInit {
 
   constructor(
     private clientProfileService: ClientProfileService,
-    private clientPortfolioService: ClientPortfolioService,
     private priceService: PriceService,
-    private tradeHistoryService: TradeHistoryService,
+    private snackBar: MatSnackBar,
     private clientActivityReportService: ClientActivityReportService
   ) { }
 
@@ -165,6 +165,8 @@ export class ReportActivityComponent implements OnInit {
 
   //On Submitting logged in clients report
   onSubmitYourReportForm() {
+    this.snackBarConfig.duration = 3000;
+    this.snackBarConfig.panelClass = ['red-snackbar'];
     console.log("Your Report type -> " + JSON.stringify(this.yourReport.value));
     console.log(this.clientId);
     this.yourReportTypeSelected = this.yourReport.value.reportType
@@ -194,7 +196,7 @@ export class ReportActivityComponent implements OnInit {
           },
           error: (e) => {
             console.log('Error in loading Trade History: ', e);
-            this._snackBar.open(e, '', {
+            this.snackBar.open(e, '', {
               duration: 3000,
             })
           }
@@ -218,6 +220,8 @@ export class ReportActivityComponent implements OnInit {
   
   //On Submitting other clients report
   onSubmitOthersReportForm() {
+    this.snackBarConfig.duration = 3000;
+    this.snackBarConfig.panelClass = ['red-snackbar'];
     console.log(`Report type of Client ${this.othersReport.value.clientId} is ${this.othersReport.value.reportType}`);
     this.otherReportTypeSelected = this.othersReport.value.reportType
     if (this.otherReportTypeSelected == "Holdings Report") {
@@ -232,6 +236,9 @@ export class ReportActivityComponent implements OnInit {
             console.log('Portfolio Data after transformation: ', this.portfolioData);
           },
           error: (e) => {
+            this.snackBar.open(e, '', {
+              duration: 3000,
+            })
             console.log('Failed to load client portfolio data: ', e);
           }
         }) : console.error('Client ID is undefined');
@@ -247,7 +254,7 @@ export class ReportActivityComponent implements OnInit {
           },
           error: (e) => {
             console.log('Error in loading Trade History: ', e);
-            this._snackBar.open(e, '', {
+            this.snackBar.open(e, '', {
               duration: 3000,
             })
           }
@@ -303,5 +310,36 @@ export class ReportActivityComponent implements OnInit {
       return data
     })
     console.log('P&L Data after transformation: ', this.profitLossData);
+  }
+
+  onBtExportForOtherUser(option: string) {
+    this.onSubmitOthersReportForm()
+    const clientId = this.othersReport.value.clientId
+    const date = new Date().toLocaleDateString();
+    const dynamicTitle = `${clientId}_${option} - ${date}`;
+    this.gridApi.exportDataAsExcel(
+      {
+        fileName: `${dynamicTitle}.xlsx`,
+        sheetName: 'Sheet1',
+        // Other export options can go here
+      }
+    );
+  }
+
+  onBtExport(option: string){
+    this.onSubmitYourReportForm()
+    const date = new Date().toLocaleDateString();
+    const dynamicTitle = `${option} - ${date}`;
+    this.gridApi.exportDataAsExcel(
+      {
+        fileName: `${dynamicTitle}.xlsx`,
+        sheetName: 'Sheet1',
+        // Other export options can go here
+      }
+    );
+  }
+
+  onGridReady(params: GridReadyEvent<any>) {
+    this.gridApi = params.api;
   }
 }

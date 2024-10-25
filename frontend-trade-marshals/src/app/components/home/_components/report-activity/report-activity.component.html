@@ -48,22 +48,39 @@
               </div>
             </form>
           </div>
-          <div *ngIf="yourReportTypeSelected === 'Holdings Report'">
-            <div class="grid-container ag-theme-alpine">
-              <ag-grid-angular style="height: 100%; width:96%;" [rowData]="transformedData"
-                [columnDefs]="holdingsColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar" />
+          <div>
+            <div *ngIf="yourReportTypeSelected === 'Holdings Report'">
+              <div class="export-button">
+                <button [disabled]="!yourReport.valid" (click)="onBtExport(yourReportTypeSelected)" mat-raised-button> Export as Excel </button>
+              </div>
+              <div class="grid-container ag-theme-alpine">
+                <ag-grid-angular style="height: 100%; width:96%;" [rowData]="transformedData"
+                  [columnDefs]="holdingsColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar"
+                  (gridReady)="onGridReady($event)"  
+                />
+              </div>
             </div>
-          </div>
-          <div *ngIf="yourReportTypeSelected === 'Trade Report'">
-            <div class="grid-container ag-theme-alpine">
-              <ag-grid-angular style="height: 100%; width:96%;" [rowData]="tradeHistoryData"
-                [columnDefs]="tradesColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar" />
+            <div *ngIf="yourReportTypeSelected === 'Trade Report'">
+              <div class="export-button">
+                <button [disabled]="!yourReport.valid" (click)="onBtExport(yourReportTypeSelected)" mat-raised-button> Export as Excel </button>
+              </div>
+              <div class="grid-container ag-theme-alpine">
+                <ag-grid-angular style="height: 100%; width:96%;" [rowData]="tradeHistoryData"
+                  [columnDefs]="tradesColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar" 
+                  (gridReady)="onGridReady($event)"
+                />
+              </div>
             </div>
-          </div>
-          <div *ngIf="yourReportTypeSelected === 'P&L Report'">
-            <div class="grid-container ag-theme-alpine">
-              <ag-grid-angular style="height: 100%; width:96%;" [rowData]="profitLossData"
-                [columnDefs]="plReportColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar" />
+            <div *ngIf="yourReportTypeSelected === 'P&L Report'">
+              <div class="export-button">
+                <button [disabled]="!yourReport.valid" (click)="onBtExport(yourReportTypeSelected)" mat-raised-button> Export as Excel </button>
+              </div>
+              <div class="grid-container ag-theme-alpine">
+                <ag-grid-angular style="height: 100%; width:96%;" [rowData]="profitLossData"
+                  [columnDefs]="plReportColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar" 
+                  (gridReady)="onGridReady($event)"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -104,21 +121,36 @@
             </form>
           </div>
           <div *ngIf="otherReportTypeSelected === 'Holdings Report'">
+            <div class="export-button">
+              <button [disabled]="!othersReport.valid" (click)="onBtExportForOtherUser(otherReportTypeSelected)" mat-raised-button> Export as Excel </button>
+            </div>
             <div class="grid-container ag-theme-alpine">
               <ag-grid-angular style="height: 100%; width:96%;" [rowData]="transformedData"
-                [columnDefs]="holdingsColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar" />
+                [columnDefs]="holdingsColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar" 
+                (gridReady)="onGridReady($event)"
+              />
             </div>
           </div>
           <div *ngIf="otherReportTypeSelected === 'Trade Report'">
+            <div class="export-button">
+              <button [disabled]="!othersReport.valid" (click)="onBtExportForOtherUser(otherReportTypeSelected)" mat-raised-button> Export as Excel </button>
+            </div>
             <div class="grid-container ag-theme-alpine">
               <ag-grid-angular style="height: 100%; width:96%;" [rowData]="tradeHistoryData"
-                [columnDefs]="tradesColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar" />
+                [columnDefs]="tradesColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar" 
+                (gridReady)="onGridReady($event)"  
+              />
             </div>
           </div>
           <div *ngIf="otherReportTypeSelected === 'P&L Report'">
+            <div class="export-button">
+              <button [disabled]="!othersReport.valid" (click)="onBtExportForOtherUser(otherReportTypeSelected)" mat-raised-button> Export as Excel </button>
+            </div>
             <div class="grid-container ag-theme-alpine">
               <ag-grid-angular style="height: 100%; width:96%;" [rowData]="profitLossData"
-                [columnDefs]="plReportColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar" />
+                [columnDefs]="plReportColumnDefs" [defaultColDef]="defaultColDef" [sideBar]="sidebar"
+                (gridReady)="onGridReady($event)"
+              />
             </div>
           </div>
         </div>

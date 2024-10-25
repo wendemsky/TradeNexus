@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { ClientPreferences } from 'src/app/models/Client/ClientPreferences';
+import { URLS } from 'src/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientPreferencesService {
 
-  dataURL = 'http://localhost:8080/client-preferences/';
+  dataURL = `${URLS.BASEURL}client-preferences/`;
 
   activeRoute: any;
 

@@ -9,10 +9,10 @@ import defaultConfig from './constants';
 //Importing routes
 import healthRoutes from './routes/health-route';
 import clientRoutes from './routes/client-routes';
-// import clientPreferencesRoutes from './routes/client-preferences-routes';
-// import portfolioRoutes from './routes/portfolio-routes'
-// import tradeRoutes from './routes/trade-routes'
-// import activityReportRoutes from './routes/activity-report-routes'
+import clientPreferencesRoutes from './routes/client-preferences-routes';
+import portfolioRoutes from './routes/portfolio-routes'
+import tradeRoutes from './routes/trade-routes'
+import activityReportRoutes from './routes/activity-report-routes'
 
 class App {
 
@@ -35,10 +35,10 @@ class App {
         // Defining Routes
         this.app.use('/', healthRoutes); // Health route will be at the root level
         this.app.use('/client', clientRoutes); // All client-related routes 
-        // this.app.use('/client-preferences', clientPreferencesRoutes); // All client preferences-related routes 
-        // this.app.use('/portfolio', portfolioRoutes); // All client portfolio-related routes 
-        // this.app.use('/trade', tradeRoutes); // All trade-related routes 
-        // this.app.use('/activity-report', activityReportRoutes); // All activity report-related routes 
+        this.app.use('/client-preferences', clientPreferencesRoutes); // All client preferences-related routes 
+        this.app.use('/portfolio', portfolioRoutes); // All client portfolio-related routes 
+        this.app.use('/trade', tradeRoutes); // All trade-related routes 
+        this.app.use('/activity-report', activityReportRoutes); // All activity report-related routes 
 
         // Handle unmatched routes
         this.app.use((req:Request, res:Response) => {
