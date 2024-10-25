@@ -116,7 +116,7 @@ export class PortfolioComponent implements OnInit {
   loadPortfolio() {
     const snackBarConfig = new MatSnackBarConfig();
     snackBarConfig.duration = 2000;
-    snackBarConfig.panelClass = ['form-submit-snackbar'];
+    snackBarConfig.panelClass = ['red-snackbar'];
 
     this.clientId ? this.clientPortfolioService.getClientPortfolio(this.clientId)
       .subscribe({
@@ -128,7 +128,7 @@ export class PortfolioComponent implements OnInit {
           this.createChart();
         },
         error: (e) => {
-          console.log('Error in loading Trade History: ', e);
+          console.log('Error in loading Portfolio: ', e);
           this._snackBar.open(e, '', snackBarConfig)
         }
       }) : console.error('Client ID is undefined');

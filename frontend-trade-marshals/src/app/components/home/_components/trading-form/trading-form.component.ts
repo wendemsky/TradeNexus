@@ -95,7 +95,8 @@ export class TradingFormComponent implements OnInit{
           if(data === null || Object.keys(data).length == 0) {
             console.error('Trade Execution Error');
             this._snackBar.open('Trade Execution Error', '', {
-              duration: 3000
+              duration: 3000,
+              panelClass: ['red-snackbar']
             });
           } else {
             this.trade = data

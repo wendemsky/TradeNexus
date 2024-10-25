@@ -6,7 +6,6 @@ import { ClientProfile } from 'src/app/models/Client/ClientProfile';
 import { ClientPreferencesService } from 'src/app/services/Client/client-preferences.service';
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
 import { RoboAdvisorComponent } from './_components/robo-advisor/robo-advisor.component';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { PriceService } from 'src/app/services/Trade/price.service';
 
 @Component({
@@ -20,14 +19,11 @@ export class HomeComponent implements OnInit {
   clientPreferencesData!: ClientPreferences | null //Client Preferences data 
   isSideMenuExpanded: boolean = false; //Side Menu
   isHomeContent: boolean = true; //Home Content displayed
-  snackBarConfig = new MatSnackBarConfig();
 
   constructor(private clientProfileService: ClientProfileService, private clientPreferencesService: ClientPreferencesService,
-    private priceService: PriceService, private snackBar: MatSnackBar, private router: Router, public dialog: MatDialog) { }
+    private priceService: PriceService, private router: Router, public dialog: MatDialog) { }
 
   ngOnInit() {
-    this.snackBarConfig.duration = 3000;
-    this.snackBarConfig.panelClass = ['form-submit-snackbar'];
     this.isSideMenuExpanded = false
     console.log('Router URL: ', this.router.url)
     if (this.router.url === '/home')

@@ -89,7 +89,7 @@ public defaultColDef: ColDef = {
   loadAllPrices() {
     const snackBarConfig = new MatSnackBarConfig();
     snackBarConfig.duration = 2000;
-    snackBarConfig.panelClass = ['form-submit-snackbar'];
+    snackBarConfig.panelClass = ['red-snackbar'];
 
     this.priceService.getPricesFromFMTS()
       .subscribe({

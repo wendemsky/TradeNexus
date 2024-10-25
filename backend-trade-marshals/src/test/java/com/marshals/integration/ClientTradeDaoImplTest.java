@@ -66,7 +66,7 @@ class ClientTradeDaoImplTest {
 		Exception e = assertThrows(DatabaseException.class, () -> {
 			dao.getClientTradeHistory(clientId);
 		});
-		assertEquals("Client ID does not exist", e.getMessage());
+		assertEquals("Client has no trades", e.getMessage());
 	}
 	
 	/*Add Trade tests*/

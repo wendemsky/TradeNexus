@@ -1,6 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { ClientPreferences } from 'src/app/models/Client/ClientPreferences';
 import { URLS } from 'src/constants';
@@ -12,10 +11,8 @@ export class ClientPreferencesService {
 
   dataURL = `${URLS.BASEURL}client-preferences/`;
 
-  activeRoute: any;
 
-  constructor(private http: HttpClient, public activatedRoute: ActivatedRoute) { 
-    this.activeRoute = this.activatedRoute.snapshot
+  constructor(private http: HttpClient) { 
   }
 
   getClientPreferences(clientId: string): Observable<ClientPreferences>{

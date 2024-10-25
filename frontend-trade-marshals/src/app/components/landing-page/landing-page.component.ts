@@ -50,8 +50,13 @@ export class LandingPageComponent implements OnInit {
     console.log('Login Form Submitted Details: ', this.loginCredentials.value)
 
     const snackBarConfig = new MatSnackBarConfig();
-    snackBarConfig.duration = 2000;
+    snackBarConfig.duration = 3000;
     snackBarConfig.panelClass = ['form-submit-snackbar'];
+
+    const errorSnackBarConfig = new MatSnackBarConfig();
+    errorSnackBarConfig.duration = 3000;
+    errorSnackBarConfig.panelClass = ['red-snackbar'];
+    
     const email = this.loginCredentials.value.email
     const pwd = this.loginCredentials.value.password
 
@@ -68,12 +73,12 @@ export class LandingPageComponent implements OnInit {
           this.closeDialog()
           this.redirectToHome()
         }else{
-          this.snackBar.open("Unexpected error in retrieving new client details", '', snackBarConfig)
+          this.snackBar.open("Unexpected error in retrieving new client details", '', errorSnackBarConfig)
         }
       },
       error: (e) => { //Error in hitting fmts client data
         console.log(e)
-        this.snackBar.open(e, '', snackBarConfig)
+        this.snackBar.open(e, '', errorSnackBarConfig)
         this.loginCredentials.reset()
       }
     })

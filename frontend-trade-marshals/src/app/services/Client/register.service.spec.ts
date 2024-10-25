@@ -69,7 +69,7 @@ describe('RegisterService', () => {
         "email": "sam@gmail.com",
         "clientId": "767836496",
         "password": "Marsh2024",
-        "name": "Sowmya",
+        "name": "Sam",
         "dateOfBirth": "11/12/2002",
         "country": "USA",
         "identification": [

@@ -18,7 +18,7 @@ export class ClientPreferencesComponent {
   clientPreferencesData!: any
   isClientFormFilled: boolean = false
   acceptAdvisor: boolean = false
-  activeRoute: any ;
+  //activeRoute: any ;
 
   snackBarConfig = new MatSnackBarConfig();
 
@@ -67,17 +67,16 @@ export class ClientPreferencesComponent {
   })
 
   constructor(private clientPreferencesService: ClientPreferencesService, private clientProfileService: ClientProfileService,
-    private router: Router, public activatedRoute: ActivatedRoute, private snackBar: MatSnackBar) {
-        this.activeRoute = this.activatedRoute.snapshot
+    private router: Router, private snackBar: MatSnackBar) {
+        //this.activeRoute = this.activatedRoute.snapshot
     }
 
   ngOnInit() {
     this.snackBarConfig.duration = 3000;
-    this.snackBarConfig.panelClass = ['form-submit-snackbar'];
-    console.log("Component:", this.activeRoute.component.name)
+    this.snackBarConfig.panelClass = ['red-snackbar'];
+   // console.log("Component:", this.activeRoute.component.name)
     this.clientProfileService.getClientProfile().subscribe({
       next: (profile) => {
-        console.log("Component:",this.activeRoute.component.name)
         console.log('Logged In Client Profile Data: ', profile);
         if(profile && profile.client?.clientId){
           this.clientProfileData = profile
@@ -118,11 +117,13 @@ export class ClientPreferencesComponent {
           this.setPreferencesFormData(this.clientPreferencesData)
         }
         else {
+          this.snackBarConfig.panelClass = ['red-snackbar'];
           this.clientPreferencesData = null
           this.snackBar.open("Unexpected error retrieving client preferences", '', this.snackBarConfig)
         }
       },
       error: (e: any) => {
+        this.snackBarConfig.panelClass = ['red-snackbar'];
         console.log('Getting client preferences error: ', e)
         this.snackBar.open(e, '', this.snackBarConfig)
       }
@@ -137,14 +138,17 @@ export class ClientPreferencesComponent {
       next: (data: any) => {
         console.log('New Preferences Submitted Data: ', data)
         if (data && data.clientId === this.clientProfileData?.client?.clientId) {
+          this.snackBarConfig.panelClass = ['form-submit-snackbar'];
           this.snackBar.open('Preferences updated successfully', '', this.snackBarConfig)
           this.redirectToHome()
         }
         else {
+          this.snackBarConfig.panelClass = ['red-snackbar'];
           this.snackBar.open('Client preferences couldn\'t be updated! Unexpected error at service!', '', this.snackBarConfig)
         }
       },
       error: (err) => {
+        this.snackBarConfig.panelClass = ['red-snackbar'];
         this.snackBar.open(err, '', this.snackBarConfig)
       }
     })
@@ -159,18 +163,21 @@ export class ClientPreferencesComponent {
       next: (data: any) => {
         console.log('New Preferences Submitted Data: ', data)
         if (data && data.clientId === this.clientProfileData?.client?.clientId) {
+          this.snackBarConfig.panelClass = ['form-submit-snackbar'];
           this.snackBar.open('Preferences saved successfully', '', this.snackBarConfig)
           this.isClientFormFilled = true
           this.clientPreferencesData = data
           this.redirectToHome()
         }
         else {
+          this.snackBarConfig.panelClass = ['red-snackbar'];
           this.snackBar.open('Client preferences couldn\'t be saved! Unexpected error at service!', '', this.snackBarConfig)
         }
 
       },
       error: (err) => {
         console.log(err)
+        this.snackBarConfig.panelClass = ['red-snackbar'];
         this.snackBar.open(err, '', this.snackBarConfig)
       }
     })

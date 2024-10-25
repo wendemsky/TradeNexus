@@ -28,7 +28,8 @@ public class ClientTradeDaoImpl implements ClientTradeDao {
 			trades = clientTradeMapper.getClientTradeHistory(clientId);
 			System.out.println("Trades when invalid clientId is passed -> " + trades + ", clientId -> " + clientId);
 			if(trades.isEmpty()) {
-				throw new DatabaseException("Client ID does not exist");
+//				throw new DatabaseException("Client ID does not exist");
+				throw new DatabaseException("Client has no trades");
 			}
 			TradeHistory tradeHistory = new TradeHistory(clientId, trades);
 			return tradeHistory;

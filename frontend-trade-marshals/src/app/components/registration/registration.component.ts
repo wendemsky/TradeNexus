@@ -136,6 +136,10 @@ export class RegistrationComponent implements OnInit {
     snackBarConfig.duration = 3000;
     snackBarConfig.panelClass = ['form-submit-snackbar'];
 
+    const errorSnackBarConfig = new MatSnackBarConfig();
+    snackBarConfig.duration = 3000;
+    snackBarConfig.panelClass = ['red-snackbar'];
+
     this.registerService.getVerificationOfClientEmail(this.signupForm.value.email).subscribe(
       {
         next: (data: any) => { //If success
@@ -151,7 +155,7 @@ export class RegistrationComponent implements OnInit {
         },
         error: (e) => { //Error in hitting register service
           console.log(e)
-          this.snackBar.open(e, '', snackBarConfig)
+          this.snackBar.open(e, '', errorSnackBarConfig)
           this.signupForm.reset()
         }
       })
@@ -177,6 +181,10 @@ export class RegistrationComponent implements OnInit {
     snackBarConfig.duration = 3000;
     snackBarConfig.panelClass = ['form-submit-snackbar'];
 
+    const errorSnackBarConfig = new MatSnackBarConfig();
+    errorSnackBarConfig.duration = 3000;
+    errorSnackBarConfig.panelClass = ['red-snackbar'];
+
     let formattedDate = this.datePipe.transform(this.personalDetails.value?.doB, 'yyyy-MM-dd'); //Transform doB with pipe operator
     this.clientData = {
       'email': this.signupForm.value.email,
@@ -201,12 +209,12 @@ export class RegistrationComponent implements OnInit {
           //After setting profile redirect to Client Preferences Component
           this.redirectToClientPreferencesPage()
         } else {
-          this.snackBar.open("Unexpected error in retrieving new client details", '', snackBarConfig)
+          this.snackBar.open("Unexpected error in retrieving new client details", '', errorSnackBarConfig)
         }
       },
       error: (e) => {
         console.log('Registering Client error: ', e)
-        this.snackBar.open(e, '', snackBarConfig)
+        this.snackBar.open(e, '', errorSnackBarConfig)
       }
     })
   }
