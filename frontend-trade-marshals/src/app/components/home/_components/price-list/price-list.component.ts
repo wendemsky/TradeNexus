@@ -5,14 +5,6 @@ import { CellClickedEvent, ColDef, SideBarDef } from 'ag-grid-community';
 import { SellComponent } from '../sell/sell.component';
 import { BuyComponent } from '../buy/buy.component';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
-// import {
-//   ColGroupDef,
-//   GridApi,
-//   GridOptions,
-//   ModuleRegistry,
-//   createGrid,
-// } from "@ag-grid-community/core";
-
 
 @Component({
   selector: 'app-price-list',
@@ -49,7 +41,8 @@ export class PriceListComponent implements OnInit{
     cellRendererParams: {
       instrumentId: this.instrumentIdSelected
     }
-  },{ 
+  },
+  { 
     headerName: "Sell", 
     field: "sell",
     cellRenderer: SellComponent,
@@ -96,7 +89,7 @@ public defaultColDef: ColDef = {
   loadAllPrices() {
     const snackBarConfig = new MatSnackBarConfig();
     snackBarConfig.duration = 2000;
-    snackBarConfig.panelClass = ['form-submit-snackbar'];
+    snackBarConfig.panelClass = ['red-snackbar'];
 
     this.priceService.getPricesFromFMTS()
       .subscribe({
@@ -138,6 +131,4 @@ public defaultColDef: ColDef = {
     }
   }
 
-
-  
 }

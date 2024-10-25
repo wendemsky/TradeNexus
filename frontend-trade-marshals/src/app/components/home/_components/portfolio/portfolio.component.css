@@ -2,23 +2,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
     color: darkgreen;
-    padding-bottom: 15px;
-    border: 2px solid darkgreen; 
 }
 
 .title{
-    padding: 10px; 
+    padding: 1%; 
     margin: 0; 
-    background-color: #fff;
-
 }
 
   #MyChart {
-    width: 100%;
-    width: 500px; 
-    /* margin-top: 10px; */
-    height: 500px;
+    margin-top: 1%;
   }
 
   .chart-container {
@@ -41,4 +35,22 @@
   font-weight: 500; 
   text-align: center;
   color: darkgreen;
+}
+
+.container {
+  display: flex;
+}
+
+.table-container {
+  flex: 0 0 75%; /* 80% width for the table */
+}
+
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid darkgreen; 
+  flex: 0 0 25%;
+  border-radius: 5px; 
+  margin-bottom: 2%;
 }

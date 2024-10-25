@@ -111,14 +111,12 @@ export class PortfolioComponent implements OnInit {
       this.clientProfileData?.client?.clientId !== undefined ? this.clientId = this.clientProfileData?.client?.clientId : console.error('Client ID is of type undefined');
       this.loadPortfolio();
     })
-    this.createChart();
-
   }
 
   loadPortfolio() {
     const snackBarConfig = new MatSnackBarConfig();
     snackBarConfig.duration = 2000;
-    snackBarConfig.panelClass = ['form-submit-snackbar'];
+    snackBarConfig.panelClass = ['red-snackbar'];
 
     this.clientId ? this.clientPortfolioService.getClientPortfolio(this.clientId)
       .subscribe({
@@ -130,7 +128,7 @@ export class PortfolioComponent implements OnInit {
           this.createChart();
         },
         error: (e) => {
-          console.log('Error in loading Trade History: ', e);
+          console.log('Error in loading Portfolio: ', e);
           this._snackBar.open(e, '', snackBarConfig)
         }
       }) : console.error('Client ID is undefined');
@@ -181,7 +179,6 @@ export class PortfolioComponent implements OnInit {
       console.error('No data available for the chart');
       return;
     }
-  
     const labels = this.transformedData.map(item => item.instrumentDesc);
     const dataValues = this.transformedData.map(item => item.avgPrice); // or any other relevant metric
   

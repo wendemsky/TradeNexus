@@ -63,7 +63,7 @@ mat-form-field {
     color: rgb(55, 97, 67) !important;
 }
 
-::ng-deep .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+::ng-deep .mdc-text-fieldd--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
     color: rgb(55, 97, 67) !important;
 }
 
@@ -96,4 +96,15 @@ button {
     font-size: 18px;
     width: 120px; height: 45px;
     padding: 5px; 
+}
+
+.export-button{
+    display: flex;
+    justify-content: right;
+    align-items: right;
+}
+
+.export-button button{
+    background-color: rgb(55, 97, 67);
+    color: white;
 }

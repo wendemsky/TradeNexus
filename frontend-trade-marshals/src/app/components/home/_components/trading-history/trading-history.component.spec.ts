@@ -6,6 +6,7 @@ import { TradeHistoryService } from 'src/app/services/Trade/trade-history.servic
 import { ClientProfileService } from 'src/app/services/Client/client-profile.service';
 import { MaterialModule } from 'src/app/material.module';
 import { AgGridAngular, AgGridModule } from 'ag-grid-angular';
+import { DatePipe } from '@angular/common';
 
 const testTrade = {
   "id": "16ef",
@@ -67,6 +68,7 @@ describe('TradingHistoryComponent', () => {
         MaterialModule,
       ],
       providers: [
+        DatePipe,
         { provide: TradeHistoryService, useValue: tradeHistoryMockService },
         { provide: ClientProfileService, useValue: clientProfileMockService }
       ]

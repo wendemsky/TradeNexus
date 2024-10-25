@@ -115,6 +115,7 @@ export class TradingHistoryComponent  implements OnInit{
           else{
             this._snackBar.open("No trade history data found for the client", '', {
               duration: 3000,
+              panelClass: ['red-snackbar']
             })
           }
         },
@@ -122,6 +123,7 @@ export class TradingHistoryComponent  implements OnInit{
           console.log('Error in loading Trade History: ',e);
           this._snackBar.open(e, '', {
             duration: 3000,
+            panelClass: ['red-snackbar']
           })
         }
       }) : console.error('Client ID is undefined.')

@@ -2,6 +2,7 @@ import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 
 import { TradeService } from './trade.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { DatePipe } from '@angular/common';
 
 describe('TradeService', () => {
   let service: TradeService;
@@ -9,7 +10,10 @@ describe('TradeService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule]
+      imports: [HttpClientTestingModule],
+      providers: [
+        DatePipe,
+      ]
     });
     service = TestBed.inject(TradeService);
   });

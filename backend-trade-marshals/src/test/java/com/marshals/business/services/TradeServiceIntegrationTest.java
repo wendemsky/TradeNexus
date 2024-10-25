@@ -93,7 +93,7 @@ class TradeServiceIntegrationTest {
 		Exception e = assertThrows(DatabaseException.class, () -> {
 			service.getClientTradeHistory(clientId);
 		});
-		assertEquals(e.getMessage(), "Client ID does not exist");
+		assertEquals(e.getMessage(), "Client has no trades");
 	}
 
 	@Test

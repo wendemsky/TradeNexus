@@ -1,27 +1,39 @@
-<div style="display: flex; align-items: center; justify-content: center;">
-<div style="margin-right: 20px;">
-    <mat-card class="balance">
-        <mat-card-header>
-            <h2 class="title">Current Balance:</h2> 
-        </mat-card-header>
-        <mat-card-content class="balance-value">
-            {{portfolioData?.currBalance}}
-        </mat-card-content>
-    </mat-card>
-    
-</div>
-<div class="chart-container">
-    <span class="chart-title">Portfolio Split (%)</span>
-    <canvas  id="MyChart" >{{ chart }}</canvas>
-    </div>
-</div>
-
 <h2> My Holdings </h2>
 
-<div class="grid-container ag-theme-alpine">
-    <ag-grid-angular style="height: 100%; width:96%;" [rowData]="transformedData" [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef" [sideBar]="sidebar"
-        [rowMultiSelectWithClick]="false"
-        (cellClicked)="cellClicked($event)"
-    />
+<div class="container"> 
+
+    <div class="table-container ag-theme-alpine">
+        <ag-grid-angular style="height: 100%; width:96%;" [rowData]="transformedData" [columnDefs]="columnDefs"
+            [defaultColDef]="defaultColDef" [sideBar]="sidebar"
+            [rowMultiSelectWithClick]="false"
+            (cellClicked)="cellClicked($event)"
+        />
+    </div>
+
+    <div>
+        <div class="card">
+            <mat-card class="balance">
+                <h2 class="title">Current Balance:</h2> <br>
+                <mat-card-content class="balance-value">
+                    {{portfolioData?.currBalance | currency: "USD"}}
+                </mat-card-content>
+            </mat-card>
+        </div>
+    
+        <div class="card" style="height: 100%;" *ngIf="portfolioData?.holdings?.length == 0">
+            <h1 class="title">Client does not have any holding(s)</h1> 
+        </div>
+        <div class="card" *ngIf="portfolioData?.holdings?.length != 0">
+            <div>
+                <mat-card class="balance">
+                    <mat-card-header>
+                        <span class="chart-title">Portfolio Split (%)</span>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <canvas  id="MyChart" >{{ chart }}</canvas>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
 </div>

@@ -152,7 +152,7 @@ export class RoboAdvisorComponent {
     private snackBar: MatSnackBar
   ) {
     this.snackBarConfig.duration = 2000;
-    this.snackBarConfig.panelClass = ['form-submit-snackbar'];
+    this.snackBarConfig.panelClass = ['red-snackbar'];
   }
 
   ngOnInit(): void {

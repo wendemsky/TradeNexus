@@ -5,14 +5,15 @@ import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { Client } from 'src/app/models/Client/Client';
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
 import { IsVerifiedClient } from 'src/app/models/Client/IsVerifiedClient';
+import { URLS } from 'src/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RegisterService {
 
-  clientDataURL = 'http://localhost:8080/client/register';
-  url = "http://localhost:8080/client/verify-email/"
+  clientDataURL = `${URLS.BASEURL}client/register`;
+  url = `${URLS.BASEURL}client/verify-email/`
 
 
   constructor(private http: HttpClient) { }

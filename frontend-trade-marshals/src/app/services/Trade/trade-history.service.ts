@@ -5,6 +5,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Order } from '../../models/Trade/order';
 import { DatePipe } from '@angular/common';
+import { URLS } from 'src/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class TradeHistoryService {
 
   // trades: Trade[] = mockTrades;
   private _snackBar = inject(MatSnackBar);
-  url = 'http://localhost:8080/trade/trade-history/';
+  url = `${URLS.BASEURL}trade/trade-history/`;
 
   constructor(private httpClient: HttpClient, private datePipe: DatePipe) { }
 

@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 
 import { ClientProfile } from 'src/app/models/Client/ClientProfile';
+import { URLS } from 'src/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
 
-  loginUrl = "http://localhost:8080/client"
+  loginUrl = `${URLS.BASEURL}client`
 
   constructor(private http: HttpClient) {
   }
