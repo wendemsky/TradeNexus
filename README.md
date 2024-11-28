@@ -1,2 +1,2 @@
-# capstone-fse1-group4
+# capstone-project
 
