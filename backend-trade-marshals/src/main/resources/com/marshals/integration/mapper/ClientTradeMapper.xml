@@ -47,7 +47,6 @@
 		t.trade_id,
 		t.cash_value,
 		t.execution_price,
-		t.executed_at,
 		o.client_id,
 		o.instrument_id,
 		o.quantity,

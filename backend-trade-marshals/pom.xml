@@ -91,6 +91,12 @@
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc11</artifactId>
 		</dependency>
+		
+		<!-- SQLite Database Driver -->
+		<dependency>
+		    <groupId>org.xerial</groupId>
+		    <artifactId>sqlite-jdbc</artifactId>
+		</dependency>
 
 		<!-- MyBatis -->
 		<dependency>

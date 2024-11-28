@@ -1,127 +1,137 @@
-{
-    "bikes-all": [
-        {
-            "id": 1,
-            "name": "Mamba Sport 12\" Balance Bike",
-            "brand": "Mamba Bikes",
-            "color": "black",
-            "price": 75.88,
-            "imageUrl": "bike1.jpeg"
-          },
-          {
-            "id": 2,
-            "name": "DJ Fat Bike 500W",
-            "brand": "DJ Bikes",
-            "color": "grey",
-            "price": 1599.86,
-            "imageUrl": "bike2.jpeg"
-          },
-          {
-            "id": 3,
-            "name": "Kobe Aluminum Balance",
-            "brand": "Kobe",
-            "color": "blue",
-            "price": 88.56,
-            "imageUrl": "bike3.jpeg"
-          },
-          {
-            "id": 4,
-            "name": "Pomona Men's Cruiser Bike",
-            "brand": "Northwoods",
-            "color": "silver",
-            "price": 221.36,
-            "imageUrl": "bike4.jpeg"
-          }
-
-    ],
-    "bikes-team": [
-        {
-            "team": "BikeTeam",
-            "membersNames": ["Aditi", "Mayank", "Aparna"]
-        }
-    ],
-    "food-all": [
-        {
-            "id": 1,
-            "name": "The Original Sandwich",
-            "brand": "Oreo",
-            "weight": "303g",
-            "calories": 405,
-            "price": 2.85,
-            "imageUrl": "food1.jpeg"
-          },
-          {
-            "id": 2,
-            "name": "Peanut Butter",
-            "brand": "KRAFT",
-            "weight": "2000g",
-            "calories": 726,
-            "price": 9.39,
-            "imageUrl": "food2.jpeg"
-          },
-          {
-            "id": 3,
-            "name": "Beef Ravioli",
-            "brand": "Chef Boyardee",
-            "weight": "425g",
-            "calories": 250,
-            "price": 2.45,
-            "imageUrl": "food3.jpeg"
-          },
-          {
-            "id": 4,
-            "name": "Medium Cheddar Cheese",
-            "brand": "MOON CHEESE",
-            "weight": "57g",
-            "calories": 525,
-            "price": 5.87,
-            "imageUrl": "food4.jpeg"
-          }
-    ],
-    "food-team": [
-        {
-            "team": "FoodTeam",
-            "membersNames": ["Shamitha", "Aadhithyashri", "Yashaswini"]
-        }
-    ],
-    "toys-all":[
-        {
-            "id": 1,
-            "name": "Medical Kit",
-            "brand": "Fisher-Price",
-            "ageGroup": "3 to 9",
-            "price": 20.41,
-            "imageUrl": "toy1.jpeg"
-          },
-          {
-            "id": 2,
-            "name": "Ferry Boat",
-            "brand": "Green Toys",
-            "ageGroup": "3 to 6",
-            "price": 13.26,
-            "imageUrl": "toy2.jpeg"
-          },
-          {
-            "id": 3,
-            "name": "Rock-a-Stack",
-            "brand": "Fisher-Price",
-            "ageGroup": "1 to 5",
-            "price": 5.99,
-            "imageUrl": "toy3.jpeg"
-          },
-          {
-            "id": 4,
-            "name": "Stack Up Cups",
-            "brand": "The First Years",
-            "ageGroup": "0 to 3",
-            "price": 3.99,
-            "imageUrl": "toy4.jpeg"
-          }
-    ],
-    "toys-team":[
-        {
-            "team": "ToyTeam",
-            "membersNames": ["Chirag", "Prabhjot", "Krishna"]
-        }
-    ]
-}
+[
+    {
+        "instrumentId": "CP123",
+        "externalIdType": "SKU",
+        "externalId": "GPU-RTX4070",
+        "categoryId": "GRAPHICS_CARD",
+        "instrumentDescription": "NVIDIA GeForce RTX 4070 12GB GDDR6X",
+        "maxQuantity": 500,
+        "minQuantity": 1
+    },
+    {
+        "instrumentId": "CP124",
+        "externalIdType": "SKU",
+        "externalId": "GPU-RX7900XT",
+        "categoryId": "GRAPHICS_CARD",
+        "instrumentDescription": "AMD Radeon RX 7900 XT 20GB GDDR6",
+        "maxQuantity": 400,
+        "minQuantity": 1
+    },
+    {
+        "instrumentId": "CP125",
+        "externalIdType": "SKU",
+        "externalId": "GPU-GTX1660",
+        "categoryId": "GRAPHICS_CARD",
+        "instrumentDescription": "NVIDIA GeForce GTX 1660 Super 6GB GDDR5",
+        "maxQuantity": 1000,
+        "minQuantity": 1
+    },
+    {
+        "instrumentId": "CP456",
+        "externalIdType": "SKU",
+        "externalId": "RAM-DDR5-16GB",
+        "categoryId": "RAM",
+        "instrumentDescription": "Corsair Vengeance 16GB DDR5 5200MHz",
+        "maxQuantity": 1000,
+        "minQuantity": 2
+    },
+    {
+        "instrumentId": "CP457",
+        "externalIdType": "SKU",
+        "externalId": "RAM-DDR4-32GB",
+        "categoryId": "RAM",
+        "instrumentDescription": "G.Skill Trident Z 32GB DDR4 3600MHz",
+        "maxQuantity": 700,
+        "minQuantity": 2
+    },
+    {
+        "instrumentId": "CP458",
+        "externalIdType": "SKU",
+        "externalId": "RAM-DDR4-8GB",
+        "categoryId": "RAM",
+        "instrumentDescription": "Kingston Fury Beast 8GB DDR4 3200MHz",
+        "maxQuantity": 1500,
+        "minQuantity": 2
+    },
+    {
+        "instrumentId": "CP789",
+        "externalIdType": "SKU",
+        "externalId": "CPU-i7-13700K",
+        "categoryId": "PROCESSOR",
+        "instrumentDescription": "Intel Core i7-13700K 13th Gen 16-Core Processor",
+        "maxQuantity": 300,
+        "minQuantity": 1
+    },
+    {
+        "instrumentId": "CP790",
+        "externalIdType": "SKU",
+        "externalId": "CPU-R5-7600X",
+        "categoryId": "PROCESSOR",
+        "instrumentDescription": "AMD Ryzen 5 7600X 6-Core Processor",
+        "maxQuantity": 400,
+        "minQuantity": 1
+    },
+    {
+        "instrumentId": "CP791",
+        "externalIdType": "SKU",
+        "externalId": "CPU-i5-12400",
+        "categoryId": "PROCESSOR",
+        "instrumentDescription": "Intel Core i5-12400 12th Gen 6-Core Processor",
+        "maxQuantity": 600,
+        "minQuantity": 1
+    },
+    {
+        "instrumentId": "CP101",
+        "externalIdType": "SKU",
+        "externalId": "MB-ASUS-ROG",
+        "categoryId": "MOTHERBOARD",
+        "instrumentDescription": "ASUS ROG Strix Z790-E Gaming WiFi Motherboard",
+        "maxQuantity": 200,
+        "minQuantity": 1
+    },
+    {
+        "instrumentId": "CP102",
+        "externalIdType": "SKU",
+        "externalId": "MB-MSI-MAG",
+        "categoryId": "MOTHERBOARD",
+        "instrumentDescription": "MSI MAG B550 TOMAHAWK ATX Motherboard",
+        "maxQuantity": 250,
+        "minQuantity": 1
+    },
+    {
+        "instrumentId": "CP103",
+        "externalIdType": "SKU",
+        "externalId": "MB-GIGABYTE-B650",
+        "categoryId": "MOTHERBOARD",
+        "instrumentDescription": "Gigabyte B650 AORUS Elite AX Motherboard",
+        "maxQuantity": 300,
+        "minQuantity": 1
+    },
+    {
+        "instrumentId": "CP202",
+        "externalIdType": "SKU",
+        "externalId": "SSD-SAMSUNG-1TB",
+        "categoryId": "STORAGE",
+        "instrumentDescription": "Samsung 980 Pro 1TB NVMe PCIe Gen 4 SSD",
+        "maxQuantity": 1000,
+        "minQuantity": 1
+    },
+    {
+        "instrumentId": "CP203",
+        "externalIdType": "SKU",
+        "externalId": "HDD-SEAGATE-4TB",
+        "categoryId": "STORAGE",
+        "instrumentDescription": "Seagate Barracuda 4TB 7200RPM HDD",
+        "maxQuantity": 500,
+        "minQuantity": 1
+    },
+    {
+        "instrumentId": "CP204",
+        "externalIdType": "SKU",
+        "externalId": "SSD-WD-2TB",
+        "categoryId": "STORAGE",
+        "instrumentDescription": "Western Digital Black SN850X 2TB NVMe SSD",
+        "maxQuantity": 700,
+        "minQuantity": 1
+    }
+]
