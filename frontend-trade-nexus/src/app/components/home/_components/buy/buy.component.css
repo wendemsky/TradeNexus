@@ -1,0 +1,30 @@
+button {
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    border: 1px solid green;
+    height: 32px;
+    width: 100px;
+    margin: 6px 0;
+    color: green;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    cursor: pointer;
+    /* background-color: #FF6B2B; */
+    background-color: green;
+    color: #FFFFFF;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+.ng-star-inserted {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
