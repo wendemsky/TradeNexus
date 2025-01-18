@@ -72,14 +72,18 @@
 
 ### Landing Page
 ![Landing Page](https://github.com/user-attachments/assets/28feb542-b2d4-40b3-b1ae-96f5f1b08717)
-![Landing Page Features](https://github.com/user-attachments/assets/541c921b-de18-453d-847b-03e75856b82f)
+![Landing Page Features](https://github.com/user-attachments/assets/f62a9534-21a6-4bc3-8ef2-85a0087840e4)
+Register New User
 ![Landing Page Register](https://github.com/user-attachments/assets/00b3af86-6955-4750-a582-88364f6fd3c1)
+Personal Details
 ![Landing Page Register Personal Details](https://github.com/user-attachments/assets/5026f44a-b87a-40cc-8187-84c93a91699b)
+Identification
 ![Landing Page Register Identification](https://github.com/user-attachments/assets/4da53c21-0cd3-4f18-a41c-24d35b82072d)
 
 
 ### Home Page
 ![Home Page](https://github.com/user-attachments/assets/373598a0-20ed-4870-8c7c-9437e8da5a91)
+Buy or Sell
 ![Home Page Buy](https://github.com/user-attachments/assets/5c4af566-e38c-4051-a23e-d32e6b0e9988)
 
 
