@@ -1,6 +1,6 @@
 # Trade Nexus
 
-Trade Nexus is a mock trading platform designed to simulate a realistic trading experience. 
+Trade Nexus is a **mock trading platform** designed to simulate a realistic trading experience. 
 
 ## Multilayer Architecture
 
