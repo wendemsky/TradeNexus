@@ -1,7 +1,10 @@
 # Trade Nexus
+
 Trade Nexus is a mock trading platform designed to simulate a realistic trading experience. 
 
-The platform is built with a robust architecture featuring five distinct layers:
+## Multilayer Architecture
+
+- The platform is built with a robust **multilayer architecture** featuring five distinct layers:
 
 1. **Database**: SQLite3 database for data storage and retrieval.
 2. **Frontend**: Developed using Angular for a dynamic and responsive user interface.
