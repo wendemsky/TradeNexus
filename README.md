@@ -1,5 +1,7 @@
 # Trade Nexus
 
+> **Note:** This project is currently undergoing a major architectural overhaul — migrating from a mock/simulated platform to a real-data application. The architecture, stack, and features described below reflect the original version. The rework is in active development.
+
 Trade Nexus is a **mock trading platform** designed to simulate a realistic trading experience. 
 
 ## Multilayer Architecture
