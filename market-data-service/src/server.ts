@@ -1,11 +1,16 @@
 import 'dotenv/config'
+import http from 'http'
+import app from './app.js'
+import { initPriceSocket } from './ws/priceSocket.js'
 import { startPriceFetcher } from './jobs/priceFetcher.js'
-import { priceCache } from './cache/PriceCache.js'
 
+const PORT = parseInt(process.env.PORT ?? '3001')
+
+const httpServer = http.createServer(app)
+
+initPriceSocket(httpServer)
 startPriceFetcher()
 
-priceCache.on('update', (instrumentId: string) => {
-  console.log(`[cache] updated: ${instrumentId}`)
+httpServer.listen(PORT, () => {
+  console.log(`[server] MDS running on http://localhost:${PORT}`)
 })
-
-console.log('[server] price fetcher started — watching for updates...')
