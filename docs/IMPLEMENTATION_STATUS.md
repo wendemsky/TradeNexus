@@ -12,7 +12,7 @@ This file tracks what has been built and what remains. Update it as each phase p
 | Phase | Service | Branch | Status | Notes |
 |-------|---------|--------|--------|-------|
 | 1 | Market Data Service (MDS) | `feature/mds/rewrite` | NOT STARTED | Start here — defines Price + Instrument shapes |
-| 2 | Database (PostgreSQL) | `feature/db/postgres-migration` | IN PROGRESS | After Phase 1 merged |
+| 2 | Database (PostgreSQL) | `feature/db/postgres-migration` | COMPLETED | After Phase 1 merged |
 | 3 | Backend (Spring Boot 3) | `feature/backend/spring-boot-3` | NOT STARTED | After Phase 2 merged |
 | 4 | Frontend (Angular 18) | `feature/frontend/angular18` | NOT STARTED | After Phase 3 merged |
 
