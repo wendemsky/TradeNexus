@@ -72,8 +72,9 @@ This file tracks what has been built and what remains. Update it as each phase p
 - [x] Generate BCrypt hashes for seed passwords before writing V3 migration
 - [x] `docker-compose.yml` — PostgreSQL 16 + pgAdmin
 - [x] `.env.example` for local + Neon/Railway connection strings
-- [ ] **Verification**: Flyway applies 3 migrations cleanly
-- [ ] **Verification**: `psql $DATABASE_URL -c "SELECT * FROM instrument"` returns 12 rows
+- [x] **Verification**: Docker Compose starts PostgreSQL 16 + pgAdmin cleanly; `tradenexus` DB visible
+- [ ] **Verification**: Flyway applies 3 migrations cleanly (confirmed when Spring Boot runs in Phase 3)
+- [ ] **Verification**: `psql $DATABASE_URL -c "SELECT * FROM instrument"` returns 12 rows (Phase 3)
 
 ### Decisions Made
 - `client_order.token` changed from `INTEGER` to `TEXT` (JWT is a string)
