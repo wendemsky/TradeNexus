@@ -1,6 +1,6 @@
 # Database — Implementation Spec
 
-**Directory:** `mockdb-trade-nexus/`
+**Directory:** `db-trade-nexus/`
 **Engine:** PostgreSQL 16
 **Phase:** 2 (after FIPS — FIPS defines instruments; DB schema must reference them)
 **Branch:** `feature/db/postgres-migration`
@@ -20,7 +20,7 @@
 ## File Structure
 
 ```
-mockdb-trade-nexus/
+db-trade-nexus/
   migrations/
     V1__initial_schema.sql        # Full schema — all tables, types, constraints
     V2__seed_instruments.sql      # 12 instruments from FIPS master list
@@ -189,7 +189,7 @@ INSERT INTO client_preferences (client_id, investment_purpose, income_category, 
 
 ---
 
-## Docker Compose (`docker-compose.yml` in `mockdb-trade-nexus/`)
+## Docker Compose (`docker-compose.yml` in `db-trade-nexus/`)
 
 ```yaml
 version: '3.9'
@@ -307,7 +307,7 @@ volumes:
 ### Environment File Template
 
 ```bash
-# mockdb-trade-nexus/.env.example
+# db-trade-nexus/.env.example
 POSTGRES_PASSWORD=changeme_local_only
 
 # For backend
@@ -338,7 +338,7 @@ DATABASE_URL=postgresql://tn_user:changeme_local_only@localhost:5432/tradenexus
 
 ```bash
 # 1. Start local PostgreSQL
-cd mockdb-trade-nexus
+cd db-trade-nexus
 docker-compose up -d
 
 # 2. Confirm migrations ran (via Spring Boot startup log or manually)
