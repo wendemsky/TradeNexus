@@ -3,7 +3,7 @@
 This file tracks what has been built and what remains. Update it as each phase progresses so future sessions start with the correct picture of where things stand.
 
 **Started:** 2026-05-27
-**Last Updated:** 2026-05-27
+**Last Updated:** 2026-05-28
 
 ---
 
@@ -12,7 +12,7 @@ This file tracks what has been built and what remains. Update it as each phase p
 | Phase | Service | Branch | Status | Notes |
 |-------|---------|--------|--------|-------|
 | 1 | Market Data Service (MDS) | `feature/mds/rewrite` | NOT STARTED | Start here — defines Price + Instrument shapes |
-| 2 | Database (PostgreSQL) | `feature/db/postgres-migration` | NOT STARTED | After Phase 1 merged |
+| 2 | Database (PostgreSQL) | `feature/db/postgres-migration` | IN PROGRESS | After Phase 1 merged |
 | 3 | Backend (Spring Boot 3) | `feature/backend/spring-boot-3` | NOT STARTED | After Phase 2 merged |
 | 4 | Frontend (Angular 18) | `feature/frontend/angular18` | NOT STARTED | After Phase 3 merged |
 
@@ -62,16 +62,16 @@ This file tracks what has been built and what remains. Update it as each phase p
 ## Phase 2 — Database Migration
 
 **Branch:** `feature/db/postgres-migration`
-**Directory:** `mockdb-trade-nexus/` (replace SQLite schema + add Flyway migrations)
+**Directory:** `db-trade-nexus/` (replace SQLite schema + add Flyway migrations)
 **Spec:** `docs/services/DATABASE.md`
 
 ### Checklist
-- [ ] `migrations/V1__initial_schema.sql` — full PostgreSQL schema (ENUMs, correct types)
-- [ ] `migrations/V2__seed_instruments.sql` — 12 instruments matching MDS `instruments.ts`
-- [ ] `migrations/V3__seed_dev_clients.sql` — dev seed clients with BCrypt hashed passwords
-- [ ] Generate BCrypt hashes for seed passwords before writing V3 migration
-- [ ] `docker-compose.yml` — PostgreSQL 16 + pgAdmin
-- [ ] `.env.example` for local + Neon/Railway connection strings
+- [x] `migrations/V1__initial_schema.sql` — full PostgreSQL schema (ENUMs, correct types)
+- [x] `migrations/V2__seed_instruments.sql` — 12 instruments matching MDS `instruments.ts`
+- [x] `migrations/V3__seed_dev_clients.sql` — dev seed clients with BCrypt hashed passwords
+- [x] Generate BCrypt hashes for seed passwords before writing V3 migration
+- [x] `docker-compose.yml` — PostgreSQL 16 + pgAdmin
+- [x] `.env.example` for local + Neon/Railway connection strings
 - [ ] **Verification**: Flyway applies 3 migrations cleanly
 - [ ] **Verification**: `psql $DATABASE_URL -c "SELECT * FROM instrument"` returns 12 rows
 

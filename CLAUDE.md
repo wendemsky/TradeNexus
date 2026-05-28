@@ -47,7 +47,7 @@ Read before starting any phase:
 TradeNexus/
   market-data-service/   # TypeScript 5 — live prices (Yahoo Finance + FRED)
   backend-trade-nexus/   # Java 21 + Spring Boot 3.2 — all auth + business logic
-  mockdb-trade-nexus/    # PostgreSQL 16 — Flyway migrations (was SQLite)
+  db-trade-nexus/    # PostgreSQL 16 — Flyway migrations (was SQLite)
   frontend-trade-nexus/  # Angular 18 — UI (standalone components + Signals)
 
   fips-backend/          # DEPRECATED — do not modify
@@ -160,7 +160,7 @@ Do not resolve conflicts in shared files unilaterally. Flag them and stop.
 
 - Work **only** in the subdirectory for your assigned layer.
 - **Never** modify without explicit instruction:
-  - `mockdb-trade-nexus/migrations/` — schema changes need coordinated migration
+  - `db-trade-nexus/migrations/` — schema changes need coordinated migration
   - Any `*.db` file — never commit database files
   - Root `README.md` — doc changes are a separate task
 - **Never** refactor outside your scope, even if it looks improvable.
