@@ -13,7 +13,7 @@ This file tracks what has been built and what remains. Update it as each phase p
 |-------|---------|--------|--------|-------|
 | 1 | Market Data Service (MDS) | `feature/mds/rewrite` | NOT STARTED | Start here — defines Price + Instrument shapes |
 | 2 | Database (PostgreSQL) | `feature/db/postgres-migration` | NOT STARTED | After Phase 1 merged |
-| 3 | Backend (Spring Boot 3) | `feature/backend/spring-boot-3` | NOT STARTED | After Phase 2 merged |
+| 3 | Backend (Spring Boot 3) | `feature/backend/spring-boot-3` | IN PROGRESS (Session 1 done) | After Phase 2 merged |
 | 4 | Frontend (Angular 18) | `feature/frontend/angular18` | NOT STARTED | After Phase 3 merged |
 
 **Note:** The mid-tier service was removed from the architecture. See `docs/services/MIDTIER.md` for the rationale. Angular connects directly to Spring Boot (REST) and MDS (WebSocket).
@@ -94,25 +94,34 @@ This file tracks what has been built and what remains. Update it as each phase p
 **Spec:** `docs/services/BACKEND.md`
 
 ### Checklist
-- [ ] Bump `pom.xml`: Spring Boot 3.2.x, Java 21
-- [ ] Replace all `javax.*` → `jakarta.*` imports
-- [ ] Remove MyBatis starters and mapper XML files
-- [ ] Add JPA, PostgreSQL driver, Flyway, JJWT 0.12, Spring Security, Bucket4j, Resilience4j
-- [ ] Create JPA entities: `Client`, `ClientIdentification`, `ClientPreferences`, `Holding`, `Instrument`, `ClientOrder`, `ClientTrade`
-- [ ] Create Spring Data JPA repositories
-- [ ] `JwtUtil.java` — `issueToken()` + `validate()` (Spring Boot owns both now)
-- [ ] `JwtAuthFilter.java` — `OncePerRequestFilter` validates JWT on protected routes
-- [ ] `SecurityConfig.java` — public routes: `/auth/**`, `/client/verify-email/**`; all others require JWT
-- [ ] `AuthController.java` — `POST /auth/login`, `POST /auth/register`, `POST /auth/refresh`
-- [ ] `MdsClient.java` — `RestTemplate` wrapper with `@Value("${mds.url}")` (never hardcoded)
+
+**Session 1 — Foundation (DONE, commit ee4d8f7)**
+- [x] Bump `pom.xml`: Spring Boot 3.2.5, Java 17 (min for Boot 3.x; upgrade to 21 when JDK available)
+- [x] Replace all `javax.*` → `jakarta.*` imports (done via Spring Boot 3 auto-migration)
+- [x] Remove MyBatis starters and mapper XML files
+- [x] Add JPA, PostgreSQL driver, Flyway, JJWT 0.12, Spring Security, Resilience4j
+- [x] Create JPA entities: `Client`, `ClientIdentification`, `ClientPreferences`, `Holding`, `Instrument`, `ClientOrder`, `ClientTrade`
+- [x] Create Spring Data JPA repositories (6 interfaces)
+- [x] `JwtUtil.java` — `issueToken()` + `validate()` with JJWT 0.12.x API
+- [x] `JwtAuthFilter.java` — `OncePerRequestFilter` validates JWT on protected routes
+- [x] `SecurityConfig.java` — public routes: `/auth/**`, `/client/verify-email/**`; all others require JWT
+- [x] `AuthController.java` — `POST /auth/login`, `POST /auth/register`, `POST /auth/refresh`
+- [x] `MdsClient.java` — `RestTemplate` wrapper with `@Value("${mds.url}")` (never hardcoded)
+- [x] `GlobalExceptionHandler.java` — error codes from `BUSINESS_LOGIC.md`
+- [x] `application.properties` — all secrets/URLs via env vars, no hardcoded values
+- [x] Flyway migrations V1–V3 in `src/main/resources/db/migration/`
+- [x] Maven wrapper (`mvnw` / `mvnw.cmd`) — builds 45 source files, `BUILD SUCCESS`
+- [x] `ClientController`, `InstrumentController`, `ClientPreferencesController`, `PortfolioController`
+
+**Session 2 — Business Logic (TODO)**
 - [ ] `TradeService.executeTrade()` — MARKET/LIMIT order logic, 0.1% bilateral fee, staleness check
 - [ ] `TradeService` — trading hours enforcement for MARKET orders
 - [ ] `PortfolioService.applyBuy/Sell()` — weighted average cost basis
 - [ ] `ActivityReportService` — realized P&L + unrealized P&L
 - [ ] Robo advisor: 3-factor scoring (momentum + risk fit + category preference)
 - [ ] Fix `subList(0, 5)` → `subList(0, Math.min(5, list.size()))`
-- [ ] `GlobalExceptionHandler.java` — error codes from `BUSINESS_LOGIC.md`
-- [ ] `application.properties` — all secrets/URLs via env vars, no hardcoded values
+- [ ] Wire `TradeController` and `ActivityReportController` (currently 501 stubs)
+- [ ] Bucket4j rate limiting on trade endpoints
 - [ ] **Verification**: login returns JWT; trade updates portfolio; P&L shows unrealized
 
 ### Decisions Made
