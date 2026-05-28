@@ -3,6 +3,11 @@ package com.marshals.controller;
 import com.marshals.client.MdsClient;
 import com.marshals.dto.OrderRequest;
 import com.marshals.dto.Price;
+import com.marshals.dto.TradeHistoryResponse;
+import com.marshals.dto.TradeResponse;
+import com.marshals.model.ClientPreferences;
+import com.marshals.model.Holding;
+import com.marshals.service.TradeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,14 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-// Trade execution and robo advisor logic implemented in Session 2
 @RestController
 @RequestMapping("/trade")
 public class TradeController {
 
+    private final TradeService tradeService;
     private final MdsClient mdsClient;
 
-    public TradeController(MdsClient mdsClient) {
+    public TradeController(TradeService tradeService, MdsClient mdsClient) {
+        this.tradeService = tradeService;
         this.mdsClient = mdsClient;
     }
 
@@ -35,22 +41,22 @@ public class TradeController {
     }
 
     @GetMapping("/trade-history/{clientId}")
-    public ResponseEntity<Void> getTradeHistory(@PathVariable String clientId) {
-        return ResponseEntity.status(501).build();
+    public ResponseEntity<TradeHistoryResponse> getTradeHistory(@PathVariable String clientId) {
+        return ResponseEntity.ok(tradeService.getTradeHistory(clientId));
     }
 
     @PostMapping("/execute-trade")
-    public ResponseEntity<Void> executeTrade(@RequestBody OrderRequest order) {
-        return ResponseEntity.status(501).build();
+    public ResponseEntity<TradeResponse> executeTrade(@RequestBody OrderRequest order) {
+        return ResponseEntity.ok(tradeService.executeTrade(order));
     }
 
     @PostMapping("/suggest-buy")
-    public ResponseEntity<Void> suggestBuy(@RequestBody Object preferences) {
-        return ResponseEntity.status(501).build();
+    public ResponseEntity<List<Price>> suggestBuy(@RequestBody ClientPreferences preferences) {
+        return ResponseEntity.ok(tradeService.suggestBuy(preferences));
     }
 
     @PostMapping("/suggest-sell")
-    public ResponseEntity<Void> suggestSell(@RequestBody Object preferences) {
-        return ResponseEntity.status(501).build();
+    public ResponseEntity<List<Holding>> suggestSell(@RequestBody ClientPreferences preferences) {
+        return ResponseEntity.ok(tradeService.suggestSell(preferences));
     }
 }

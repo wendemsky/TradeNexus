@@ -1,28 +1,39 @@
 package com.marshals.controller;
 
+import com.marshals.dto.TradePL;
+import com.marshals.dto.TradeHistoryResponse;
+import com.marshals.model.Holding;
+import com.marshals.service.ActivityReportService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// Realized + unrealized P&L and full activity report implemented in Session 2
+import java.util.List;
+
 @RestController
 @RequestMapping("/activity-report")
 public class ActivityReportController {
 
+    private final ActivityReportService activityReportService;
+
+    public ActivityReportController(ActivityReportService activityReportService) {
+        this.activityReportService = activityReportService;
+    }
+
     @GetMapping("/holdings/{clientId}")
-    public ResponseEntity<Void> getHoldings(@PathVariable String clientId) {
-        return ResponseEntity.status(501).build();
+    public ResponseEntity<List<Holding>> getHoldings(@PathVariable String clientId) {
+        return ResponseEntity.ok(activityReportService.getHoldings(clientId));
     }
 
     @GetMapping("/trades/{clientId}")
-    public ResponseEntity<Void> getTradeHistory(@PathVariable String clientId) {
-        return ResponseEntity.status(501).build();
+    public ResponseEntity<TradeHistoryResponse> getTradeHistory(@PathVariable String clientId) {
+        return ResponseEntity.ok(activityReportService.getTradeHistory(clientId));
     }
 
     @GetMapping("/pl/{clientId}")
-    public ResponseEntity<Void> getPL(@PathVariable String clientId) {
-        return ResponseEntity.status(501).build();
+    public ResponseEntity<List<TradePL>> getPL(@PathVariable String clientId) {
+        return ResponseEntity.ok(activityReportService.getPLReport(clientId));
     }
 }
