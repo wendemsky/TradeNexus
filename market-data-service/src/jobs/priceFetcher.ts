@@ -61,6 +61,7 @@ async function fetchBondPrices(): Promise<void> {
     const lines = resp.data.trim().split('\n')
     const latest = lines[lines.length - 1].split(',')
     const yieldPct = parseFloat(latest[1]) / 100
+    if (isNaN(yieldPct)) continue
 
     const instrumentId = FRED_TO_INSTRUMENT[series]
     const instrument = INSTRUMENT_MAP.get(instrumentId)!

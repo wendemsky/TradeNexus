@@ -5,10 +5,9 @@ import { verifyToken } from '../lib/jwtHelper.js'
 
 export function initPriceSocket(httpServer: Server): void {
   const wss = new WebSocketServer({ server: httpServer, path: '/ws/prices' })
+  const authenticatedClients = new Set<WebSocket>()
 
   wss.on('connection', (ws) => {
-    let authenticated = false
-
     ws.on('message', (data) => {
       try {
         const frame = JSON.parse(data.toString()) as { type: string; token?: string }
@@ -16,7 +15,7 @@ export function initPriceSocket(httpServer: Server): void {
         if (frame.type === 'AUTH') {
           try {
             verifyToken(frame.token ?? '')
-            authenticated = true
+            authenticatedClients.add(ws)
             ws.send(JSON.stringify({
               type: 'PRICE_SNAPSHOT',
               prices: priceCache.getAll(),
@@ -41,7 +40,10 @@ export function initPriceSocket(httpServer: Server): void {
       }
     }, 30_000)
 
-    ws.on('close', () => clearInterval(pingInterval))
+    ws.on('close', () => {
+      authenticatedClients.delete(ws)
+      clearInterval(pingInterval)
+    })
   })
 
   priceCache.on('update', () => {
@@ -50,7 +52,7 @@ export function initPriceSocket(httpServer: Server): void {
       prices: priceCache.getAll(),
       timestamp: new Date().toISOString(),
     })
-    wss.clients.forEach(client => {
+    authenticatedClients.forEach(client => {
       if (client.readyState === WebSocket.OPEN) client.send(frame)
     })
   })
