@@ -1,4 +1,4 @@
-import { bondPrice } from '../src/lib/bondPricer'
+import { bondPrice } from '../src/lib/bondPricer.js'
 
 describe('bondPrice', () => {
   it('returns face value when yield equals coupon rate', () => {

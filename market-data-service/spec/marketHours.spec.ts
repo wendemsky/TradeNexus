@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { isNYSEOpen, secondsUntilNextOpen } from '../src/lib/marketHours'
+import { isNYSEOpen, secondsUntilNextOpen } from '../src/lib/marketHours.js'
 
 describe('isNYSEOpen', () => {
   let dateSpy: jasmine.Spy
