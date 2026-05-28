@@ -11,7 +11,7 @@ This file tracks what has been built and what remains. Update it as each phase p
 
 | Phase | Service | Branch | Status | Notes |
 |-------|---------|--------|--------|-------|
-| 1 | Market Data Service (MDS) | `feature/mds/rewrite` | NOT STARTED | Start here — defines Price + Instrument shapes |
+| 1 | Market Data Service (MDS) | `feature/mds/rewrite` | COMPLETED | Merged to master |
 | 2 | Database (PostgreSQL) | `feature/db/postgres-migration` | COMPLETED | After Phase 1 merged |
 | 3 | Backend (Spring Boot 3) | `feature/backend/spring-boot-3` | NOT STARTED | After Phase 2 merged |
 | 4 | Frontend (Angular 18) | `feature/frontend/angular18` | NOT STARTED | After Phase 3 merged |
@@ -27,25 +27,25 @@ This file tracks what has been built and what remains. Update it as each phase p
 **Spec:** `docs/services/MDS.md`
 
 ### Checklist
-- [ ] Create `market-data-service/` directory with TypeScript project structure
-- [ ] `src/data/instruments.ts` — 12-instrument typed constant (authoritative master list)
-- [ ] `src/lib/bondPricer.ts` — Bond PV formula + unit tests
-- [ ] `src/lib/marketHours.ts` — NYSE open/closed detection (ET timezone, Luxon)
-- [ ] `src/lib/jwtHelper.ts` — `verifyToken()` only (no issuance — Spring Boot issues)
-- [ ] `src/cache/PriceCache.ts` — In-memory `Map<instrumentId, Price>` + EventEmitter
-- [ ] `src/jobs/priceFetcher.ts` — `node-cron`: Yahoo Finance (stocks/ETFs) + FRED (bonds) + bond PV calc
-- [ ] `src/ws/priceSocket.ts` — WebSocket server, AUTH frame handling, price broadcasting
-- [ ] `src/routes/instruments.ts` — `GET /instruments`
-- [ ] `src/routes/prices.ts` — `GET /prices`, `GET /prices/:id`, `GET /prices/:id/history`
-- [ ] `src/routes/marketStatus.ts` — `GET /market-status`
-- [ ] `src/routes/health.ts` — `GET /health`
-- [ ] `src/app.ts` and `src/server.ts` — Express + HTTP server bootstrap + cron start
-- [ ] `.env.example` with `JWT_SECRET`, `FRED_API_KEY`, `PRICE_REFRESH_SECONDS`, `PORT`
-- [ ] `tsconfig.json` — strict, ES2022 target, Node types
-- [ ] `package.json` — `yahoo-finance2`, `ws`, `node-cron`, `jsonwebtoken`, `luxon`, `axios`
-- [ ] `spec/bondPricer.spec.ts` — unit tests covering par/premium/discount scenarios
-- [ ] `spec/marketHours.spec.ts` — unit tests for weekend/holiday/hours detection
-- [ ] **Verification**: `curl http://localhost:3001/prices` returns 12 real prices
+- [x] Create `market-data-service/` directory with TypeScript project structure
+- [x] `src/data/instruments.ts` — 12-instrument typed constant (authoritative master list)
+- [x] `src/lib/bondPricer.ts` — Bond PV formula + unit tests
+- [x] `src/lib/marketHours.ts` — NYSE open/closed detection (ET timezone, Luxon)
+- [x] `src/lib/jwtHelper.ts` — `verifyToken()` only (no issuance — Spring Boot issues)
+- [x] `src/cache/PriceCache.ts` — In-memory `Map<instrumentId, Price>` + EventEmitter
+- [x] `src/jobs/priceFetcher.ts` — `node-cron`: Yahoo Finance (stocks/ETFs) + FRED (bonds) + bond PV calc
+- [x] `src/ws/priceSocket.ts` — WebSocket server, AUTH frame handling, price broadcasting
+- [x] `src/routes/instruments.ts` — `GET /instruments`
+- [x] `src/routes/prices.ts` — `GET /prices`, `GET /prices/:id`, `GET /prices/:id/history`
+- [x] `src/routes/marketStatus.ts` — `GET /market-status`
+- [x] `src/routes/health.ts` — `GET /health`
+- [x] `src/app.ts` and `src/server.ts` — Express + HTTP server bootstrap + cron start
+- [x] `.env.example` with `JWT_SECRET`, `FRED_API_KEY`, `PRICE_REFRESH_SECONDS`, `PORT`
+- [x] `tsconfig.json` — strict, ES2022 target, Node types
+- [x] `package.json` — `yahoo-finance2`, `ws`, `node-cron`, `jsonwebtoken`, `luxon`, `axios`
+- [x] `spec/bondPricer.spec.ts` — unit tests covering par/premium/discount scenarios
+- [x] `spec/marketHours.spec.ts` — unit tests for weekend/holiday/hours detection
+- [ ] **Verification**: `curl http://localhost:3001/prices` returns 12 real prices (run after env setup)
 - [ ] **Verification**: `wscat -c ws://localhost:3001/ws/prices` + AUTH frame shows PRICE_SNAPSHOT
 
 ### Decisions Made
