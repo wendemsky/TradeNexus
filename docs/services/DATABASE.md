@@ -2,7 +2,7 @@
 
 **Directory:** `db-trade-nexus/`
 **Engine:** PostgreSQL 16
-**Phase:** 2 (after FIPS — FIPS defines instruments; DB schema must reference them)
+**Phase:** 2 (instruments seeded by Flyway V2; MDS reads the same instrument list from DB)
 **Branch:** `feature/db/postgres-migration`
 
 ---
@@ -47,7 +47,7 @@ CREATE TYPE investment_purpose AS ENUM ('Education', 'Major Expense', 'Retiremen
 CREATE TYPE invest_length  AS ENUM ('Short', 'Medium', 'Long');
 CREATE TYPE spend_tier     AS ENUM ('Tier1', 'Tier2', 'Tier3', 'Tier4');
 
--- INSTRUMENT (master list — seeded from FIPS instruments.ts)
+-- INSTRUMENT (master list — seeded by Flyway V2; matches MDS instruments.ts)
 CREATE TABLE instrument (
     instrument_id      VARCHAR(20)     PRIMARY KEY,
     ticker             VARCHAR(20)     NOT NULL,
@@ -229,64 +229,13 @@ volumes:
 
 ---
 
-## Root `docker-compose.yml` (all services — at repo root)
+## Root `docker-compose.yml` (all services — at repo root, future addition)
+
+The root compose file will wire all four services together for a single `docker-compose up` local startup. Currently `db-trade-nexus/docker-compose.yml` handles PostgreSQL + pgAdmin; the other services are run directly (`npm run dev`, `./mvnw spring-boot:run`, `ng serve`).
 
 ```yaml
-version: '3.9'
-services:
-  postgres:
-    image: postgres:16
-    environment:
-      POSTGRES_DB: tradenexus
-      POSTGRES_USER: tn_user
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U tn_user -d tradenexus"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
-  fips:
-    build: ./fips-backend
-    ports:
-      - "3001:3001"
-    env_file: ./fips-backend/.env
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/fips/instruments"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  backend:
-    build: ./backend-trade-nexus
-    ports:
-      - "8080:8080"
-    env_file: ./backend-trade-nexus/.env
-    depends_on:
-      postgres:
-        condition: service_healthy
-      fips:
-        condition: service_healthy
-    environment:
-      DATABASE_URL: postgresql://tn_user:${POSTGRES_PASSWORD}@postgres:5432/tradenexus
-
-  midtier:
-    build: ./midtier-trade-nexus
-    ports:
-      - "4000:4000"
-    env_file: ./midtier-trade-nexus/.env
-    depends_on:
-      backend:
-        condition: service_started
-      fips:
-        condition: service_healthy
-
-volumes:
-  pgdata:
+# Future root docker-compose.yml — 4-service stack
+# postgres (5433) + mds (3001) + backend (8080) + frontend (4200)
 ```
 
 ---
@@ -318,17 +267,17 @@ DATABASE_URL=postgresql://tn_user:changeme_local_only@localhost:5432/tradenexus
 
 ## Key Schema Design Decisions
 
-1. **`client_id` stays VARCHAR(50)** — FIPS generates numeric string IDs using the email hash formula. Keeping string type maintains compatibility with the JWT `sub` claim.
+1. **`client_id` stays VARCHAR(50)** — Spring Boot generates UUID string IDs on registration. Keeping string type maintains compatibility with the JWT `sub` claim.
 
 2. **`token TEXT` in `client_order`** — The JWT is a ~200-character string. Old schema had `INTEGER`. This is a breaking change from the old design.
 
 3. **`accept_advisor BOOLEAN`** — Old schema was `TEXT CHECK IN ('true','false')`. Java code had a `==` comparison bug that never worked. New schema uses proper boolean.
 
-4. **`coupon_rate` and `maturity_date` on `instrument`** — Required for bond price calculation in FIPS. NULL for STOCK/ETF.
+4. **`coupon_rate` and `maturity_date` on `instrument`** — Required for bond price calculation in MDS (PV formula). NULL for STOCK/ETF.
 
 5. **Flyway, not Hibernate DDL** — `spring.jpa.hibernate.ddl-auto=validate`. Hibernate validates against existing schema but never creates/alters tables. Flyway owns schema lifecycle.
 
-6. **No PRICE_SNAPSHOT table (Phase 2)** — Prices are served live from FIPS. A historical price table can be added in a future phase for charting. Adds storage complexity not needed now.
+6. **No PRICE_SNAPSHOT table (Phase 2)** — Prices are served live from MDS (in-memory rolling cache). A historical price table can be added in a future phase for charting. Adds storage complexity not needed now.
 
 7. **`holdings.quantity` must be > 0** — Zero-quantity holdings are deleted by the portfolio service (not left as 0-row).
 

@@ -35,10 +35,6 @@ Read before starting any phase:
 - `docs/services/BACKEND.md` — Phase 3 spec (Spring Boot — owns all auth + business logic)
 - `docs/services/FRONTEND.md` — Phase 4 spec
 
-**Deprecated docs (do not implement from these):**
-- `docs/services/FIPS.md` — replaced by `MDS.md`
-- `docs/services/MIDTIER.md` — mid-tier removed from architecture
-
 ---
 
 ## Architecture
@@ -47,18 +43,15 @@ Read before starting any phase:
 TradeNexus/
   market-data-service/   # TypeScript 5 — live prices (Yahoo Finance + FRED)
   backend-trade-nexus/   # Java 21 + Spring Boot 3.2 — all auth + business logic
-  db-trade-nexus/    # PostgreSQL 16 — Flyway migrations (was SQLite)
+  db-trade-nexus/        # PostgreSQL 16 — Flyway migrations
   frontend-trade-nexus/  # Angular 18 — UI (standalone components + Signals)
-
-  fips-backend/          # DEPRECATED — do not modify
-  midtier-trade-nexus/   # REMOVED — do not modify
 ```
 
-### Request flow (new design)
+### Request flow
 
 ```
 Browser → Angular (4200)
-        →[REST] Spring Boot (8080)  ←→  PostgreSQL (5432)
+        →[REST] Spring Boot (8080)  ←→  PostgreSQL (5433 local / 5432 Docker)
         →[WS]   MDS (3001)          ←→  Yahoo Finance / FRED API
 
 No mid-tier. Angular calls Spring Boot and MDS directly.
