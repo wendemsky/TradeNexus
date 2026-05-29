@@ -1,27 +1,46 @@
 package com.marshals.service;
 
+import com.marshals.dto.ClientPortfolioResponse;
 import com.marshals.model.Client;
 import com.marshals.model.Holding;
-import com.marshals.model.HoldingId;
 import com.marshals.repository.ClientRepository;
 import com.marshals.repository.HoldingRepository;
+import com.marshals.repository.InstrumentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
 
 @Service
 public class PortfolioService {
 
     private final HoldingRepository holdingRepository;
     private final ClientRepository clientRepository;
+    private final InstrumentRepository instrumentRepository;
 
-    public PortfolioService(HoldingRepository holdingRepository, ClientRepository clientRepository) {
+    public PortfolioService(HoldingRepository holdingRepository,
+                            ClientRepository clientRepository,
+                            InstrumentRepository instrumentRepository) {
         this.holdingRepository = holdingRepository;
         this.clientRepository = clientRepository;
+        this.instrumentRepository = instrumentRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public ClientPortfolioResponse getPortfolio(String clientId) {
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new NoSuchElementException("CLIENT_NOT_FOUND"));
+        List<Holding> holdings = holdingRepository.findByIdClientId(clientId);
+        holdings.forEach(h -> instrumentRepository.findById(h.getInstrumentId()).ifPresent(i -> {
+            h.setInstrumentDescription(i.getDescription());
+            h.setCategoryId(i.getCategoryId());
+        }));
+        return new ClientPortfolioResponse(clientId, client.getCurrBalance(), holdings);
     }
 
     // BUY — weighted average cost basis, balance deducted

@@ -3,14 +3,14 @@ package com.marshals.client;
 import com.marshals.dto.MarketStatus;
 import com.marshals.dto.Price;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@Service
+@Component
 public class MdsClient {
 
     @Value("${mds.url:http://localhost:3001}")

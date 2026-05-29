@@ -6,6 +6,7 @@ import com.marshals.dto.RegisterRequest;
 import com.marshals.dto.TokenRefreshResponse;
 import com.marshals.model.Client;
 import com.marshals.model.ClientIdentification;
+import com.marshals.repository.ClientIdentificationRepository;
 import com.marshals.repository.ClientRepository;
 import com.marshals.security.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -29,6 +30,7 @@ public class AuthService {
     private static final Set<String> USA_ID_TYPES = Set.of("SSN");
 
     private final ClientRepository clientRepository;
+    private final ClientIdentificationRepository identificationRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -36,13 +38,16 @@ public class AuthService {
     private BigDecimal initialBalance;
 
     public AuthService(ClientRepository clientRepository,
+                       ClientIdentificationRepository identificationRepository,
                        PasswordEncoder passwordEncoder,
                        JwtUtil jwtUtil) {
         this.clientRepository = clientRepository;
+        this.identificationRepository = identificationRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
     }
 
+    @Transactional(readOnly = true)
     public ClientProfile login(LoginRequest request) {
         Client client = clientRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("EMAIL_NOT_FOUND"));
@@ -138,11 +143,7 @@ public class AuthService {
     private void checkIdUniqueness(RegisterRequest request) {
         if (request.getIdentification() == null) return;
         for (RegisterRequest.IdentificationEntry entry : request.getIdentification()) {
-            boolean taken = clientRepository.findAll().stream()
-                    .flatMap(c -> c.getIdentification().stream())
-                    .anyMatch(id -> entry.getType().equals(id.getType())
-                            && entry.getValue().equals(id.getValue()));
-            if (taken) {
+            if (identificationRepository.countByTypeAndValue(entry.getType(), entry.getValue()) > 0) {
                 throw new IllegalArgumentException("ID_TAKEN");
             }
         }

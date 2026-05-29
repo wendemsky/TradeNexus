@@ -171,6 +171,7 @@ public class TradeService {
 
     // ─── Robo Advisor — BUY ──────────────────────────────────────────────────
 
+    @Transactional(readOnly = true)
     public List<Price> suggestBuy(com.marshals.model.ClientPreferences prefs) {
         if (!prefs.isAcceptAdvisor()) {
             throw new AccessDeniedException("ADVISOR_NOT_ACCEPTED");
@@ -182,7 +183,7 @@ public class TradeService {
         // Category filter: exclude categories that don't match risk tolerance
         List<Price> eligible = allPrices.stream()
                 .filter(p -> {
-                    String cat = resolveCategory(p.getInstrumentId(), allPrices);
+                    String cat = resolveCategory(p.getInstrumentId());
                     if (risk <= 2 && ("STOCK".equals(cat) || "ETF".equals(cat))) return false;
                     if (risk >= 4 && "GOVT".equals(cat)) return false;
                     return true;
@@ -203,6 +204,7 @@ public class TradeService {
 
     // ─── Robo Advisor — SELL ─────────────────────────────────────────────────
 
+    @Transactional(readOnly = true)
     public List<Holding> suggestSell(com.marshals.model.ClientPreferences prefs) {
         if (!prefs.isAcceptAdvisor()) {
             throw new AccessDeniedException("ADVISOR_NOT_ACCEPTED");
@@ -281,8 +283,10 @@ public class TradeService {
         if (!"MARKET".equals(req.getOrderType()) && !"LIMIT".equals(req.getOrderType())) {
             throw new IllegalArgumentException("INVALID_ORDER_TYPE");
         }
-        if ("LIMIT".equals(req.getOrderType()) && req.getTargetPrice() == null) {
-            throw new IllegalArgumentException("TARGET_PRICE_REQUIRED_FOR_LIMIT");
+        if ("LIMIT".equals(req.getOrderType())) {
+            if (req.getTargetPrice() == null || req.getTargetPrice().compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("INVALID_TARGET_PRICE");
+            }
         }
         if (req.getClientId() == null || req.getClientId().isBlank()) {
             throw new IllegalArgumentException("MISSING_CLIENT_ID");
@@ -320,7 +324,7 @@ public class TradeService {
         List<Price> history = mdsClient.getPriceHistory(price.getInstrumentId());
         double momentum = calcMomentumScore(history);
         double riskFit = calcRiskFitScore(history, prefs.getRiskTolerance());
-        double category = calcCategoryScore(resolveCategory(price.getInstrumentId(), null), prefs);
+        double category = calcCategoryScore(resolveCategory(price.getInstrumentId()), prefs);
         return 0.30 * momentum + 0.40 * riskFit + 0.30 * category;
     }
 
@@ -372,9 +376,9 @@ public class TradeService {
         return isGovt ? 0.1 : 0.9;
     }
 
-    private String resolveCategory(String instrumentId, List<Price> ignored) {
+    private String resolveCategory(String instrumentId) {
         return instrumentRepository.findById(instrumentId)
-                .map(i -> i.getCategoryId())
+                .map(Instrument::getCategoryId)
                 .orElse(null);
     }
 

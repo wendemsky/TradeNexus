@@ -41,6 +41,7 @@ public class ActivityReportService {
         this.mdsClient = mdsClient;
     }
 
+    @Transactional(readOnly = true)
     public List<Holding> getHoldings(String clientId) {
         List<Holding> holdings = holdingRepository.findByIdClientId(clientId);
         holdings.forEach(h -> instrumentRepository.findById(h.getInstrumentId()).ifPresent(i -> {

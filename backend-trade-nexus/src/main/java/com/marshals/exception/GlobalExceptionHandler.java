@@ -1,5 +1,7 @@
 package com.marshals.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,6 +13,8 @@ import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     private ResponseEntity<Map<String, Object>> error(int status, String message) {
         return ResponseEntity.status(status).body(Map.of(
@@ -52,11 +56,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Map<String, Object>> handleNotFound(NoSuchElementException e) {
-        return error(404, e.getMessage() != null ? e.getMessage() : "INSTRUMENT_NOT_FOUND");
+        return error(404, e.getMessage() != null ? e.getMessage() : "NOT_FOUND");
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneric(Exception e) {
+        log.error("Unhandled exception", e);
         return error(500, "Unexpected error");
     }
 }
