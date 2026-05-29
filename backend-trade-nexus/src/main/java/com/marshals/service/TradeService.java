@@ -158,6 +158,7 @@ public class TradeService {
         return TradeResponse.from(trade);
     }
 
+    @Transactional(readOnly = true)
     public TradeHistoryResponse getTradeHistory(String clientId) {
         List<TradeResponse> trades = tradeRepository
                 .findByOrderClientClientId(clientId)

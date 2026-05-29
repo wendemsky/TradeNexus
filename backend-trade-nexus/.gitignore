@@ -2,3 +2,5 @@
 /target/
 /.settings
 /logs
+.env
+src/main/resources/application-local.properties

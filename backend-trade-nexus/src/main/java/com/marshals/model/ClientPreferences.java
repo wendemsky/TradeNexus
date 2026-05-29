@@ -26,7 +26,7 @@ public class ClientPreferences {
     private String percentageOfSpend;
 
     @Column(name = "risk_tolerance", nullable = false)
-    private int riskTolerance;
+    private short riskTolerance;
 
     @Column(name = "accept_advisor", nullable = false)
     private boolean acceptAdvisor;
@@ -48,8 +48,8 @@ public class ClientPreferences {
     public String getPercentageOfSpend() { return percentageOfSpend; }
     public void setPercentageOfSpend(String percentageOfSpend) { this.percentageOfSpend = percentageOfSpend; }
 
-    public int getRiskTolerance() { return riskTolerance; }
-    public void setRiskTolerance(int riskTolerance) { this.riskTolerance = riskTolerance; }
+    public short getRiskTolerance() { return riskTolerance; }
+    public void setRiskTolerance(short riskTolerance) { this.riskTolerance = riskTolerance; }
 
     public boolean isAcceptAdvisor() { return acceptAdvisor; }
     public void setAcceptAdvisor(boolean acceptAdvisor) { this.acceptAdvisor = acceptAdvisor; }

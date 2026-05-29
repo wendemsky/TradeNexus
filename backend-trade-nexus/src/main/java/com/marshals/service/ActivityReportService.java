@@ -12,6 +12,7 @@ import com.marshals.repository.ClientTradeRepository;
 import com.marshals.repository.HoldingRepository;
 import com.marshals.repository.InstrumentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -49,6 +50,7 @@ public class ActivityReportService {
         return holdings;
     }
 
+    @Transactional(readOnly = true)
     public TradeHistoryResponse getTradeHistory(String clientId) {
         List<TradeResponse> trades = tradeRepository.findByOrderClientClientId(clientId)
                 .stream()
@@ -58,6 +60,7 @@ public class ActivityReportService {
         return new TradeHistoryResponse(clientId, trades);
     }
 
+    @Transactional(readOnly = true)
     public List<TradePL> getPLReport(String clientId) {
         List<ClientTrade> trades = tradeRepository.findByOrderClientClientId(clientId)
                 .stream()
