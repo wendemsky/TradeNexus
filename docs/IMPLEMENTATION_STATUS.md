@@ -3,7 +3,7 @@
 This file tracks what has been built and what remains. Update it as each phase progresses so future sessions start with the correct picture of where things stand.
 
 **Started:** 2026-05-27
-**Last Updated:** 2026-05-28
+**Last Updated:** 2026-05-29
 
 ---
 
@@ -125,6 +125,24 @@ This file tracks what has been built and what remains. Update it as each phase p
 - [x] `TradeController` and `ActivityReportController` fully wired
 - [ ] Bucket4j rate limiting on trade endpoints — deferred (add in Session 3 if needed)
 - [x] **Verification**: 50 source files compile clean; endpoints ready for integration test
+
+**Session 3 — Audit, Refactor & Tests (DONE, 2026-05-29)**
+- [x] Full architecture audit: removed layering violations, dead code, duplicate logic
+- [x] `SecurityUtils.java` — static `assertOwnerOrAdmin()` replacing 5 duplicate private methods
+- [x] `ClientIdentificationRepository` — targeted JPQL `countByTypeAndValue()` replacing `findAll()` table scan
+- [x] `ClientService` and `InstrumentService` — service layer added (controllers now call services, not repos)
+- [x] `PortfolioService.getPortfolio()` — moved from `PortfolioController` to service layer
+- [x] All service read methods annotated `@Transactional(readOnly=true)`; write methods `@Transactional`
+- [x] `TradeService.suggestBuy/Sell()` — removed unused parameter; added `@Transactional(readOnly=true)`
+- [x] LIMIT order validation — fixed: `targetPrice == null || targetPrice <= 0`
+- [x] `GlobalExceptionHandler` — added SLF4J logger for unhandled exceptions
+- [x] `MdsClient` — changed `@Service` to `@Component` (semantic correctness)
+- [x] Removed duplicate `GET /trade/trade-history/:clientId` endpoint (data available via `ActivityReportController`)
+- [x] Docker PostgreSQL remapped to port 5433 (local PG18 occupies 5432)
+- [x] `mvnw.cmd` trailing backslash bug fixed (Windows-specific)
+- [x] **Unit tests**: 70 tests across all 7 services (Mockito, no Spring context)
+- [x] **Integration tests**: 19 tests via `MockMvc` + real DB (failsafe plugin, `./mvnw verify`)
+- [x] **Verification**: `./mvnw test` → 70/70 unit tests pass; `./mvnw verify` → 89/89 total
 
 ### Decisions Made
 - Spring Boot now issues JWTs (JJWT 0.12.x HS256) — FIPS/MDS no longer does

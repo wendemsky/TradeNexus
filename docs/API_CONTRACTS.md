@@ -273,13 +273,13 @@ No authentication required on REST endpoints — prices are public market data. 
 **POST /auth/login**  ← was `GET /client?email=x&password=y` — security fix
 - Body: `{ email: string, password: string }` (plaintext over HTTPS — backend BCrypts)
 - Response 200: `ClientProfile`
-- Response 401: `ErrorResponse` — `INVALID_CREDENTIALS`
+- Response 400: `ErrorResponse` — `INVALID_CREDENTIALS`
 - Response 404: `ErrorResponse` — `EMAIL_NOT_FOUND`
 
 **POST /auth/register**
 - Body: `{ email, password, name, dateOfBirth, country, identification[] }`
 - Response 200: `ClientProfile`
-- Response 409: `ErrorResponse` — `EMAIL_TAKEN` | `ID_TAKEN`
+- Response 400: `ErrorResponse` — `EMAIL_TAKEN` | `ID_TAKEN` | `INVALID_PASSWORD_FORMAT` | `INVALID_COUNTRY` | `MISSING_REQUIRED_FIELDS`
 
 **POST /auth/refresh**
 - Headers: `Authorization: Bearer <existing-token>`
@@ -311,10 +311,6 @@ No authentication required on REST endpoints — prices are public market data. 
 - Response 400: `ErrorResponse` — validation failure
 - Response 402: `ErrorResponse` — `INSUFFICIENT_BALANCE`
 - Response 409: `ErrorResponse` — `MARKET_CLOSED` | `LIMIT_NOT_MET` | `PRICE_DATA_STALE`
-
-**GET /trade/trade-history/:clientId**
-- Auth: Required (JWT; clientId must match token subject or isAdmin=true)
-- Response 200: `TradeHistory`
 
 **GET /trade/live-prices**
 - Auth: Required (JWT)
