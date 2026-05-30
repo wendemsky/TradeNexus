@@ -29,6 +29,7 @@ export class InstrumentsComponent implements OnInit, OnDestroy {
   private subs = new Subscription();
 
   readonly isLoading = signal(true);
+  private readonly prices$ = toObservable(this.priceStore.prices);
 
   columnDefs: ColDef<Price>[] = [];
   defaultColDef: ColDef<Price> = {
@@ -52,7 +53,7 @@ export class InstrumentsComponent implements OnInit, OnDestroy {
     );
 
     this.subs.add(
-      toObservable(this.priceStore.prices).subscribe(prices => {
+      this.prices$.subscribe(prices => {
         if (this.gridApi) {
           this.gridApi.setGridOption('rowData', Array.from(prices.values()));
           this.isLoading.set(false);

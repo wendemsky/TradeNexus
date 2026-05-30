@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ColDef } from 'ag-grid-community';
 import { AgGridAngular } from 'ag-grid-angular';
-import { TradeService } from '../../../core/services/trade.service';
+import { ActivityService } from '../../../core/services/activity.service';
 import { authStore } from '../../../store/auth.store';
 import { Trade } from '../../../shared/models/trade.models';
 
@@ -12,7 +12,7 @@ import { Trade } from '../../../shared/models/trade.models';
   templateUrl: './trading-history.component.html',
 })
 export class TradingHistoryComponent implements OnInit {
-  private readonly tradeService = inject(TradeService);
+  private readonly activityService = inject(ActivityService);
 
   readonly isLoading = signal(true);
   readonly trades    = signal<Trade[]>([]);
@@ -72,7 +72,7 @@ export class TradingHistoryComponent implements OnInit {
     const clientId = authStore.clientId();
     if (!clientId) return;
 
-    this.tradeService.getTradeHistory(clientId).subscribe({
+    this.activityService.getTrades(clientId).subscribe({
       next: history => {
         this.trades.set(history.trades ?? []);
         this.isLoading.set(false);
