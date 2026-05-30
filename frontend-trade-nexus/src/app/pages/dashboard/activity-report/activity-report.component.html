@@ -1,0 +1,62 @@
+<div class="h-full flex flex-col gap-4 p-4 lg:p-6">
+
+  <h1 class="text-lg font-semibold text-text-primary">Activity Report</h1>
+
+  <!-- Tab bar + Export button -->
+  <div class="flex items-center justify-between border-b border-border flex-shrink-0">
+    <div class="flex">
+      @for (tab of tabs; track tab.id) {
+        <button
+          class="px-4 py-2.5 text-sm font-medium transition-colors border-b-2"
+          [class]="activeTab() === tab.id
+            ? 'text-brand border-brand'
+            : 'text-text-secondary border-transparent hover:text-text-primary'"
+          (click)="switchTab(tab.id)">
+          {{ tab.label }}
+        </button>
+      }
+    </div>
+    <button class="btn-secondary btn-sm mb-1" (click)="exportToExcel()">
+      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414A1 1 0 0119 9.414V19a2 2 0 01-2 2z"/>
+      </svg>
+      Export Excel
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div class="flex-1 min-h-0">
+
+    @if (isLoading()) {
+      <div class="h-full flex items-center justify-center text-text-secondary text-sm">
+        Loading…
+      </div>
+    } @else if (errorMsg()) {
+      <div class="rounded-lg border border-negative/30 bg-negative/10 px-4 py-3 text-sm text-negative">
+        {{ errorMsg() }}
+      </div>
+    } @else {
+
+      @if (activeTab() === 'holdings') {
+        <ag-grid-angular [class]="themeClass" class="w-full h-full"
+          [columnDefs]="holdingCols" [defaultColDef]="defaultColDef" [rowData]="holdings()">
+        </ag-grid-angular>
+      }
+
+      @if (activeTab() === 'trades') {
+        <ag-grid-angular [class]="themeClass" class="w-full h-full"
+          [columnDefs]="tradeCols" [defaultColDef]="defaultColDef" [rowData]="trades()">
+        </ag-grid-angular>
+      }
+
+      @if (activeTab() === 'pl') {
+        <ag-grid-angular [class]="themeClass" class="w-full h-full"
+          [columnDefs]="plCols" [defaultColDef]="defaultColDef" [rowData]="pl()">
+        </ag-grid-angular>
+      }
+
+    }
+  </div>
+
+</div>

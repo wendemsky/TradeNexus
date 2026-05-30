@@ -1,0 +1,109 @@
+<div class="min-h-screen bg-background flex flex-col lg:flex-row">
+
+  <!-- Hero panel (desktop left / mobile top) -->
+  <div class="lg:flex-1 flex flex-col justify-center px-8 py-12 lg:px-16 lg:py-0">
+    <div class="max-w-md">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-8 h-8 rounded-lg bg-brand flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+          </svg>
+        </div>
+        <span class="text-xl font-semibold text-text-primary">TradeNexus</span>
+      </div>
+
+      <h1 class="text-3xl lg:text-4xl font-bold text-text-primary leading-tight mb-4">
+        Institutional-grade<br>portfolio management
+      </h1>
+      <p class="text-text-secondary text-base leading-relaxed">
+        Real-time market data, intelligent order execution, and portfolio analytics —
+        designed for serious investors.
+      </p>
+
+      <div class="mt-10 flex flex-col gap-3">
+        <div class="flex items-center gap-3 text-sm text-text-secondary">
+          <div class="w-1.5 h-1.5 rounded-full bg-positive flex-shrink-0"></div>
+          Live prices via NYSE-synced WebSocket feed
+        </div>
+        <div class="flex items-center gap-3 text-sm text-text-secondary">
+          <div class="w-1.5 h-1.5 rounded-full bg-positive flex-shrink-0"></div>
+          MARKET and LIMIT order execution
+        </div>
+        <div class="flex items-center gap-3 text-sm text-text-secondary">
+          <div class="w-1.5 h-1.5 rounded-full bg-positive flex-shrink-0"></div>
+          AI-powered robo advisor recommendations
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login form panel -->
+  <div class="lg:w-[440px] flex items-center justify-center px-6 py-12 lg:border-l border-border">
+    <div class="w-full max-w-sm">
+      <h2 class="text-2xl font-semibold text-text-primary mb-1">Sign in</h2>
+      <p class="text-sm text-text-secondary mb-8">Access your portfolio and trading dashboard</p>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+
+        <div>
+          <label class="form-label" for="email">Email address</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            class="form-input"
+            placeholder="you&#64;example.com"
+            autocomplete="email">
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <p class="form-error">Enter a valid email address.</p>
+          }
+        </div>
+
+        <div>
+          <label class="form-label" for="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            class="form-input"
+            placeholder="••••••••"
+            autocomplete="current-password">
+          @if (form.get('password')?.invalid && form.get('password')?.touched) {
+            <p class="form-error">Password must be at least 8 characters.</p>
+          }
+        </div>
+
+        @if (errorMsg()) {
+          <div class="rounded-lg border border-negative/30 bg-negative/10 px-4 py-3 text-sm text-negative">
+            {{ errorMsg() }}
+          </div>
+        }
+
+        <button
+          type="submit"
+          class="btn-primary w-full"
+          [disabled]="form.invalid || isLoading()">
+          @if (isLoading()) {
+            <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+            Signing in…
+          } @else {
+            Sign in
+          }
+        </button>
+
+        <p class="text-sm text-center text-text-secondary">
+          New to TradeNexus?
+          <a routerLink="/register" class="text-brand hover:text-brand-hover font-medium transition-colors">
+            Create an account
+          </a>
+        </p>
+
+      </form>
+    </div>
+  </div>
+
+</div>
