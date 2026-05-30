@@ -1,0 +1,191 @@
+<div class="min-h-screen bg-background flex items-start lg:items-center justify-center px-4 py-8 lg:py-0">
+  <div class="w-full max-w-lg">
+
+    <!-- Header -->
+    <div class="flex items-center gap-3 mb-8">
+      <div class="w-7 h-7 rounded-lg bg-brand flex items-center justify-center">
+        <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+        </svg>
+      </div>
+      <span class="text-lg font-semibold text-text-primary">TradeNexus</span>
+    </div>
+
+    <h1 class="text-2xl font-bold text-text-primary mb-1">Create your account</h1>
+    <p class="text-sm text-text-secondary mb-8">Already have an account?
+      <a routerLink="/" class="text-brand hover:text-brand-hover font-medium transition-colors">Sign in</a>
+    </p>
+
+    <!-- Step indicator -->
+    <div class="flex items-center gap-2 mb-8">
+      @for (step of [1, 2, 3]; track step) {
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold transition-colors"
+            [class]="step <= currentStep()
+              ? 'bg-brand text-white'
+              : 'bg-surface-raised text-text-secondary border border-border'">
+            @if (step < currentStep()) {
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            } @else {
+              {{ step }}
+            }
+          </div>
+          <span class="text-xs hidden sm:block"
+            [class]="step === currentStep() ? 'text-text-primary font-medium' : 'text-text-secondary'">
+            {{ step === 1 ? 'Credentials' : step === 2 ? 'Personal' : 'Identification' }}
+          </span>
+        </div>
+        @if (step < 3) {
+          <div class="flex-1 h-px bg-border"></div>
+        }
+      }
+    </div>
+
+    <!-- Step 1: Credentials -->
+    @if (currentStep() === 1) {
+      <form [formGroup]="credentialsForm" (ngSubmit)="nextFromStep1()" class="card flex flex-col gap-5">
+        <h2 class="text-base font-semibold text-text-primary">Account credentials</h2>
+
+        <div>
+          <label class="form-label" for="email">Email address</label>
+          <input id="email" type="email" formControlName="email" class="form-input"
+            placeholder="you&#64;example.com" autocomplete="email">
+          @if (credentialsForm.get('email')?.invalid && credentialsForm.get('email')?.touched) {
+            <p class="form-error">Enter a valid email address.</p>
+          }
+        </div>
+
+        <div>
+          <label class="form-label" for="password">Password</label>
+          <input id="password" type="password" formControlName="password" class="form-input"
+            placeholder="••••••••" autocomplete="new-password">
+          @if (credentialsForm.get('password')?.invalid && credentialsForm.get('password')?.touched) {
+            @if (credentialsForm.get('password')?.errors?.['minlength']) {
+              <p class="form-error">Password must be at least 8 characters.</p>
+            } @else if (credentialsForm.get('password')?.errors?.['passwordStrength']) {
+              <p class="form-error">Must include uppercase, lowercase, and a number.</p>
+            }
+          }
+        </div>
+
+        <div>
+          <label class="form-label" for="confirmPassword">Confirm password</label>
+          <input id="confirmPassword" type="password" formControlName="confirmPassword" class="form-input"
+            placeholder="••••••••" autocomplete="new-password">
+          @if (credentialsForm.errors?.['passwordMismatch'] && credentialsForm.get('confirmPassword')?.touched) {
+            <p class="form-error">Passwords do not match.</p>
+          }
+        </div>
+
+        @if (errorMsg()) {
+          <div class="rounded-lg border border-negative/30 bg-negative/10 px-4 py-3 text-sm text-negative">
+            {{ errorMsg() }}
+          </div>
+        }
+
+        <button type="submit" class="btn-primary w-full" [disabled]="isLoading()">
+          @if (isLoading()) { Checking… } @else { Continue }
+        </button>
+      </form>
+    }
+
+    <!-- Step 2: Personal details -->
+    @if (currentStep() === 2) {
+      <form [formGroup]="personalForm" (ngSubmit)="nextFromStep2()" class="card flex flex-col gap-5">
+        <h2 class="text-base font-semibold text-text-primary">Personal details</h2>
+
+        <div>
+          <label class="form-label" for="name">Full name</label>
+          <input id="name" type="text" formControlName="name" class="form-input" placeholder="Jane Smith">
+          @if (personalForm.get('name')?.invalid && personalForm.get('name')?.touched) {
+            <p class="form-error">Enter your full name.</p>
+          }
+        </div>
+
+        <div>
+          <label class="form-label" for="dob">Date of birth</label>
+          <input id="dob" type="date" formControlName="dateOfBirth" class="form-input" [max]="maxDob()">
+          @if (personalForm.get('dateOfBirth')?.invalid && personalForm.get('dateOfBirth')?.touched) {
+            <p class="form-error">You must be at least 18 years old.</p>
+          }
+        </div>
+
+        <div>
+          <label class="form-label" for="country">Country</label>
+          <select id="country" formControlName="country" class="form-input">
+            <option value="India">India</option>
+            <option value="USA">United States</option>
+          </select>
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button type="button" class="btn-secondary flex-1" (click)="goToStep(1)">Back</button>
+          <button type="submit" class="btn-primary flex-1">Continue</button>
+        </div>
+      </form>
+    }
+
+    <!-- Step 3: Identification + summary -->
+    @if (currentStep() === 3) {
+      <div class="flex flex-col gap-4">
+        <form [formGroup]="idForm" class="card flex flex-col gap-5">
+          <h2 class="text-base font-semibold text-text-primary">Identification</h2>
+
+          <div>
+            <label class="form-label" for="idType">ID type</label>
+            <select id="idType" formControlName="idType" class="form-input">
+              @for (t of idTypes(); track t) {
+                <option [value]="t">{{ t }}</option>
+              }
+            </select>
+          </div>
+
+          <div>
+            <label class="form-label" for="idValue">ID number</label>
+            <input id="idValue" type="text" formControlName="idValue" class="form-input font-mono"
+              [placeholder]="idForm.get('idType')?.value === 'Aadhar' ? '12-digit Aadhar number'
+                           : idForm.get('idType')?.value === 'PAN'    ? 'e.g. ABCDE1234F'
+                           : '9-digit SSN'">
+            @if (idForm.get('idValue')?.invalid && idForm.get('idValue')?.touched) {
+              <p class="form-error">Invalid {{ idForm.get('idType')?.value }} format.</p>
+            }
+          </div>
+        </form>
+
+        <!-- Review summary -->
+        <div class="card">
+          <h3 class="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-3">Review</h3>
+          <dl class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+            <dt class="text-text-secondary">Email</dt>
+            <dd class="text-text-primary font-mono truncate">{{ credentialsForm.value.email }}</dd>
+            <dt class="text-text-secondary">Name</dt>
+            <dd class="text-text-primary">{{ personalForm.value.name }}</dd>
+            <dt class="text-text-secondary">Date of birth</dt>
+            <dd class="text-text-primary font-mono">{{ personalForm.value.dateOfBirth }}</dd>
+            <dt class="text-text-secondary">Country</dt>
+            <dd class="text-text-primary">{{ personalForm.value.country }}</dd>
+            <dt class="text-text-secondary">ID type</dt>
+            <dd class="text-text-primary">{{ idForm.value.idType }}</dd>
+          </dl>
+        </div>
+
+        @if (errorMsg()) {
+          <div class="rounded-lg border border-negative/30 bg-negative/10 px-4 py-3 text-sm text-negative">
+            {{ errorMsg() }}
+          </div>
+        }
+
+        <div class="flex gap-3">
+          <button type="button" class="btn-secondary flex-1" (click)="goToStep(2)">Back</button>
+          <button type="button" class="btn-primary flex-1" [disabled]="idForm.invalid || isLoading()" (click)="submit()">
+            @if (isLoading()) { Creating account… } @else { Create account }
+          </button>
+        </div>
+      </div>
+    }
+
+  </div>
+</div>

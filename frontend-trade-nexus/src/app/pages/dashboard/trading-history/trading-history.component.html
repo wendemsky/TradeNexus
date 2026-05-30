@@ -1,0 +1,30 @@
+<div class="h-full flex flex-col gap-4 p-4 lg:p-6">
+
+  <h1 class="text-lg font-semibold text-text-primary">Trading History</h1>
+
+  @if (isLoading()) {
+    <div class="flex-1 flex items-center justify-center text-text-secondary text-sm">
+      Loading trade history…
+    </div>
+  } @else if (error()) {
+    <div class="rounded-lg border border-negative/30 bg-negative/10 px-4 py-3 text-sm text-negative">
+      {{ error() }}
+    </div>
+  } @else if (trades().length === 0) {
+    <div class="card flex items-center justify-center text-text-secondary text-sm py-16">
+      No trades yet — execute your first trade from the Instruments page.
+    </div>
+  } @else {
+    <div class="flex-1 min-h-0">
+      <ag-grid-angular
+        [class]="themeClass"
+        class="w-full h-full"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [rowData]="trades()"
+        [animateRows]="true">
+      </ag-grid-angular>
+    </div>
+  }
+
+</div>

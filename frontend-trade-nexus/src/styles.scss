@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Custom Properties (Design Tokens) ─────────────────────────── */
+
+:root {
+  /* Light mode */
+  --color-background:     #f8fafc;
+  --color-surface:        #ffffff;
+  --color-surface-raised: #f1f5f9;
+  --color-border:         #e2e8f0;
+  --color-text-primary:   #0f172a;
+  --color-text-secondary: #64748b;
+  --color-brand:          #2563eb;
+  --color-brand-hover:    #1d4ed8;
+  --color-positive:       #16a34a;
+  --color-negative:       #dc2626;
+  --color-caution:        #d97706;
+}
+
+.dark {
+  --color-background:     #0f1117;
+  --color-surface:        #1a1d23;
+  --color-surface-raised: #22262e;
+  --color-border:         #2a2d35;
+  --color-text-primary:   #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-brand:          #3b82f6;
+  --color-brand-hover:    #2563eb;
+  --color-positive:       #22c55e;
+  --color-negative:       #ef4444;
+  --color-caution:        #f59e0b;
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  @apply bg-background text-text-primary font-sans;
+  margin: 0;
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Typography ─────────────────────────────────────────────────────── */
+
+.price-cell,
+.numeric-cell {
+  @apply font-mono tabular-nums;
+  font-size: 13px;
+}
+
+/* ─── AG Grid Theme Overrides ────────────────────────────────────────── */
+
+.ag-theme-alpine,
+.ag-theme-alpine-dark {
+  --ag-background-color:           var(--color-surface);
+  --ag-header-background-color:    var(--color-background);
+  --ag-odd-row-background-color:   var(--color-surface);
+  --ag-even-row-background-color:  var(--color-surface);
+  --ag-row-hover-color:            var(--color-surface-raised);
+  --ag-selected-row-background-color: color-mix(in srgb, var(--color-brand) 15%, transparent);
+  --ag-border-color:               var(--color-border);
+  --ag-foreground-color:           var(--color-text-primary);
+  --ag-secondary-foreground-color: var(--color-text-secondary);
+  --ag-header-foreground-color:    var(--color-text-secondary);
+  --ag-font-family:                Inter, system-ui, sans-serif;
+  --ag-font-size:                  13px;
+  --ag-grid-size:                  6px;
+  --ag-list-item-height:           36px;
+  --ag-row-height:                 40px;
+  --ag-header-height:              40px;
+  --ag-cell-horizontal-padding:    12px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* ─── Financial Indicator Utilities ─────────────────────────────────── */
+
+.text-positive { color: var(--color-positive) !important; }
+.text-negative { color: var(--color-negative) !important; }
+.text-caution  { color: var(--color-caution) !important; }
+
+.bg-positive-subtle { background-color: color-mix(in srgb, var(--color-positive) 12%, transparent); }
+.bg-negative-subtle { background-color: color-mix(in srgb, var(--color-negative) 12%, transparent); }
+
+/* ─── Price Flash Animations ─────────────────────────────────────────── */
+
+@keyframes flash-positive {
+  0%, 100% { background-color: transparent; }
+  30%      { background-color: color-mix(in srgb, var(--color-positive) 25%, transparent); }
+}
+
+@keyframes flash-negative {
+  0%, 100% { background-color: transparent; }
+  30%      { background-color: color-mix(in srgb, var(--color-negative) 25%, transparent); }
+}
+
+.price-flash-up   { animation: flash-positive 0.8s ease; }
+.price-flash-down { animation: flash-negative 0.8s ease; }
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 3px;
+}
+
+/* ─── CDK Overlay ────────────────────────────────────────────────────── */
+
+.cdk-overlay-dark-backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.dialog-panel {
+  @apply bg-surface rounded-xl border border-border shadow-2xl;
+}
+
+.fullscreen-dialog-panel {
+  @apply bg-surface w-screen h-screen;
+}
+
+/* ─── Form Field Utilities ───────────────────────────────────────────── */
+
+.form-input {
+  @apply w-full px-3 py-2 rounded-lg border border-border bg-surface text-text-primary text-sm
+         placeholder:text-text-secondary
+         focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand
+         disabled:opacity-50 disabled:cursor-not-allowed
+         transition-colors duration-150;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-text-secondary mb-1;
+}
+
+.form-error {
+  @apply text-xs text-negative mt-1;
+}
+
+/* ─── Button Utilities ───────────────────────────────────────────────── */
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium
+         transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-brand
+         disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer;
+}
+
+.btn-primary   { @apply btn bg-brand text-white hover:bg-brand-hover; }
+.btn-secondary { @apply btn bg-surface-raised text-text-primary border border-border hover:bg-surface; }
+.btn-ghost     { @apply btn text-text-secondary hover:text-text-primary hover:bg-surface-raised; }
+.btn-danger    { @apply btn bg-negative text-white hover:opacity-90; }
+.btn-success   { @apply btn bg-positive text-white hover:opacity-90; }
+.btn-sm        { @apply px-3 py-1.5 text-xs; }
+
+/* ─── Card Utility ───────────────────────────────────────────────────── */
+
+.card { @apply bg-surface border border-border rounded-xl p-4; }
+
+/* ─── Badge Utilities ────────────────────────────────────────────────── */
+
+.badge        { @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium; }
+.badge-blue   { @apply badge bg-blue-500/15 text-blue-500; }
+.badge-amber  { @apply badge bg-amber-500/15 text-amber-600; }
+.badge-green  { @apply badge bg-green-500/15 text-green-600; }
+.badge-red    { @apply badge bg-red-500/15 text-red-600; }
+.badge-gray   { @apply badge bg-surface-raised text-text-secondary; }
+
+.dark .badge-blue  { @apply bg-blue-500/20 text-blue-400; }
+.dark .badge-amber { @apply bg-amber-500/20 text-amber-400; }
+.dark .badge-green { @apply bg-green-500/20 text-green-400; }
+.dark .badge-red   { @apply bg-red-500/20 text-red-400; }
+
+/* ─── Nav Link ───────────────────────────────────────────────────────── */
+
+.nav-link {
+  @apply flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-text-secondary
+         hover:text-text-primary hover:bg-surface-raised transition-colors duration-150;
+}
+
+.nav-link.active {
+  @apply text-brand;
+  background-color: color-mix(in srgb, var(--color-brand) 12%, transparent);
+}

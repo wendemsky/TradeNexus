@@ -1,0 +1,57 @@
+<div class="h-full flex flex-col gap-4 p-4 lg:p-6">
+
+  <h1 class="text-lg font-semibold text-text-primary">Portfolio</h1>
+
+  <!-- Stat cards -->
+  <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 flex-shrink-0">
+    <div class="card">
+      <p class="text-xs text-text-secondary mb-1">Cash Balance</p>
+      <p class="text-xl font-semibold font-mono text-text-primary">{{ balance() | currency }}</p>
+    </div>
+    <div class="card">
+      <p class="text-xs text-text-secondary mb-1">Portfolio Value</p>
+      <p class="text-xl font-semibold font-mono text-text-primary">
+        {{ (netWorth() - balance()) | currency }}
+      </p>
+    </div>
+    <div class="card col-span-2 lg:col-span-1">
+      <p class="text-xs text-text-secondary mb-1">Total Net Worth</p>
+      <p class="text-xl font-semibold font-mono text-text-primary">{{ netWorth() | currency }}</p>
+    </div>
+  </div>
+
+  <!-- Main content: grid + chart -->
+  <div class="flex-1 min-h-0 flex flex-col lg:flex-row gap-4">
+
+    <!-- Holdings grid -->
+    <div class="flex-1 min-h-0 min-w-0">
+      @if (holdingsPL().length === 0) {
+        <div class="card h-full flex items-center justify-center text-text-secondary text-sm">
+          No holdings yet — buy an instrument from the Instruments page.
+        </div>
+      } @else {
+        <ag-grid-angular
+          [class]="themeClass"
+          class="w-full h-full"
+          [columnDefs]="columnDefs"
+          [defaultColDef]="defaultColDef"
+          [getRowId]="getRowId"
+          [animateRows]="true"
+          (gridReady)="onGridReady($event)">
+        </ag-grid-angular>
+      }
+    </div>
+
+    <!-- Doughnut chart -->
+    @if (holdingsPL().length > 0) {
+      <div class="card lg:w-72 flex-shrink-0 flex flex-col">
+        <p class="text-sm font-medium text-text-secondary mb-4">Allocation</p>
+        <div class="flex-1 relative min-h-[200px]">
+          <canvas #doughnutCanvas class="absolute inset-0 w-full h-full"></canvas>
+        </div>
+      </div>
+    }
+
+  </div>
+
+</div>

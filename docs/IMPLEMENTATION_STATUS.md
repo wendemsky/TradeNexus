@@ -162,41 +162,120 @@ This file tracks what has been built and what remains. Update it as each phase p
 **Spec:** `docs/services/FRONTEND.md`
 
 ### Checklist
-- [ ] Delete old Angular 15 project
-- [ ] Bootstrap new Angular 18 project (standalone, SCSS, routing)
-- [ ] `ng add @angular/material` — dark trading terminal theme
-- [ ] Install `ag-grid-angular` 32, `ag-grid-community` 32
-- [ ] Install `chart.js` 4, `lightweight-charts` 4, `jwt-decode` 4, `xlsx`
-- [ ] `PriceStore` — signal-based WS consumer (`ws://localhost:3001/ws/prices`), sends AUTH frame
-- [ ] `AuthStore` — signal, sessionStorage, `isTokenExpired()`, `shouldRefresh()`
-- [ ] `PortfolioStore` — signal, `holdingWithPL(priceStore)` computed
-- [ ] `AuthInterceptor` — `HttpInterceptorFn` adds `Authorization: Bearer`
-- [ ] `AuthGuard` — `canActivateFn` checks token expiry
-- [ ] Token auto-refresh: interval checks `shouldRefresh()` every 60s
-- [ ] All HTTP services (calls go to `http://localhost:8080` — not through a mid-tier)
-- [ ] Update `environment.ts`: `apiUrl: 'http://localhost:8080'`, `wsUrl: 'ws://localhost:3001/ws/prices'`
-- [ ] Landing page (login + hero)
-- [ ] Registration component (3-step MatStepper)
-- [ ] Dashboard shell (MatSidenav + router-outlet)
-- [ ] Instruments component (AG Grid, live prices, Buy/Sell buttons, `orderType` field)
-- [ ] TradingFormDialog (MARKET/LIMIT selector, live price, fee estimate)
-- [ ] Portfolio component (holdings grid + unrealized P&L + Chart.js doughnut)
-- [ ] TradingHistory component (AG Grid)
-- [ ] Preferences component (robo advisor preferences form)
-- [ ] RoboAdvisorDialog (buy/sell recommendation grids)
-- [ ] ActivityReport component (3 tabs + SheetJS Excel export — NOT AG Grid Enterprise)
-- [ ] Remove `crypto-js` (password sent plaintext over HTTPS to Spring Boot)
-- [ ] Remove all `any` types; all models match `API_CONTRACTS.md`
-- [ ] `ng build --configuration=production` — zero errors
-- [ ] **Verification**: full golden path trade flow works end-to-end with live prices
+
+#### Phase 0 — Docs
+- [x] Update `docs/services/FRONTEND.md` — Tailwind + SPARTAN UI, color system, responsiveness
+- [x] Update `docs/IMPLEMENTATION_STATUS.md` — Phase 4 checklist revised
+
+#### Phase 1 — Scaffold
+- [x] Delete old Angular 15 project (`frontend-trade-nexus/`)
+- [x] Bootstrap Angular 21 project (`ng new` — standalone, SCSS, routing) — upgraded from planned 18; all APIs identical
+- [x] Install Tailwind CSS + PostCSS + Autoprefixer; run `tailwindcss init`
+- [x] Install Angular CDK (replaces SPARTAN UI — SPARTAN requires Nx; CDK + Tailwind achieves same result)
+- [x] Install `ag-grid-angular@32`, `ag-grid-community@32` (NO enterprise)
+- [x] Install `chart.js@4`, `lightweight-charts@4`, `jwt-decode@4`, `xlsx`
+- [x] `tailwind.config.js` — `darkMode: 'class'`, color tokens mapped to CSS vars
+- [x] `styles.scss` — CSS custom properties for light/dark, AG Grid overrides, flash animations, utility classes
+- [x] `index.html` — inline theme-init script (prevent flash of wrong theme) + Inter + JetBrains Mono fonts
+- [x] Environment files: `apiUrl: localhost:8080`, `wsUrl: ws://localhost:3001/ws/prices`, `mdsHttpUrl: localhost:3001`
+
+#### Phase 2 — Models
+- [x] `shared/models/price.models.ts` — `Instrument`, `Price`, `MarketStatus`
+- [x] `shared/models/client.models.ts` — `Client`, `ClientProfile`, `ClientPortfolio`, `Holding`, `HoldingWithPL`, `ClientPreferences`, `ClientIdentification`
+- [x] `shared/models/trade.models.ts` — `Order`, `Trade`, `TradeHistory`, `TradePL`
+
+#### Phase 3 — Signal Stores
+- [x] `store/auth.store.ts` — module-level signal, sessionStorage (`tn-session`), `login/logout/updateToken`
+- [x] `store/price.store.ts` — injectable, WS consumer, AUTH frame, exponential backoff, `reconnect()`
+- [x] `store/portfolio.store.ts` — injectable, `holdingWithPL` computed from live prices
+
+#### Phase 4 — Core Auth Infrastructure
+- [x] `core/auth/token.service.ts` — `isExpired()`, `shouldRefresh()` via jwt-decode
+- [x] `core/auth/auth.interceptor.ts` — `HttpInterceptorFn`, Bearer header, 401 handler
+- [x] `core/auth/auth.guard.ts` — `CanActivateFn`, token expiry check
+- [x] `app.config.ts` — `provideRouter`, `provideHttpClient(withInterceptors)`, `provideAnimationsAsync`
+- [x] `app.routes.ts` — full route tree with `authGuard` on `/dashboard`
+- [x] `app.ts` (root component) — session restore, `.dark` class init, token refresh interval
+
+#### Phase 5 — HTTP Services
+- [x] `core/services/client.service.ts`
+- [x] `core/services/portfolio.service.ts`
+- [x] `core/services/trade.service.ts`
+- [x] `core/services/robo-advisor.service.ts`
+- [x] `core/services/preferences.service.ts`
+- [x] `core/services/activity.service.ts`
+- [x] `core/services/mds.service.ts`
+
+#### Phase 6 — Auth Pages
+- [x] Landing page (login form + dark hero, Tailwind + Angular CDK)
+- [x] Registration (3-step custom stepper — vertical mobile, horizontal desktop)
+  - [x] Step 1: credentials + `verifyEmail()` check
+  - [x] Step 2: personal details (name, DOB, country)
+  - [x] Step 3: identification + summary
+- [x] `shared/validators/password.validator.ts`
+- [x] `shared/validators/id.validator.ts` (dynamic by ID type)
+
+#### Phase 7 — Dashboard Shell (Responsive)
+- [x] Sidebar layout (desktop `lg:`) — 240px fixed, nav links with icons, theme toggle, logout
+- [x] Bottom tab bar (mobile base/`md:`) — 5 tabs with icons (no hamburger needed — bottom nav covers it)
+- [x] Top bar (mobile only): brand name, balance, theme toggle
+
+#### Phase 8 — Instruments + Price Flash
+- [x] `shared/components/price-flash-cell/` — `ICellRendererAngularComp`, green/red CSS animation
+- [x] `pages/dashboard/instruments/` — AG Grid, `getRowId`, `toObservable` bridge, column responsive rules via `BreakpointObserver`
+- [x] Buy/Sell button cells — disabled when `marketOpen === false`
+
+#### Phase 9 — TradingFormDialog
+- [x] MARKET/LIMIT toggle
+- [x] Live price from `PriceStore` computed signal
+- [x] Fee breakdown display (BUY: `qty × ask × 1.001`, SELL: `qty × bid × 0.999`)
+- [x] Error display inline (MARKET_CLOSED, INSUFFICIENT_BALANCE, LIMIT_NOT_MET, etc.)
+- [x] Full-screen on mobile, `max-w-lg` on desktop
+
+#### Phase 10 — Portfolio
+- [x] Holdings grid with `holdingWithPL` computed data (live updates)
+- [x] Balance + net worth card
+- [x] Chart.js doughnut (holdings by market value + Cash slice)
+- [ ] Mobile: reduced columns (desktop shows all; mobile responsive via grid overflow)
+
+#### Phase 11 — Trading History
+- [x] AG Grid with sort by `executedAt` descending
+- [x] Direction + Order Type badge rendering
+
+#### Phase 12 — Preferences
+- [x] All preference fields (Select × 4, range slider, toggle switch)
+- [x] POST vs PUT logic based on `preferencesExist` flag
+- [x] "Get Recommendations" button (visible only when `acceptAdvisor === true`)
+- [x] Two-column form desktop (`lg:grid-cols-2`), single-column mobile
+
+#### Phase 13 — Robo Advisor Dialog
+- [x] `forkJoin` both suggest endpoints simultaneously
+- [x] Two custom tabs: Buy / Sell grids
+- [x] Click row → opens TradingFormDialog
+
+#### Phase 14 — Activity Report + Excel Export
+- [x] Three custom tabs: Holdings, Trade History, P&L Summary
+- [x] Lazy-load each tab on first visit
+- [x] SheetJS export button per tab (NOT `gridApi.exportDataAsExcel()`)
+- [x] P&L tab: `text-positive`/`text-negative` cell classes
+
+#### Phase 15 — Final Polish
+- [x] Theme toggle (light/dark) functional in sidebar and mobile top bar
+- [x] `npx tsc --noEmit` — zero errors
+- [x] `ng build --configuration=production` — zero errors, **451 kB compressed transfer size**
+- [ ] **Verification**: full golden path trade flow works end-to-end with live prices (requires all 3 backend services running)
 
 ### Decisions Made
-- `sessionStorage` for JWT (more secure than localStorage)
+- **No Angular Material** — replaced by Angular CDK + Tailwind CSS utility classes (SPARTAN UI requires Nx workspace; CDK achieves same result natively)
+- **No ag-grid-enterprise** — AG Grid Community 32 + SheetJS for Excel export
+- Institutional design philosophy: trust and readability over aesthetics; brand colors separate from financial indicators
+- Default dark mode (`#0f1117` background); light mode via Tailwind `class` strategy
+- Both themes baked in from day 1 via CSS custom properties
+- `sessionStorage` for JWT (key: `tn-session`); full `ClientProfile` stored (not just token)
 - No price caching in browser storage — live from `PriceStore` WS signal
-- SheetJS (`xlsx`) for Excel export — no AG Grid Enterprise dependency
-- `lightweight-charts` for price sparklines (Phase 4 basic; OHLC is future)
-- Direct WS connection to MDS port 3001 (no mid-tier broker)
-- Direct REST calls to Spring Boot port 8080 (no mid-tier proxy)
+- `lightweight-charts` for future price sparklines; Chart.js 4 for portfolio doughnut
+- Direct WS connection to MDS port 3001; direct REST to Spring Boot port 8080 (no mid-tier)
+- Desktop-first responsive; mobile breakpoint at base/`md:`; column visibility via `BreakpointObserver`
 
 ---
 
